@@ -1,7 +1,15 @@
+from __future__ import annotations
+
 import ctypes
 from ctypes import wintypes
+from typing import TYPE_CHECKING
 
 import comtypes
+
+if TYPE_CHECKING:
+    from _ctypes import _Pointer
+
+    from d3dshot.dll.dxgi import IDXGIAdapter, IDXGIAdapter1
 
 
 class DXGI_SAMPLE_DESC(ctypes.Structure):
@@ -37,7 +45,7 @@ class D3D11_TEXTURE2D_DESC(ctypes.Structure):
     )
 
 
-class ID3D11DeviceChild(comtypes.IUnknown):
+class ID3D11DeviceChild(comtypes.IUnknown):  # type:ignore[misc] # TODO (Avasam): Figure out why it's Any
     _iid_ = comtypes.GUID("{1841e5c8-16b0-489b-bcc8-44cfb0d5deae}")
     _methods_ = [
         comtypes.STDMETHOD(None, "GetDevice"),
@@ -194,7 +202,7 @@ class ID3D11DeviceContext(ID3D11DeviceChild):
     ]
 
 
-class ID3D11Device(comtypes.IUnknown):
+class ID3D11Device(comtypes.IUnknown):  # type:ignore[misc] # TODO (Avasam): Figure out why it's Any
     _iid_ = comtypes.GUID("{db6f6ddb-ac77-4e88-8253-819df9bbf140}")
     _methods_ = [
         comtypes.STDMETHOD(comtypes.HRESULT, "CreateBuffer"),
@@ -204,7 +212,7 @@ class ID3D11Device(comtypes.IUnknown):
             "CreateTexture2D",
             [
                 ctypes.POINTER(D3D11_TEXTURE2D_DESC),
-                ctypes.POINTER(None),
+                ctypes.POINTER(None),  # type: ignore[arg-type] # TODO (Avasam): Possible false-positive
                 ctypes.POINTER(ctypes.POINTER(ID3D11Texture2D)),
             ],
         ),
@@ -252,7 +260,9 @@ class ID3D11Device(comtypes.IUnknown):
     ]
 
 
-def initialize_d3d_device(dxgi_adapter):
+def initialize_d3d_device(
+    dxgi_adapter: _Pointer[IDXGIAdapter] | _Pointer[IDXGIAdapter1],
+) -> tuple[_Pointer[ID3D11Device], _Pointer[ID3D11DeviceContext]]:
     initialize_func = ctypes.windll.d3d11.D3D11CreateDevice
 
     feature_levels = [45312, 45056, 41216, 40960, 37632, 37376, 37120]
@@ -276,14 +286,16 @@ def initialize_d3d_device(dxgi_adapter):
     return d3d_device, d3d_device_context
 
 
-def describe_d3d11_texture_2d(d3d11_texture_2d):
+def describe_d3d11_texture_2d(d3d11_texture_2d: _Pointer[ID3D11Texture2D]) -> D3D11_TEXTURE2D_DESC:
     d3d11_texture_2d_description = D3D11_TEXTURE2D_DESC()
     d3d11_texture_2d.GetDesc(ctypes.byref(d3d11_texture_2d_description))
 
     return d3d11_texture_2d_description
 
 
-def prepare_d3d11_texture_2d_for_cpu(d3d11_texture_2d, d3d_device):
+def prepare_d3d11_texture_2d_for_cpu(
+    d3d11_texture_2d: _Pointer[ID3D11Texture2D], d3d_device: _Pointer[ID3D11Device]
+) -> _Pointer[ID3D11Texture2D]:
     d3d11_texture_2d_description = describe_d3d11_texture_2d(d3d11_texture_2d)
 
     d3d11_texture_2d_description_cpu = D3D11_TEXTURE2D_DESC()

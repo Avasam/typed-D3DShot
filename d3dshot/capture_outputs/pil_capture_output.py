@@ -1,30 +1,56 @@
+from __future__ import annotations
+
 import ctypes
+from collections.abc import Sequence
+from typing import TYPE_CHECKING, Literal, TypeVar
 
 from PIL import Image
 
+from d3dshot._compat import override
 from d3dshot.capture_output import CaptureOutput
+
+if TYPE_CHECKING:
+    from ctypes import _CVoidConstPLike
+
+    from typing_extensions import Self
+
+_ImageT = TypeVar("_ImageT", bound=Image.Image)
+_ImageTs = TypeVar("_ImageTs", bound=Sequence[Image.Image])
 
 
 class PILCaptureOutput(CaptureOutput):
-    def __init__(self) -> None:
-        pass
+    def __new__(cls) -> Self:
+        return super(CaptureOutput, cls).__new__(cls)  # type: ignore[return-value]
 
-    def process(self, pointer, pitch, size, width, height, region, rotation):
+    @override
+    def process(
+        self,
+        pointer: _CVoidConstPLike,
+        pitch: int,
+        size: int,
+        width: int,
+        height: int,
+        region: tuple[int, int, int, int],
+        rotation: Literal[0, 90, 180, 270],
+    ) -> Image.Image:
         raw_bytes = ctypes.string_at(pointer, size=size)
 
         pitch_per_channel = pitch // 4
 
+        # Use match-case in Python 3.10
         if rotation == 0:
             image = Image.frombytes("RGBA", (pitch_per_channel, height), raw_bytes)
         elif rotation == 90:
             image = Image.frombytes("RGBA", (pitch_per_channel, width), raw_bytes)
-            image = image.transpose(Image.ROTATE_270)
+            image = image.transpose(Image.Transpose.ROTATE_270)
         elif rotation == 180:
             image = Image.frombytes("RGBA", (pitch_per_channel, height), raw_bytes)
-            image = image.transpose(Image.ROTATE_180)
+            image = image.transpose(Image.Transpose.ROTATE_180)
         elif rotation == 270:
             image = Image.frombytes("RGBA", (pitch_per_channel, width), raw_bytes)
-            image = image.transpose(Image.ROTATE_90)
+            image = image.transpose(Image.Transpose.ROTATE_90)
+        else:
+            raise ValueError(f"Invalid rotation {rotation}°")
 
         b, g, r, _ = image.split()
         image = Image.merge("RGB", (r, g, b))
@@ -41,8 +67,10 @@ class PILCaptureOutput(CaptureOutput):
 
         return image
 
-    def to_pil(self, frame):
+    @override
+    def to_pil(self, frame: _ImageT) -> _ImageT:
         return frame
 
-    def stack(self, frames, stack_dimension):
+    @override
+    def stack(self, frames: _ImageTs, stack_dimension: object) -> _ImageTs:
         return frames
