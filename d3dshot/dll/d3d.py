@@ -120,7 +120,9 @@ class ID3D11DeviceContext(ID3D11DeviceChild):
             ],
         ),
         comtypes.STDMETHOD(
-            None, "CopyResource", [ctypes.POINTER(ID3D11Resource), ctypes.POINTER(ID3D11Resource)],
+            None,
+            "CopyResource",
+            [ctypes.POINTER(ID3D11Resource), ctypes.POINTER(ID3D11Resource)],
         ),
         comtypes.STDMETHOD(None, "UpdateSubresource"),
         comtypes.STDMETHOD(None, "CopyStructureCount"),
@@ -241,7 +243,9 @@ class ID3D11Device(comtypes.IUnknown):
         comtypes.STDMETHOD(ctypes.c_uint, "GetCreationFlags"),
         comtypes.STDMETHOD(comtypes.HRESULT, "GetDeviceRemovedReason"),
         comtypes.STDMETHOD(
-            None, "GetImmediateContext", [ctypes.POINTER(ctypes.POINTER(ID3D11DeviceContext))],
+            None,
+            "GetImmediateContext",
+            [ctypes.POINTER(ctypes.POINTER(ID3D11DeviceContext))],
         ),
         comtypes.STDMETHOD(comtypes.HRESULT, "SetExceptionMode"),
         comtypes.STDMETHOD(ctypes.c_uint, "GetExceptionMode"),
@@ -298,7 +302,9 @@ def prepare_d3d11_texture_2d_for_cpu(d3d11_texture_2d, d3d_device):
 
     d3d11_texture_2d_cpu = ctypes.POINTER(ID3D11Texture2D)()
     d3d_device.CreateTexture2D(
-        ctypes.byref(d3d11_texture_2d_description_cpu), None, ctypes.byref(d3d11_texture_2d_cpu),
+        ctypes.byref(d3d11_texture_2d_description_cpu),
+        None,
+        ctypes.byref(d3d11_texture_2d_cpu),
     )
 
     return d3d11_texture_2d_cpu
