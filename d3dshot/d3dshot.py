@@ -93,8 +93,14 @@ class D3DShot(metaclass=Singleton):
 
         return self.capture_output.stack(frames, stack_dimension)
 
-    def screenshot(self, region=None):
-        region = self._validate_region(region)
+    def screenshot(
+        self,
+        region=None,
+        *,
+        skip_region_validation: bool = False,
+    ):
+        if not skip_region_validation:
+            region = self._validate_region(region)
 
         if self.previous_screenshot is None:
             frame = None
@@ -104,6 +110,7 @@ class D3DShot(metaclass=Singleton):
 
             self.previous_screenshot = frame
             return frame
+
         for _ in range(300):
             frame = self.display.capture(self.capture_output.process, region=region)
 
@@ -113,13 +120,20 @@ class D3DShot(metaclass=Singleton):
 
         return self.previous_screenshot
 
-    def screenshot_to_disk(self, directory=None, file_name=None, region=None):
+    def screenshot_to_disk(
+        self,
+        directory=None,
+        file_name=None,
+        region=None,
+        *,
+        skip_region_validation: bool = False,
+    ):
         directory = self._validate_directory(directory)
         file_name = self._validate_file_name(file_name)
 
         file_path = f"{directory}/{file_name}"
 
-        frame = self.screenshot(region=region)
+        frame = self.screenshot(region=region, skip_region_validation=skip_region_validation)
 
         frame_pil = self.capture_output.to_pil(frame)
         frame_pil.save(file_path)
@@ -332,11 +346,12 @@ class D3DShot(metaclass=Singleton):
 
     def _screenshot_every(self, interval, region) -> None:
         self._reset_frame_buffer()
+        region = self._validate_region(region)
 
         while self.is_capturing:
             cycle_start = time.time()
 
-            frame = self.screenshot(region=self._validate_region(region))
+            frame = self.screenshot(region=region, skip_region_validation=True)
             self.frame_buffer.appendleft(frame)
 
             cycle_end = time.time()
@@ -348,11 +363,11 @@ class D3DShot(metaclass=Singleton):
 
         self._is_capturing = False
 
-    def _screenshot_to_disk_every(self, interval, directory, region) -> None:
+        region = self._validate_region(region)
         while self.is_capturing:
             cycle_start = time.time()
 
-            self.screenshot_to_disk(directory=directory, region=self._validate_region(region))
+            self.screenshot_to_disk(directory=directory, region=region, skip_region_validation=True)
 
             cycle_end = time.time()
 
