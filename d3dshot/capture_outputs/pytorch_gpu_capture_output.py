@@ -1,6 +1,5 @@
 import numpy as np
 import torch
-
 from PIL import Image
 
 from d3dshot.capture_outputs.pytorch_capture_output import PytorchCaptureOutput

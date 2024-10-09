@@ -1,7 +1,7 @@
-import d3dshot.dll.dxgi
 import d3dshot.dll.d3d
-import d3dshot.dll.user32
+import d3dshot.dll.dxgi
 import d3dshot.dll.shcore
+import d3dshot.dll.user32
 
 
 class Display:

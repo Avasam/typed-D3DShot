@@ -30,9 +30,9 @@ class PILCaptureOutput(CaptureOutput):
         image = Image.merge("RGB", (r, g, b))
 
         # Trim pitch padding
-        if rotation in (0, 180) and pitch_per_channel != width:
-            image = image.crop((0, 0, width, height))
-        elif rotation in (90, 270) and pitch_per_channel != height:
+        if (rotation in (0, 180) and pitch_per_channel != width) or (
+            rotation in (90, 270) and pitch_per_channel != height
+        ):
             image = image.crop((0, 0, width, height))
 
         # Region slicing

@@ -1,8 +1,7 @@
 import importlib.util
 
-from d3dshot.d3dshot import D3DShot
 from d3dshot.capture_output import CaptureOutputs
-
+from d3dshot.d3dshot import D3DShot
 
 pil_is_available = importlib.util.find_spec("PIL") is not None
 numpy_is_available = importlib.util.find_spec("numpy") is not None
@@ -92,6 +91,6 @@ def _validate_capture_output(capture_output):
 
 def _validate_frame_buffer_size(frame_buffer_size):
     if not isinstance(frame_buffer_size, int) or frame_buffer_size < 1:
-        raise AttributeError(f"'frame_buffer_size' should be an int greater than 0")
+        raise AttributeError("'frame_buffer_size' should be an int greater than 0")
 
     return frame_buffer_size

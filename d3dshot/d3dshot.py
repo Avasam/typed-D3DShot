@@ -1,12 +1,11 @@
-import threading
 import collections
-
 import gc
 import os
+import threading
 import time
 
-from d3dshot.display import Display
 from d3dshot.capture_output import CaptureOutput, CaptureOutputs
+from d3dshot.display import Display
 
 
 class Singleton(type):
@@ -103,15 +102,14 @@ class D3DShot(metaclass=Singleton):
 
             self.previous_screenshot = frame
             return frame
-        else:
-            for _ in range(300):
-                frame = self.display.capture(self.capture_output.process, region=region)
+        for _ in range(300):
+            frame = self.display.capture(self.capture_output.process, region=region)
 
-                if frame is not None:
-                    self.previous_screenshot = frame
-                    return frame
+            if frame is not None:
+                self.previous_screenshot = frame
+                return frame
 
-            return self.previous_screenshot
+        return self.previous_screenshot
 
     def screenshot_to_disk(self, directory=None, file_name=None, region=None):
         directory = self._validate_directory(directory)
@@ -191,11 +189,11 @@ class D3DShot(metaclass=Singleton):
         return True
 
     def benchmark(self):
-        print(f"Preparing Benchmark...")
-        print("")
+        print("Preparing Benchmark...")
+        print()
         print(f"Capture Output: {self.capture_output.backend.__class__.__name__}")
         print(f"Display: {self.display}")
-        print("")
+        print()
 
         frame_count = 0
 
@@ -258,7 +256,7 @@ class D3DShot(metaclass=Singleton):
 
     def _validate_target_fps(self, target_fps):
         if not isinstance(target_fps, int) or target_fps < 1:
-            raise AttributeError(f"'target_fps' should be an int greater than 0")
+            raise AttributeError("'target_fps' should be an int greater than 0")
 
         return target_fps
 
@@ -305,9 +303,8 @@ class D3DShot(metaclass=Singleton):
 
             if frame is not None:
                 self.frame_buffer.appendleft(frame)
-            else:
-                if len(self.frame_buffer):
-                    self.frame_buffer.appendleft(self.frame_buffer[0])
+            elif len(self.frame_buffer):
+                self.frame_buffer.appendleft(self.frame_buffer[0])
 
             gc.collect()
 
