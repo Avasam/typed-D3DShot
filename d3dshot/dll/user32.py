@@ -48,9 +48,4 @@ def get_display_device_name_mapping():
 
 
 def get_hmonitor_by_point(x, y):
-    point = wintypes.POINT()
-
-    point.x = x
-    point.y = y
-
-    return ctypes.windll.user32.MonitorFromPoint(point, 0)
+    return ctypes.windll.user32.MonitorFromPoint(wintypes.POINT(x, y), 0)

@@ -338,6 +338,8 @@ def get_dxgi_output_duplication_frame(
 
         size = pitch * height if rotation in {0, 180} else pitch * width
 
+        if region is None:  # TODO (Avasam): Consider removing default param in an update
+            region = (0, 0, width, height)
         frame = process_func(pointer, pitch, size, width, height, region, rotation)
 
         id3d11_surface.Unmap()

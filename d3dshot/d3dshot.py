@@ -39,12 +39,10 @@ class D3DShot(metaclass=Singleton):
         self.displays = None
         self.detect_displays()
 
-        self.display = self.displays[0] if len(self.displays) > 0 else None
-
-        for display in self.displays:
-            if display.is_primary:
-                self.display = display
-                break
+        self.display = next(
+            (display for display in self.displays if display.is_primary),
+            self.displays[0],
+        )
 
         self.capture_output = CaptureOutput(backend=capture_output)
 
@@ -228,11 +226,13 @@ class D3DShot(metaclass=Singleton):
         if region is None:
             return None
 
-        if isinstance(region, list):
-            region = tuple(region)
+        error_message = "'region' is expected to be a 4-length iterable"
 
-        if not isinstance(region, tuple) or len(region) != 4:
-            raise AttributeError("'region' is expected to be a 4-length tuple")
+        if not isinstance(region, tuple):
+            try:
+                region = tuple(region)
+            except TypeError:
+                raise AttributeError(error_message, region) from None
 
         valid = True
 
@@ -245,34 +245,46 @@ class D3DShot(metaclass=Singleton):
                 if value <= region[0]:
                     valid = False
                     break
-            elif i == 3 and value <= region[1]:
-                valid = False
-                break
+                continue
+            if i == 3:
+                if value <= region[1]:
+                    valid = False
+                    break
+                continue
+            if i == 4:
+                raise AttributeError(error_message, region)
 
         if not valid:
-            raise AttributeError(
-                """Invalid 'region' tuple. Make sure all values are ints and that 'right' and
-                'bottom' values are greater than their 'left' and 'top' counterparts"""
+            error_message = (
+                "Invalid 'region' tuple. Make sure all values are ints and that 'right' and "
+                + "'bottom' values are greater than their 'left' and 'top' counterparts"
             )
+            raise AttributeError(error_message)
 
         return region
 
-    def _validate_target_fps(self, target_fps):
+    @staticmethod
+    def _validate_target_fps(target_fps: int) -> int:
         if not isinstance(target_fps, int) or target_fps < 1:
             raise AttributeError("'target_fps' should be an int greater than 0")
 
         return target_fps
 
-    def _validate_directory(self, directory):
-        if directory is None or not isinstance(directory, str):
+    @staticmethod
+    def _validate_directory(directory):
+        if directory is None:
             directory = "."
+        if not isinstance(directory, str):
+            directory = str(directory)
 
-        if not os.path.isdir(directory):
+        # We don't need to pull in pathlib just for this
+        if not os.path.isdir(directory):  # noqa: PTH112
             raise NotADirectoryError(directory)
 
         return directory
 
-    def _validate_file_name(self, file_name):
+    @staticmethod
+    def _validate_file_name(file_name: str | None) -> str:
         if file_name is None or not isinstance(file_name, str):
             file_name = f"{time.time()}.png"
 
@@ -283,11 +295,9 @@ class D3DShot(metaclass=Singleton):
 
         return file_name
 
-    def _validate_interval(self, interval):
-        if isinstance(interval, int):
-            interval = float(interval)
-
-        if not isinstance(interval, float) or interval < 1.0:
+    @staticmethod
+    def _validate_interval(interval):
+        if not isinstance(interval, (int, float)) or interval < 1.0:
             raise AttributeError("'interval' should be one of (int, float) and be >= 1.0")
 
         return interval

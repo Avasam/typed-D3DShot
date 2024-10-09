@@ -88,16 +88,12 @@ class Display:
         if region is None:
             return (0, 0, self.resolution[0], self.resolution[1])
 
-        clean_region = []
-
-        clean_region.extend((
+        return (
             0 if region[0] < 0 or region[0] > self.resolution[0] else region[0],
             0 if region[1] < 0 or region[1] > self.resolution[1] else region[1],
             self.resolution[0] if region[2] < 0 or region[2] > self.resolution[0] else region[2],
             self.resolution[1] if region[3] < 0 or region[3] > self.resolution[1] else region[3],
-        ))
-
-        return tuple(clean_region)
+        )
 
     @classmethod
     def discover_displays(cls):
