@@ -2,7 +2,6 @@ import ctypes
 
 import numpy as np
 import torch
-
 from PIL import Image
 
 from d3dshot.capture_output import CaptureOutput

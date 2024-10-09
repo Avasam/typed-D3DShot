@@ -1,5 +1,5 @@
 import ctypes
-import ctypes.wintypes as wintypes
+from ctypes import wintypes
 
 
 class DISPLAY_DEVICE(ctypes.Structure):

@@ -1,5 +1,5 @@
 import ctypes
-import ctypes.wintypes as wintypes
+from ctypes import wintypes
 
 
 def get_scale_factor_for_monitor(hmonitor):

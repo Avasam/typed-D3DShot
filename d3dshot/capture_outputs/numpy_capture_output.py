@@ -1,7 +1,6 @@
 import ctypes
 
 import numpy as np
-
 from PIL import Image
 
 from d3dshot.capture_output import CaptureOutput

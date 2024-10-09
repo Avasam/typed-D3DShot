@@ -1,5 +1,5 @@
 import ctypes
-import ctypes.wintypes as wintypes
+from ctypes import wintypes
 
 import comtypes
 
@@ -216,7 +216,7 @@ def initialize_dxgi_factory():
 def discover_dxgi_adapters(dxgi_factory):
     dxgi_adapters = list()
 
-    for i in range(0, 10):
+    for i in range(10):
         try:
             dxgi_adapter = ctypes.POINTER(IDXGIAdapter1)()
             dxgi_factory.EnumAdapters1(i, ctypes.byref(dxgi_adapter))
@@ -238,7 +238,7 @@ def describe_dxgi_adapter(dxgi_adapter):
 def discover_dxgi_outputs(dxgi_adapter):
     dxgi_outputs = list()
 
-    for i in range(0, 10):
+    for i in range(10):
         try:
             dxgi_output = ctypes.POINTER(IDXGIOutput1)()
             dxgi_adapter.EnumOutputs(i, ctypes.byref(dxgi_output))

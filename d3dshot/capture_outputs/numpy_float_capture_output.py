@@ -1,5 +1,4 @@
 import numpy as np
-
 from PIL import Image
 
 from d3dshot.capture_outputs.numpy_capture_output import NumpyCaptureOutput
