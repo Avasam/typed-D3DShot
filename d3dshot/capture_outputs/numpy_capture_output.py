@@ -1,7 +1,6 @@
 import ctypes
 
 import numpy as np
-from PIL import Image
 
 from d3dshot.capture_output import CaptureOutput
 
@@ -40,7 +39,8 @@ class NumpyCaptureOutput(CaptureOutput):
 
         return image
 
-    def to_pil(self, frame):
+        from PIL import Image
+
         return Image.fromarray(frame)
 
     def stack(self, frames, stack_dimension):
