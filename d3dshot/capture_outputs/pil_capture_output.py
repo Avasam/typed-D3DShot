@@ -6,7 +6,7 @@ from d3dshot.capture_output import CaptureOutput
 
 
 class PILCaptureOutput(CaptureOutput):
-    def __init__(self):
+    def __init__(self) -> None:
         pass
 
     def process(self, pointer, pitch, size, width, height, region, rotation):
@@ -30,8 +30,8 @@ class PILCaptureOutput(CaptureOutput):
         image = Image.merge("RGB", (r, g, b))
 
         # Trim pitch padding
-        if (rotation in (0, 180) and pitch_per_channel != width) or (
-            rotation in (90, 270) and pitch_per_channel != height
+        if (rotation in {0, 180} and pitch_per_channel != width) or (
+            rotation in {90, 270} and pitch_per_channel != height
         ):
             image = image.crop((0, 0, width, height))
 

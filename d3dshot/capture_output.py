@@ -16,7 +16,7 @@ class CaptureOutputError(BaseException):
 
 
 class CaptureOutput:
-    def __init__(self, backend=CaptureOutputs.PIL):
+    def __init__(self, backend=CaptureOutputs.PIL) -> None:
         self.backend = self._initialize_backend(backend)
 
     def process(self, pointer, pitch, size, width, height, region, rotation):

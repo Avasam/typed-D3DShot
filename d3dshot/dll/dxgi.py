@@ -208,13 +208,11 @@ def initialize_dxgi_factory():
     handle = ctypes.c_void_p(0)
 
     create_factory_func(IDXGIFactory1._iid_, ctypes.byref(handle))
-    idxgi_factory = ctypes.POINTER(IDXGIFactory1)(handle.value)
-
-    return idxgi_factory
+    return ctypes.POINTER(IDXGIFactory1)(handle.value)
 
 
 def discover_dxgi_adapters(dxgi_factory):
-    dxgi_adapters = list()
+    dxgi_adapters = []
 
     for i in range(10):
         try:
@@ -236,7 +234,7 @@ def describe_dxgi_adapter(dxgi_adapter):
 
 
 def discover_dxgi_outputs(dxgi_adapter):
-    dxgi_outputs = list()
+    dxgi_outputs = []
 
     for i in range(10):
         try:
@@ -323,10 +321,7 @@ def get_dxgi_output_duplication_frame(
         pointer = dxgi_mapped_rect.pBits
         pitch = int(dxgi_mapped_rect.Pitch)
 
-        if rotation in (0, 180):
-            size = pitch * height
-        else:
-            size = pitch * width
+        size = pitch * height if rotation in {0, 180} else pitch * width
 
         frame = process_func(pointer, pitch, size, width, height, region, rotation)
 

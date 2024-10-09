@@ -14,7 +14,7 @@ class DISPLAY_DEVICE(ctypes.Structure):
 
 
 def get_display_device_name_mapping():
-    display_names = list()
+    display_names = []
 
     i = 0
     while True:
@@ -30,7 +30,7 @@ def get_display_device_name_mapping():
 
         i += 1
 
-    display_device_name_mapping = dict()
+    display_device_name_mapping = {}
 
     for display_name, is_primary in display_names:
         display_device = DISPLAY_DEVICE()

@@ -17,7 +17,7 @@ class Display:
         hmonitor=None,
         dxgi_output=None,
         dxgi_adapter=None,
-    ):
+    ) -> None:
         self.name = name or "Unknown"
         self.adapter_name = adapter_name or "Unknown Adapter"
 
@@ -38,7 +38,7 @@ class Display:
 
         self.dxgi_output_duplication = self._initialize_dxgi_output_duplication()
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"<Display name={self.name} adapter={self.adapter_name} resolution={self.resolution[0]}x{self.resolution[1]} rotation={self.rotation} scale_factor={self.scale_factor} primary={self.is_primary}>"
 
     def capture(self, process_func, region=None):
@@ -74,16 +74,14 @@ class Display:
         if region is None:
             return (0, 0, self.resolution[0], self.resolution[1])
 
-        clean_region = list()
+        clean_region = []
 
-        clean_region.append(0 if region[0] < 0 or region[0] > self.resolution[0] else region[0])
-        clean_region.append(0 if region[1] < 0 or region[1] > self.resolution[1] else region[1])
-        clean_region.append(
-            self.resolution[0] if region[2] < 0 or region[2] > self.resolution[0] else region[2]
-        )
-        clean_region.append(
-            self.resolution[1] if region[3] < 0 or region[3] > self.resolution[1] else region[3]
-        )
+        clean_region.extend((
+            0 if region[0] < 0 or region[0] > self.resolution[0] else region[0],
+            0 if region[1] < 0 or region[1] > self.resolution[1] else region[1],
+            self.resolution[0] if region[2] < 0 or region[2] > self.resolution[0] else region[2],
+            self.resolution[1] if region[3] < 0 or region[3] > self.resolution[1] else region[3],
+        ))
 
         return tuple(clean_region)
 
@@ -94,7 +92,7 @@ class Display:
         dxgi_factory = d3dshot.dll.dxgi.initialize_dxgi_factory()
         dxgi_adapters = d3dshot.dll.dxgi.discover_dxgi_adapters(dxgi_factory)
 
-        displays = list()
+        displays = []
 
         for dxgi_adapter in dxgi_adapters:
             dxgi_adapter_description = d3dshot.dll.dxgi.describe_dxgi_adapter(dxgi_adapter)

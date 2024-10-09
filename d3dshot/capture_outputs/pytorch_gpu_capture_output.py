@@ -6,7 +6,7 @@ from d3dshot.capture_outputs.pytorch_capture_output import PytorchCaptureOutput
 
 
 class PytorchGPUCaptureOutput(PytorchCaptureOutput):
-    def __init__(self):
+    def __init__(self) -> None:
         self.device = torch.device("cuda")
         torch.tensor([0], device=self.device)  # Warm up CUDA
 
