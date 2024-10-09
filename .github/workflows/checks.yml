@@ -1,0 +1,102 @@
+# https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions
+name: Checks
+on:
+  workflow_dispatch: #  Allows manual builds
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  ruff:
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+    steps:
+      - name: Checkout ${{ github.repository }}/${{ github.ref }}
+        uses: actions/checkout@v4
+      - name: Get Ruff version
+        id: ruff_version
+        # We need an exact value, feature request for any valid range specifier
+        # https://github.com/astral-sh/ruff-action/issues/11
+        run: |
+          $Env:RUFF_VERSION=Select-String -path pyproject.toml -pattern 'ruff ?[=<>~]?= ?(.+?)"' | %{ $_.Matches[0].Groups[1].Value }
+          echo $Env:RUFF_VERSION
+          echo "RUFF_VERSION=$Env:RUFF_VERSION" >> $Env:GITHUB_OUTPUT
+      - uses: astral-sh/ruff-action@v1
+        with:
+          version: ${{ steps.ruff_version.outputs.RUFF_VERSION }}
+  mypy:
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
+        # Our minimum numpy 1 supported and latest numpy 2
+        # Can't test numpy 1.21 & 1.22, but the lost in type-safety is minimal
+        numpy-version: ["numpy>=2"]
+        # To save on workflow runtime, only test old numpy on extreme ends of Python version
+        # This should at least ensure support for oldest combination
+        # and let us know when newest numpy drops support for any Python version
+        include:
+          - python-version: "3.8"
+            numpy-version: "numpy==1.23.*"
+          - python-version: "3.13"
+            numpy-version: "numpy==1.23.*"
+    steps:
+      - name: Checkout ${{ github.repository }}/${{ github.ref }}
+        uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          version: "latest"
+          enable-cache: true
+          cache-dependency-glob: "pyproject.toml"
+      - name: Install Python ${{ matrix.python-version }}
+        run: uv python install ${{ matrix.python-version }}
+      - name: Install the project
+        run: uv pip install -r pyproject.toml ${{ matrix.numpy-version }} --all-extras --system
+      - run: mypy d3dshot/
+  Pyright:
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
+        # Our minimum numpy 1 supported and latest numpy 2
+        # Can't test numpy 1.21 & 1.22, but the lost in type-safety is minimal
+        numpy-version: ["numpy>=2"]
+        # To save on workflow runtime, only test old numpy on extreme ends of Python version
+        # This should at least ensure support for oldest combination
+        # and let us know when newest numpy drops support for any Python version
+        include:
+          - python-version: "3.8"
+            numpy-version: "numpy==1.23.*"
+          - python-version: "3.13"
+            numpy-version: "numpy==1.23.*"
+    steps:
+      - name: Checkout ${{ github.repository }}/${{ github.ref }}
+        uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          version: "latest"
+          enable-cache: true
+          cache-dependency-glob: "pyproject.toml"
+      - name: Install Python ${{ matrix.python-version }}
+        run: uv python install ${{ matrix.python-version }}
+      - name: Install the project
+        run: uv pip install -r pyproject.toml ${{ matrix.numpy-version }} --all-extras --system
+      - name: Analysing the code with Pyright
+        uses: jakebailey/pyright-action@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+          extra-args: --threads
+          version: PATH
+          working-directory: d3dshot/

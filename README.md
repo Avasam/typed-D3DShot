@@ -1,25 +1,29 @@
-# D3DShot
+# typed-D3DShot (D3DShot but statically typed!)
 
+This fork of the [now archived D3DShot](https://github.com/SerpentAI/D3DShot) aims to add static type-checking support by adding type annotations and making certain classes generic. With [typed-D3DShot](https://pypi.org/project/typed-D3DShot/), you don't need to install Typeshed's defunct [types-D3DShot](https://pypi.org/project/types-D3DShot/). `typed-D3DShot`'s own code is type-checked using [mypy](/mypy.ini) and [pyright](/pyrightconfig.json).
 
-_D3DShot_ is a pure Python implementation of the [Windows Desktop Duplication API](https://docs.microsoft.com/en-us/windows/desktop/direct3ddxgi/desktop-dup-api). It leverages DXGI and Direct3D system libraries to enable extremely fast and robust screen capture functionality for your Python scripts and applications on Windows. 
+Note that I do not intend on maintaining this library outside typing support and what I need for [AutoSplit](https://github.com/Toufool/AutoSplit).
+
+---
+
+_D3DShot_ is a pure Python implementation of the [Windows Desktop Duplication API](https://docs.microsoft.com/en-us/windows/desktop/direct3ddxgi/desktop-dup-api). It leverages DXGI and Direct3D system libraries to enable extremely fast and robust screen capture functionality for your Python scripts and applications on Windows.
 
 **D3DShot:**
 
 * Is by far the fastest way to capture the screen with Python on Windows 8.1+
 * Is very easy to use. If you can remember 10-ish methods, you know the entire thing.
 * Covers all common scenarios and use cases:
-	* Screenshot to memory
-	* Screenshot to disk
-	* Screenshot to memory buffer every X seconds (threaded; non-blocking)
-	* Screenshot to disk every X seconds (threaded; non-blocking)
-	* High-speed capture to memory buffer (threaded; non-blocking)
-* Captures to PIL Images out of the box. Gracefully adds output options if NumPy or PyTorch can be found.
+  * Screenshot to memory
+  * Screenshot to disk
+  * Screenshot to memory buffer every X seconds (threaded; non-blocking)
+  * Screenshot to disk every X seconds (threaded; non-blocking)
+  * High-speed capture to memory buffer (threaded; non-blocking)
+* Output options to capture to PIL Images, NumPy or PyTorch.
 * Detects displays in just about any configuration: Single monitor, multiple monitors on one adapter, multiple monitors on multiple adapters.
 * Handles display rotation and scaling for you
 * Supports capturing specific regions of the screen
 * Is robust and very stable. You can run it for hours / days without performance degradation
 * Is even able to capture DirectX 11 / 12 exclusive fullscreen applications and games!
-
 
 ### TL;DR Quick Code Samples
 
@@ -31,22 +35,26 @@ import d3dshot
 d = d3dshot.create()
 d.screenshot()
 ```
-```
+
+```python
 Out[1]: <PIL.Image.Image image mode=RGB size=2560x1440 at 0x1AA7ECB5C88>
 ```
 
 **Screenshot to Disk**
+
 ```python
 import d3dshot
 
 d = d3dshot.create()
 d.screenshot_to_disk()
 ```
-```
+
+```python
 Out[1]: './1554298682.5632973.png'
 ```
 
 **Screen Capture for 5 Seconds and Grab the Latest Frame**
+
 ```python
 import d3dshot
 import time
@@ -54,16 +62,18 @@ import time
 d = d3dshot.create()
 
 d.capture()
-time.sleep(5)  # Capture is non-blocking so we wait explicitely
+time.sleep(5)  # Capture is non-blocking so we wait explicitly
 d.stop()
 
 d.get_latest_frame()
 ```
-```
+
+```python
 Out[1]: <PIL.Image.Image image mode=RGB size=2560x1440 at 0x1AA044BCF60>
 ```
 
 **Screen Capture the Second Monitor as NumPy Arrays for 3 Seconds and Grab the 4 Latest Frames as a Stack**
+
 ```python
 import d3dshot
 import time
@@ -73,36 +83,50 @@ d = d3dshot.create(capture_output="numpy")
 d.display = d.displays[1]
 
 d.capture()
-time.sleep(3)  # Capture is non-blocking so we wait explicitely
+time.sleep(3)  # Capture is non-blocking so we wait explicitly
 d.stop()
 
 frame_stack = d.get_frame_stack((0, 1, 2, 3), stack_dimension="last")
 frame_stack.shape
 ```
-```
+
+```python
 Out[1]: (1080, 1920, 3, 4)
 ```
 
 This is barely scratching the surface... Keep reading!
 
-
 ## Requirements
 
 * Windows 8.1+ (64-bit)
-* Python 3.6+ (64-bit)
+* Python 3.8+ (64-bit)
 
 ## Installation
-
-```
-pip install d3dshot
-```
 
 _D3DShot_ leverages DLLs that are already available on your system so the dependencies are very light. Namely:
 
 * [_comtypes_](https://github.com/enthought/comtypes): Internal use. To preserve developer sanity while working with COM interfaces.
-* [_Pillow_](https://github.com/python-pillow/Pillow): Default Capture Output. Also used to save to disk as PNG and JPG.
 
 These dependencies will automatically be installed alongside _D3DShot_; No need to worry about them!
+
+Some more dependencies are required depending on your preferred capture output:
+
+* [_Pillow_](https://github.com/python-pillow/Pillow): Default Capture Output. Also used to save to disk as PNG and JPG.
+* [_NumPy_](https://github.com/numpy/numpy): Works extremely fast with multidimensional arrays, which images are.
+* [_PyTorch_](https://github.com/numpy/numpy): Offers Tensor computation with strong GPU acceleration.
+
+Optional dependencies (also known as "extras") are provided to make it easy to install all needed dependencies.
+
+```shell
+# For the NumPy capture output
+pip install d3dshot[numpy]
+# For the Pillow capture output
+pip install d3dshot[PIL]
+# For the PyTorch capture output
+pip install d3dshot[torch]
+# You can mix if needed
+pip install d3dshot[numpy][PIL]
+```
 
 ##### Extra Step: Laptop Users
 
@@ -121,7 +145,6 @@ d = d3dshot.create(capture_output="pil")
 ```
 
 _D3DShot_ is however quite flexible! As your environment meets certain optional sets of requirements, more options become available.
-
 
 **If _NumPy_ is available**
 
@@ -174,7 +197,6 @@ d == d2
 # Out[2]: True
 ```  
 
-
 ### Frame Buffer
 
 When you create a _D3DShot_ instance, a frame buffer is also initialized. It is meant as a thread-safe, first-in, first-out way to hold a certain quantity of captures and is implemented as a `collections.deque`.
@@ -203,7 +225,8 @@ When you create a _D3DShot_ instance, your available displays will automatically
 ```python
 d.displays
 ```
-```
+
+```python
 Out[1]: 
 [<Display name=BenQ XL2730Z (DisplayPort) adapter=NVIDIA GeForce GTX 1080 Ti resolution=2560x1440 rotation=0 scale_factor=1.0 primary=True>,
  <Display name=BenQ XL2430T (HDMI) adapter=Intel(R) UHD Graphics 630 resolution=1920x1080 rotation=0 scale_factor=1.0 primary=False>]
@@ -214,16 +237,19 @@ By default, your primary display will be selected. At all times you can verify w
 ```python
 d.display
 ```
-```
+
+```python
 Out[1]: <Display name=BenQ XL2730Z (DisplayPort) adapter=NVIDIA GeForce GTX 1080 Ti resolution=2560x1440 rotation=0 scale_factor=1.0 primary=True>
 ```
 
 Selecting another display for capture is as simple as setting `d.display` to another value from `d.displays`
+
 ```python
 d.display = d.displays[1]
 d.display
 ```
-```
+
+```python
 Out[1]: <Display name=BenQ XL2430T (HDMI) adapter=Intel(R) UHD Graphics 630 resolution=1080x1920 rotation=90 scale_factor=1.0 primary=False>
 ```
 
@@ -236,7 +262,7 @@ Display rotation and scaling is detected and handled for you by _D3DShot_:
 
 All capture methods (screenshots included) accept an optional `region` kwarg. The expected value is a 4-length tuple of integers that is to be structured like this:
 
-```
+```python
 (left, top, right, bottom)  # values represent pixels
 ```
 
@@ -246,7 +272,7 @@ For example, if you want to only capture a 200px by 200px region offset by 100px
 d.screenshot(region=(100, 100, 300, 300))
 ```
 
-If you are capturing a scaled display, the region will be computed against the full, non-scaled resolution. 
+If you are capturing a scaled display, the region will be computed against the full, non-scaled resolution.
 
 If you go through the source code, you will notice that the region cropping happens after a full display capture. That might seem sub-optimal but testing has revealed that copying a region of the GPU _D3D11Texture2D_ to the destination CPU _D3D11Texture2D_ using _CopySubresourceRegion_ is only faster when the region is very small. In fact, it doesn't take long for larger regions to actually start becoming slower than the full display capture using this method. To make things worse, it adds a lot of complexity by having the surface pitch not match the buffer size and treating rotated displays differently. It was therefore decided that it made more sense to stick to _CopyResource_ in all cases and crop after the fact.
 
@@ -277,7 +303,7 @@ d.displays
 
 **Select a display for capture**
 
-Your primary display is selected by default but if you have a multi-monitor setup, you can select another entry in `d.displays` 
+Your primary display is selected by default but if you have a multi-monitor setup, you can select another entry in `d.displays`
 
 ```python
 d.display = d.displays[1]
@@ -304,7 +330,7 @@ d.screenshot_to_disk()
 `screenshot_to_disk` accepts 3 optional kwargs:
 
 * `directory`: The path / directory where to write the file. If omitted, the working directory of the program will be used
-* `file_name`: The file name to use. Permitted extensions are: _.png_, _.jpg_. If omitted, the file name will be `<time.time()>.png` 
+* `file_name`: The file name to use. Permitted extensions are: _.png_, _.jpg_. If omitted, the file name will be `<time.time()>.png`
 * `region`: A region tuple. See the _Regions_ section under _Concepts_
 
 _Returns_: A string representing the full path to the saved image file
@@ -421,13 +447,14 @@ As always, remember that benchmarks are inherently flawed and highly depend on y
 | **"pytorch_gpu"**       | 27.333 FPS                        | 35.767 FPS                            | 34.8 FPS                                         |
 | **"pytorch_float_gpu"** | 27.267 FPS                        | 37.383 FPS                            | 35.033 FPS                                       |
 
-The absolute fastest capture outputs appear to be _"numpy"_ and unrotated _"pytorch"_; all averaging around 58 FPS. In Python land, this is FAST! 
+The absolute fastest capture outputs appear to be _"numpy"_ and unrotated _"pytorch"_; all averaging around 58 FPS. In Python land, this is FAST!
 
 #### How is the "numpy" capture output performance _that_ good?
 
 NumPy arrays have a ctypes interface that can give you their raw memory address (`X.ctypes.data`). If you have the memory address and size of another byte buffer, which is what we end up with by processing what returns from the Desktop Duplication API, you can use `ctypes.memmove` to copy that byte buffer directly to the NumPy structure, effectively bypassing as much Python as possible.
 
 In practice it ends up looking like this:
+
 ```python
 ctypes.memmove(np.empty((size,), dtype=np.uint8).ctypes.data, pointer, size)
 ```
@@ -451,7 +478,7 @@ It remains the default capture output because:
 
 The data of the Direct3D textures made accessible by the Desktop Duplication API is formatted as bytes. To represent this data as normalized floats instead, a type cast and element-wise division needs to be performed on the array holding those bytes. This imposes a major performance penalty. Interestingly, you can see this performance penalty mitigated on GPU PyTorch tensors since the element-wise division can be massively parallelized on the device.
 
-#
+## Acknowledgements
 
 _Crafted with ❤ by Serpent.AI 🐍_  
-[Twitter](https://twitter.com/Serpent_AI) - [Twitch](https://www.twitch.tv/serpent_ai)
+[Twitter](https://twitter.com/Serpent_AI) - [Twitch](https://www.twitch.tv/serpent_ai) - [GitHub](https://github.com/SerpentAI) - [@nbrochu](https://github.com/nbrochu)

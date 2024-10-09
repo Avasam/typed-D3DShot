@@ -1,44 +1,65 @@
-[tool.poetry]
-name = "D3DShot"
-version = "0.1.5"
-description = "Extremely Fast and Robust Screen Capture on Windows with the Desktop Duplication API"
-readme = "README.md"
-authors = ["Nicholas Brochu <nicholas@serpent.ai>"]
-license = "MIT"
-repository = "https://github.com/SerpentAI/D3DShot"
-keywords = ["Screen Capture", "Screenshot", "Computer Vision", "Windows"]
-classifiers = [
-    "Development Status :: 5 - Production/Stable",
-    "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
-    "Natural Language :: English",
-    "Operating System :: Microsoft :: Windows",
-    "Operating System :: Microsoft :: Windows :: Windows 8.1",
-    "Operating System :: Microsoft :: Windows :: Windows 10",
-    "Programming Language :: Python",
-    "Programming Language :: Python :: 3.8",
-    "Topic :: Multimedia :: Graphics",
-    "Topic :: Multimedia :: Graphics :: Capture",
-    "Topic :: Multimedia :: Graphics :: Capture :: Screen Capture"
-]
-packages = [
-    {include = "d3dshot"},
-]
-include = []
-
-[tool.poetry.dependencies]
-python = ">=3.6"
-
-comtypes = "~1.1.7"
-pillow = "~7.1.2"
-
-[tool.poetry.dev-dependencies]
-ipython = "~7.14"
-notebook = "~6.0"
-
-[tool.black]
-line-length = 99
 
 [build-system]
-requires = ["poetry>=0.12"]
-build-backend = "poetry.masonry.api"
+requires = ["setuptools >= 69.0.0"] # Automatically pickup `py.typed` file
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "typed-D3DShot"
+version = "1.0.0"
+description = "Extremely Fast, Robust, and Typed, Screen Capture on Windows with the Desktop Duplication API"
+readme = "README.md"
+authors = [{ name = "Nicholas Brochu", email = "nicholas@serpent.ai" }]
+maintainers = [{ name = "Avasam", email = "samuel.06@hotmail.com" }]
+license = { file = "LICENSE" }
+keywords = [
+  "Computer Vision",
+  "D3D",
+  "Desktop Duplication",
+  "Direct3D",
+  "Screen Capture",
+  "Screenshot",
+  "Windows",
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Natural Language :: English",
+  "Operating System :: Microsoft :: Windows",
+  "Operating System :: Microsoft :: Windows :: Windows 8.1",
+  "Operating System :: Microsoft :: Windows :: Windows 10",
+  "Operating System :: Microsoft :: Windows :: Windows 11",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Multimedia :: Graphics",
+  "Topic :: Multimedia :: Graphics :: Capture",
+  "Topic :: Multimedia :: Graphics :: Capture :: Screen Capture",
+]
+requires-python = ">= 3.8"
+dependencies = ["comtypes >= 1.1.7"]
+
+[project.optional-dependencies]
+# First version w/ Image.Transpose enums
+# 10.3.0 is the first py.typed, but we can do with simple type inference
+PIL = ["pillow >= 9.1.0"]
+# First py.typed version w/ numpy.typing.NDArray
+numpy = ["numpy >= 1.21.0"]
+# First py.typed version
+torch = ["torch >= 2.0.0", "typed-D3DShot[numpy]"]
+dev = [
+  # Always keep Ruff first for the CI
+  "ruff ~= 0.6.9",
+  "mypy == 1.11.*",
+  "pyright == 1.1.384",
+]
+
+[project.urls]
+Homepage = "https://github.com/Avasam/D3DShot"
+Repository = "https://github.com/Avasam/D3DShot.git"
+Issues = "https://github.com/Avasam/D3DShot/issues"
+Changelog = "https://github.com/Avasam/D3DShot/blob/HEAD/CHANGELOG.md"
