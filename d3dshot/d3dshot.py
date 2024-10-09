@@ -15,8 +15,12 @@ class Singleton(type):
         if cls not in cls._instances:
             cls._instances[cls] = super().__call__(*args, **kwargs)
         else:
-            print(
-                f"Only 1 instance of {cls.__name__} is allowed per process! Returning the existing instance..."
+            import warnings
+
+            warnings.warn(
+                f"Only 1 instance of {cls.__name__} is allowed per process!"
+                + "Returning the existing instance...",
+                stacklevel=1,
             )
 
         return cls._instances[cls]
