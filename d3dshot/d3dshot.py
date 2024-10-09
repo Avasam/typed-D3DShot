@@ -13,7 +13,7 @@ class Singleton(type):
 
     def __call__(cls, *args, **kwargs):
         if cls not in cls._instances:
-            cls._instances[cls] = super(Singleton, cls).__call__(*args, **kwargs)
+            cls._instances[cls] = super().__call__(*args, **kwargs)
         else:
             print(
                 f"Only 1 instance of {cls.__name__} is allowed per process! Returning the existing instance..."
@@ -31,7 +31,7 @@ class D3DShot(metaclass=Singleton):
         numpy_is_available=False,
         pytorch_is_available=False,
         pytorch_gpu_is_available=False,
-    ):
+    ) -> None:
         self.displays = None
         self.detect_displays()
 
@@ -45,7 +45,7 @@ class D3DShot(metaclass=Singleton):
         self.capture_output = CaptureOutput(backend=capture_output)
 
         self.frame_buffer_size = frame_buffer_size
-        self.frame_buffer = collections.deque(list(), self.frame_buffer_size)
+        self.frame_buffer = collections.deque([], self.frame_buffer_size)
 
         self.previous_screenshot = None
 
@@ -73,7 +73,7 @@ class D3DShot(metaclass=Singleton):
         return self.frame_buffer[frame_index]
 
     def get_frames(self, frame_indices):
-        frames = list()
+        frames = []
 
         for frame_index in frame_indices:
             frame = self.get_frame(frame_index)
@@ -84,7 +84,7 @@ class D3DShot(metaclass=Singleton):
         return frames
 
     def get_frame_stack(self, frame_indices, stack_dimension=None):
-        if stack_dimension not in ["first", "last"]:
+        if stack_dimension not in {"first", "last"}:
             stack_dimension = "first"
 
         frames = self.get_frames(frame_indices)
@@ -124,7 +124,7 @@ class D3DShot(metaclass=Singleton):
 
         return file_path
 
-    def frame_buffer_to_disk(self, directory=None):
+    def frame_buffer_to_disk(self, directory=None) -> None:
         directory = self._validate_directory(directory)
 
         # tuple cast to ensure an immutable frame buffer
@@ -132,7 +132,7 @@ class D3DShot(metaclass=Singleton):
             frame_pil = self.capture_output.to_pil(frame)
             frame_pil.save(f"{directory}/{i + 1}.png")
 
-    def capture(self, target_fps=60, region=None):
+    def capture(self, target_fps=60, region=None) -> bool:
         target_fps = self._validate_target_fps(target_fps)
 
         if self.is_capturing:
@@ -145,7 +145,7 @@ class D3DShot(metaclass=Singleton):
 
         return True
 
-    def screenshot_every(self, interval, region=None):
+    def screenshot_every(self, interval, region=None) -> bool:
         if self.is_capturing:
             return False
 
@@ -160,7 +160,7 @@ class D3DShot(metaclass=Singleton):
 
         return True
 
-    def screenshot_to_disk_every(self, interval, directory=None, region=None):
+    def screenshot_to_disk_every(self, interval, directory=None, region=None) -> bool:
         if self.is_capturing:
             return False
 
@@ -176,7 +176,7 @@ class D3DShot(metaclass=Singleton):
 
         return True
 
-    def stop(self):
+    def stop(self) -> bool:
         if not self.is_capturing:
             return False
 
@@ -188,7 +188,7 @@ class D3DShot(metaclass=Singleton):
 
         return True
 
-    def benchmark(self):
+    def benchmark(self) -> None:
         print("Preparing Benchmark...")
         print()
         print(f"Capture Output: {self.capture_output.backend.__class__.__name__}")
@@ -208,15 +208,15 @@ class D3DShot(metaclass=Singleton):
 
         print(f"Done! Results: {round(frame_count / 60, 3)} FPS")
 
-    def detect_displays(self):
+    def detect_displays(self) -> None:
         self._reset_displays()
         self.displays = Display.discover_displays()
 
-    def _reset_displays(self):
-        self.displays = list()
+    def _reset_displays(self) -> None:
+        self.displays = []
 
-    def _reset_frame_buffer(self):
-        self.frame_buffer = collections.deque(list(), self.frame_buffer_size)
+    def _reset_frame_buffer(self) -> None:
+        self.frame_buffer = collections.deque([], self.frame_buffer_size)
 
     def _validate_region(self, region):
         region = region or self.region or None
@@ -241,14 +241,13 @@ class D3DShot(metaclass=Singleton):
                 if value <= region[0]:
                     valid = False
                     break
-            elif i == 3:
-                if value <= region[1]:
-                    valid = False
-                    break
+            elif i == 3 and value <= region[1]:
+                valid = False
+                break
 
         if not valid:
             raise AttributeError(
-                """Invalid 'region' tuple. Make sure all values are ints and that 'right' and 
+                """Invalid 'region' tuple. Make sure all values are ints and that 'right' and
                 'bottom' values are greater than their 'left' and 'top' counterparts"""
             )
 
@@ -275,7 +274,7 @@ class D3DShot(metaclass=Singleton):
 
         file_extension = file_name.split(".")[-1]
 
-        if file_extension not in ["png", "jpg", "jpeg"]:
+        if file_extension not in {"png", "jpg", "jpeg"}:
             raise AttributeError("'file_name' needs to end in .png, .jpg or .jpeg")
 
         return file_name
@@ -289,7 +288,7 @@ class D3DShot(metaclass=Singleton):
 
         return interval
 
-    def _capture(self, target_fps, region):
+    def _capture(self, target_fps, region) -> None:
         self._reset_frame_buffer()
 
         frame_time = 1 / target_fps
@@ -317,7 +316,7 @@ class D3DShot(metaclass=Singleton):
 
         self._is_capturing = False
 
-    def _screenshot_every(self, interval, region):
+    def _screenshot_every(self, interval, region) -> None:
         self._reset_frame_buffer()
 
         while self.is_capturing:
@@ -335,7 +334,7 @@ class D3DShot(metaclass=Singleton):
 
         self._is_capturing = False
 
-    def _screenshot_to_disk_every(self, interval, directory, region):
+    def _screenshot_to_disk_every(self, interval, directory, region) -> None:
         while self.is_capturing:
             cycle_start = time.time()
 

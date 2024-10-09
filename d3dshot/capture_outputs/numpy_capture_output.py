@@ -7,7 +7,7 @@ from d3dshot.capture_output import CaptureOutput
 
 
 class NumpyCaptureOutput(CaptureOutput):
-    def __init__(self):
+    def __init__(self) -> None:
         pass
 
     def process(self, pointer, pitch, size, width, height, region, rotation):
@@ -29,9 +29,9 @@ class NumpyCaptureOutput(CaptureOutput):
             image = np.rot90(image, axes=(0, 1))
 
         # Trim pitch padding
-        if rotation in (0, 180) and pitch_per_channel != width:
+        if rotation in {0, 180} and pitch_per_channel != width:
             image = image[:, :width, :]
-        elif rotation in (90, 270) and pitch_per_channel != height:
+        elif rotation in {90, 270} and pitch_per_channel != height:
             image = image[:height, :, :]
 
         # Region slicing
