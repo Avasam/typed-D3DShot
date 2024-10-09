@@ -2,6 +2,12 @@ import d3dshot.dll.d3d
 import d3dshot.dll.dxgi
 import d3dshot.dll.shcore
 import d3dshot.dll.user32
+class DisplayCaptureError(Exception):
+    pass
+
+
+class DisplayCaptureWarning(DisplayCaptureError, Warning):  # noqa: N818
+    pass
 
 
 class Display:
@@ -43,10 +49,9 @@ class Display:
 
     def capture(self, process_func, region=None):
         region = self._get_clean_region(region)
-        frame = None
 
         try:
-            frame = d3dshot.dll.dxgi.get_dxgi_output_duplication_frame(
+            return d3dshot.dll.dxgi.get_dxgi_output_duplication_frame(
                 self.dxgi_output_duplication,
                 self.d3d_device,
                 process_func=process_func,
@@ -55,10 +60,19 @@ class Display:
                 region=region,
                 rotation=self.rotation,
             )
-        except:
-            pass
+        except Exception as _error:  # noqa: BLE001 # See warning. We want more precise exceptions eventually
+            import traceback
+            import warnings
 
-        return frame
+            warnings.warn(
+                "Caught an Error in Display.capture, downgrading to Warning. "
+                + "This may become a CaptureOutputError in the future:\n"
+                + traceback.format_exc(),
+                DisplayCaptureWarning,
+                stacklevel=2,
+            )
+            # raise DisplayCaptureError(*error.args) from _error
+            return None
 
     def _initialize_dxgi_output_duplication(self):
         (
