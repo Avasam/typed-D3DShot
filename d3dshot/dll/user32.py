@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import ctypes
 from ctypes import wintypes
 
@@ -13,7 +15,7 @@ class DISPLAY_DEVICE(ctypes.Structure):
     )
 
 
-def get_display_device_name_mapping():
+def get_display_device_name_mapping() -> dict[str, tuple[str, bool]]:
     display_names = []
 
     i = 0
@@ -47,5 +49,5 @@ def get_display_device_name_mapping():
     return display_device_name_mapping
 
 
-def get_hmonitor_by_point(x, y):
+def get_hmonitor_by_point(x: int, y: int) -> int:
     return ctypes.windll.user32.MonitorFromPoint(wintypes.POINT(x, y), 0)

@@ -1,7 +1,23 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Literal, TypeVar, overload
+
 import d3dshot.dll.d3d
 import d3dshot.dll.dxgi
 import d3dshot.dll.shcore
 import d3dshot.dll.user32
+from d3dshot._compat import override
+
+if TYPE_CHECKING:
+    from _ctypes import _Pointer
+    from collections.abc import Callable, Sequence
+    from ctypes import _CVoidConstPLike
+
+    from typing_extensions import Self
+
+_T = TypeVar("_T")
+
+
 class DisplayCaptureError(Exception):
     pass
 
@@ -11,26 +27,64 @@ class DisplayCaptureWarning(DisplayCaptureError, Warning):  # noqa: N818
 
 
 class Display:
+    @overload
     def __init__(
         self,
-        name=None,
-        adapter_name=None,
-        resolution=None,
-        position=None,
-        rotation=None,
-        scale_factor=None,
-        is_primary=False,
-        hmonitor=None,
-        dxgi_output=None,
-        dxgi_adapter=None,
+        name: str | None,
+        adapter_name: str | None,
+        resolution: tuple[int, int] | None,
+        position: d3dshot.dll.dxgi.PositionDict | None,
+        rotation: Literal[0, 90, 180, 270] | None,
+        scale_factor: float | None,
+        is_primary: bool,
+        hmonitor: int | None,
+        dxgi_output: _Pointer[d3dshot.dll.dxgi.IDXGIOutput1],
+        dxgi_adapter: _Pointer[d3dshot.dll.dxgi.IDXGIAdapter]
+        | _Pointer[d3dshot.dll.dxgi.IDXGIAdapter1],
+    ) -> None: ...
+    @overload
+    def __init__(
+        self,
+        name: str | None = None,
+        adapter_name: str | None = None,
+        resolution: tuple[int, int] | None = None,
+        position: d3dshot.dll.dxgi.PositionDict | None = None,
+        rotation: Literal[0, 90, 180, 270] | None = None,
+        scale_factor: float | None = None,
+        is_primary: bool = False,
+        hmonitor: int | None = None,
+        *,
+        dxgi_output: _Pointer[d3dshot.dll.dxgi.IDXGIOutput1],
+        dxgi_adapter: _Pointer[d3dshot.dll.dxgi.IDXGIAdapter]
+        | _Pointer[d3dshot.dll.dxgi.IDXGIAdapter1],
+    ) -> None: ...
+    def __init__(  # noqa: PLR0913, PLR0917
+        self,
+        name: str | None = None,
+        adapter_name: str | None = None,
+        resolution: tuple[int, int] | None = None,
+        position: d3dshot.dll.dxgi.PositionDict | None = None,
+        rotation: Literal[0, 90, 180, 270] | None = None,
+        scale_factor: float | None = None,
+        is_primary: bool = False,
+        hmonitor: int | None = None,
+        dxgi_output: _Pointer[d3dshot.dll.dxgi.IDXGIOutput1] | None = None,
+        # Mypy doesn't support _ctypes._Pointer subclasses,
+        # so we must specify a union of all subclasses in param
+        dxgi_adapter: _Pointer[d3dshot.dll.dxgi.IDXGIAdapter]
+        | _Pointer[d3dshot.dll.dxgi.IDXGIAdapter1]
+        | None = None,
     ) -> None:
+        if dxgi_output is None or dxgi_adapter is None:
+            # TODO (Avasam): Consider removing default param in an update
+            raise TypeError("dxgi_output and dxgi_adapter parameters for Display() cannot be None")
         self.name = name or "Unknown"
         self.adapter_name = adapter_name or "Unknown Adapter"
 
         self.resolution = resolution or (0, 0)
 
         self.position = position or d3dshot.dll.dxgi.PositionDict(left=0, top=0, right=0, bottom=0)
-        self.rotation = rotation or 0
+        self.rotation: Literal[0, 90, 180, 270] = rotation or 0
         self.scale_factor = scale_factor or 1.0
 
         self.is_primary = is_primary
@@ -39,15 +93,34 @@ class Display:
         self.dxgi_output = dxgi_output
         self.dxgi_adapter = dxgi_adapter
 
-        self.d3d_device = None
-        self.d3d_device_context = None
-
         self.dxgi_output_duplication = self._initialize_dxgi_output_duplication()
 
+    @override
     def __repr__(self) -> str:
-        return f"<Display name={self.name} adapter={self.adapter_name} resolution={self.resolution[0]}x{self.resolution[1]} rotation={self.rotation} scale_factor={self.scale_factor} primary={self.is_primary}>"
+        name = self.name
+        adapter = self.adapter_name
+        resolution = f"{self.resolution[0]}x{self.resolution[1]}"
+        rotation = self.rotation
+        scale_factor = {self.scale_factor}
+        primary = {self.is_primary}
+        return f"<Display {name=} {adapter=} {resolution=} {rotation=} {scale_factor=} {primary=}>"
 
-    def capture(self, process_func, region=None):
+    def capture(
+        self,
+        process_func: Callable[
+            [
+                _CVoidConstPLike,
+                int,
+                int,
+                int,
+                int,
+                tuple[int, int, int, int],
+                Literal[0, 90, 180, 270],
+            ],
+            _T,
+        ],
+        region: Sequence[int] | None = None,
+    ) -> _T | None:
         region = self._get_clean_region(region)
 
         try:
@@ -74,7 +147,9 @@ class Display:
             # raise DisplayCaptureError(*error.args) from _error
             return None
 
-    def _initialize_dxgi_output_duplication(self):
+    def _initialize_dxgi_output_duplication(
+        self,
+    ) -> _Pointer[d3dshot.dll.dxgi.IDXGIOutputDuplication]:
         (
             self.d3d_device,
             self.d3d_device_context,
@@ -84,7 +159,7 @@ class Display:
             self.dxgi_output, self.d3d_device
         )
 
-    def _get_clean_region(self, region):
+    def _get_clean_region(self, region: Sequence[int] | None) -> tuple[int, int, int, int]:
         if region is None:
             return (0, 0, self.resolution[0], self.resolution[1])
 
@@ -96,7 +171,7 @@ class Display:
         )
 
     @classmethod
-    def discover_displays(cls):
+    def discover_displays(cls) -> list[Self]:
         display_device_name_mapping = d3dshot.dll.user32.get_display_device_name_mapping()
 
         dxgi_factory = d3dshot.dll.dxgi.initialize_dxgi_factory()

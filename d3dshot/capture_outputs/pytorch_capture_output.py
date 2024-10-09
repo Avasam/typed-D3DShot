@@ -1,23 +1,46 @@
+from __future__ import annotations
+
 import ctypes
+from typing import TYPE_CHECKING, Literal
 
 import numpy as np
 import torch
 
+from d3dshot._compat import override
 from d3dshot.capture_output import CaptureOutput
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
+    from ctypes import _CVoidConstPLike
+
+    import numpy.typing as npt
+    from PIL import Image
+    from typing_extensions import Self
 
 
 class PytorchCaptureOutput(CaptureOutput):
-    def __init__(self) -> None:
-        pass
+    def __new__(cls) -> Self:
+        return super(CaptureOutput, cls).__new__(cls)  # type: ignore[misc]
 
-    def process(self, pointer, pitch, size, width, height, region, rotation):
+    @override
+    def process(
+        self,
+        pointer: _CVoidConstPLike,
+        pitch: int,
+        size: int,
+        width: int,
+        height: int,
+        region: tuple[int, int, int, int],
+        rotation: Literal[0, 90, 180, 270],
+    ) -> torch.Tensor:
         # We proxy through numpy's ctypes interface because making
         # a PyTorch tensor from a bytearray is HORRIBLY slow...
-        image = np.empty((size,), dtype=np.uint8)
+        image: npt.NDArray[np.uint8] = np.empty((size,), dtype=np.uint8)
         ctypes.memmove(image.ctypes.data, pointer, size)
 
         pitch_per_channel = pitch // 4
 
+        # Use match-case in Python 3.10
         if rotation == 0:
             image = np.reshape(image, (height, pitch_per_channel, 4))[..., [2, 1, 0]]
         elif rotation == 90:
@@ -42,14 +65,25 @@ class PytorchCaptureOutput(CaptureOutput):
 
         return torch.from_numpy(image)
 
+    @override
+    def to_pil(self, frame: npt.ArrayLike) -> Image.Image:
         from PIL import Image
 
         return Image.fromarray(np.array(frame))
 
-    def stack(self, frames, stack_dimension):
+    @override
+    def stack(
+        self,
+        frames: Sequence[torch.Tensor],
+        stack_dimension: Literal["first", "last"],
+    ) -> torch.Tensor:
         if stack_dimension == "first":
             dimension = 0
         elif stack_dimension == "last":
             dimension = -1
+        else:
+            raise ValueError(f"stack_dimension must be 'first' or 'last', got {stack_dimension!r}")
 
-        return torch.stack(frames, dim=dimension)
+        # I assume torch's type is wrong and it can take any sequence
+        # If untrue, let's coerce it to a tuple/list
+        return torch.stack(frames, dim=dimension)  # type: ignore[arg-type]

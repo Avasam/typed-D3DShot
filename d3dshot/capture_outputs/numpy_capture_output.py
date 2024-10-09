@@ -1,20 +1,47 @@
+from __future__ import annotations
+
 import ctypes
+from typing import TYPE_CHECKING, Literal, TypeVar
 
 import numpy as np
 
+from d3dshot._compat import override
 from d3dshot.capture_output import CaptureOutput
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
+    from ctypes import _CVoidConstPLike
+
+    import numpy.typing as npt
+    from numpy._typing._array_like import _ArrayLike
+    from PIL import Image
+    from typing_extensions import Self
+
+    # Same as numpy._core.shape_base._SCT, which was as numpy.core.shape_base._SCT before numpy 2
+    _SCT = TypeVar("_SCT", bound=np.generic)
 
 
 class NumpyCaptureOutput(CaptureOutput):
-    def __init__(self) -> None:
-        pass
+    def __new__(cls) -> Self:
+        return super(CaptureOutput, cls).__new__(cls)  # type: ignore[misc]
 
-    def process(self, pointer, pitch, size, width, height, region, rotation):
-        image = np.empty((size,), dtype=np.uint8)
+    @override
+    def process(
+        self,
+        pointer: _CVoidConstPLike,
+        pitch: int,
+        size: int,
+        width: int,
+        height: int,
+        region: tuple[int, int, int, int],
+        rotation: Literal[0, 90, 180, 270],
+    ) -> npt.NDArray[np.uint8]:
+        image: npt.NDArray[np.uint8] = np.empty((size,), dtype=np.uint8)
         ctypes.memmove(image.ctypes.data, pointer, size)
 
         pitch_per_channel = pitch // 4
 
+        # Use match-case in Python 3.10
         if rotation == 0:
             image = np.reshape(image, (height, pitch_per_channel, 4))[..., [2, 1, 0]]
         elif rotation == 90:
@@ -39,14 +66,23 @@ class NumpyCaptureOutput(CaptureOutput):
 
         return image
 
+    @override
+    def to_pil(self, frame: Image.SupportsArrayInterface) -> Image.Image:
         from PIL import Image
 
         return Image.fromarray(frame)
 
-    def stack(self, frames, stack_dimension):
+    @override
+    # use of generics allows us to be more precise,
+    # even if realistically we'll only get uint8 or floating
+    def stack(  # pyright: ignore[reportIncompatibleMethodOverride]
+        self, frames: Sequence[_ArrayLike[_SCT]], stack_dimension: Literal["first", "last"]
+    ) -> npt.NDArray[_SCT]:
         if stack_dimension == "first":
             dimension = 0
         elif stack_dimension == "last":
             dimension = -1
+        else:
+            raise ValueError(f"stack_dimension must be 'first' or 'last', got {stack_dimension!r}")
 
         return np.stack(frames, axis=dimension)

@@ -1,5 +1,8 @@
+from __future__ import annotations
+
 import ctypes
 from ctypes import wintypes
+from typing import TYPE_CHECKING, Literal, TypedDict, TypeVar
 
 import comtypes
 
@@ -9,6 +12,13 @@ from d3dshot.dll.d3d import (
     ID3D11Texture2D,
     prepare_d3d11_texture_2d_for_cpu,
 )
+
+if TYPE_CHECKING:
+    from _ctypes import _Pointer
+    from collections.abc import Callable
+    from ctypes import _CVoidConstPLike
+
+_T = TypeVar("_T")
 
 
 class LUID(ctypes.Structure):
@@ -61,7 +71,7 @@ class DXGI_MAPPED_RECT(ctypes.Structure):
     _fields_ = (("Pitch", wintypes.INT), ("pBits", ctypes.POINTER(wintypes.FLOAT)))
 
 
-class IDXGIObject(comtypes.IUnknown):
+class IDXGIObject(comtypes.IUnknown):  # type:ignore[misc] # TODO (Avasam): Figure out why it's Any
     _iid_ = comtypes.GUID("{aec22fb8-76f3-4639-9be0-28eb43a67a2e}")
     _methods_ = [
         comtypes.STDMETHOD(comtypes.HRESULT, "SetPrivateData"),
@@ -199,7 +209,7 @@ class IDXGIFactory1(IDXGIFactory):
     ]
 
 
-def initialize_dxgi_factory():
+def initialize_dxgi_factory() -> _Pointer[IDXGIFactory1]:
     create_factory_func = ctypes.windll.dxgi.CreateDXGIFactory1
 
     create_factory_func.argtypes = (comtypes.GUID, ctypes.POINTER(ctypes.c_void_p))
@@ -208,10 +218,12 @@ def initialize_dxgi_factory():
     handle = ctypes.c_void_p(0)
 
     create_factory_func(IDXGIFactory1._iid_, ctypes.byref(handle))
-    return ctypes.POINTER(IDXGIFactory1)(handle.value)
+    idxgi_factory = ctypes.POINTER(IDXGIFactory1)(handle.value)  # type: ignore[call-overload]
+
+    return idxgi_factory  # noqa: RET504 # Keep for explicit name since we don't have types
 
 
-def discover_dxgi_adapters(dxgi_factory):
+def discover_dxgi_adapters(dxgi_factory: _Pointer[IDXGIFactory1]) -> list[_Pointer[IDXGIAdapter1]]:
     dxgi_adapters = []
 
     for i in range(10):
@@ -220,29 +232,33 @@ def discover_dxgi_adapters(dxgi_factory):
             dxgi_factory.EnumAdapters1(i, ctypes.byref(dxgi_adapter))
 
             dxgi_adapters.append(dxgi_adapter)
-        except comtypes.COMError:
+        except comtypes.COMError:  # noqa: PERF203 # using exception to signal end of iteration
             break
 
     return dxgi_adapters
 
 
-def describe_dxgi_adapter(dxgi_adapter):
+def describe_dxgi_adapter(dxgi_adapter: _Pointer[IDXGIAdapter1]) -> str:
     dxgi_adapter_description = DXGI_ADAPTER_DESC1()
     dxgi_adapter.GetDesc1(ctypes.byref(dxgi_adapter_description))
 
     return dxgi_adapter_description.Description
 
 
-def discover_dxgi_outputs(dxgi_adapter):
+def discover_dxgi_outputs(
+    dxgi_adapter: _Pointer[IDXGIAdapter] | _Pointer[IDXGIAdapter1],
+) -> list[_Pointer[IDXGIOutput1]]:
     dxgi_outputs = []
 
     for i in range(10):
         try:
             dxgi_output = ctypes.POINTER(IDXGIOutput1)()
-            dxgi_adapter.EnumOutputs(i, ctypes.byref(dxgi_output))
+            # Mypy doesn't support _ctypes._Pointer subclasses,
+            # so we must specify a union of all subclasses in param
+            dxgi_adapter.EnumOutputs(i, ctypes.byref(dxgi_output))  # type: ignore[union-attr]
 
             dxgi_outputs.append(dxgi_output)
-        except comtypes.COMError:
+        except comtypes.COMError:  # noqa: PERF203 # using exception to signal end of iteration
             break
 
     return dxgi_outputs
@@ -292,7 +308,9 @@ def describe_dxgi_output(dxgi_output: _Pointer[IDXGIOutput1]) -> DXGIOutputDict:
     )
 
 
-def initialize_dxgi_output_duplication(dxgi_output, d3d_device):
+def initialize_dxgi_output_duplication(
+    dxgi_output: _Pointer[IDXGIOutput1], d3d_device: _Pointer[ID3D11Device]
+) -> _Pointer[IDXGIOutputDuplication]:
     dxgi_output_duplication = ctypes.POINTER(IDXGIOutputDuplication)()
     dxgi_output.DuplicateOutput(d3d_device, ctypes.byref(dxgi_output_duplication))
 
@@ -300,14 +318,17 @@ def initialize_dxgi_output_duplication(dxgi_output, d3d_device):
 
 
 def get_dxgi_output_duplication_frame(
-    dxgi_output_duplication,
-    d3d_device,
-    process_func=None,
-    width=0,
-    height=0,
-    region=None,
-    rotation=0,
-):
+    dxgi_output_duplication: _Pointer[IDXGIOutputDuplication],
+    d3d_device: _Pointer[ID3D11Device],
+    process_func: Callable[
+        [_CVoidConstPLike, int, int, int, int, tuple[int, int, int, int], Literal[0, 90, 180, 270]],
+        _T,
+    ],
+    width: int = 0,
+    height: int = 0,
+    region: tuple[int, int, int, int] | None = None,
+    rotation: Literal[0, 90, 180, 270] = 0,
+) -> _T | None:
     dxgi_output_duplication_frame_information = DXGI_OUTDUPL_FRAME_INFO()
     dxgi_resource = ctypes.POINTER(IDXGIResource)()
 
