@@ -1,18 +1,27 @@
-import enum
+from enum import Enum, auto
+from typing import Final
 
 
-class CaptureOutputs(enum.Enum):
-    PIL = 0
-    NUMPY = 1
-    NUMPY_FLOAT = 2
-    PYTORCH = 3
-    PYTORCH_FLOAT = 4
-    PYTORCH_GPU = 5
-    PYTORCH_FLOAT_GPU = 6
+class CaptureOutputs(Enum):
+    PIL = auto()
+    NUMPY = auto()
+    NUMPY_FLOAT = auto()
+    PYTORCH = auto()
+    PYTORCH_FLOAT = auto()
+    PYTORCH_GPU = auto()
+    PYTORCH_FLOAT_GPU = auto()
 
 
-class CaptureOutputError(BaseException):
-    pass
+capture_output_mapping: Final = {
+    capture_output.name.lower(): capture_output for capture_output in CaptureOutputs
+}
+"""Deprecated, use `CaptureOutputs[key.upper()]` instead of `capture_output_mapping[key]`"""
+capture_outputs: Final = [capture_output.name.lower() for capture_output in CaptureOutputs]
+"""
+Deprecated,
+  use `CaptureOutputs.PIL.name` instead of `capture_outputs[CaptureOutputs.PIL.value]`
+  use `CaptureOutputs(value).name` instead of `capture_outputs[value]`
+"""
 
 
 class CaptureOutput:
