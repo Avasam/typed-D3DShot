@@ -1,6 +1,8 @@
-import importlib.util
-
-from d3dshot.capture_output import CaptureOutputs
+from d3dshot.capture_output import (
+    CaptureOutputs,
+    capture_output_mapping,  # noqa: F401 # Deprecated, make it still runtime available
+    capture_outputs,  # noqa: F401 # Deprecated, make it still runtime available
+)
 from d3dshot.d3dshot import D3DShot
 
 pil_is_available = importlib.util.find_spec("PIL") is not None
@@ -15,26 +17,6 @@ if pytorch_is_available:
 
     pytorch_gpu_is_available = torch.cuda.is_available()
 
-
-capture_output_mapping = {
-    "pil": CaptureOutputs.PIL,
-    "numpy": CaptureOutputs.NUMPY,
-    "numpy_float": CaptureOutputs.NUMPY_FLOAT,
-    "pytorch": CaptureOutputs.PYTORCH,
-    "pytorch_float": CaptureOutputs.PYTORCH_FLOAT,
-    "pytorch_gpu": CaptureOutputs.PYTORCH_GPU,
-    "pytorch_float_gpu": CaptureOutputs.PYTORCH_FLOAT_GPU,
-}
-
-capture_outputs = [
-    "pil",
-    "numpy",
-    "numpy_float",
-    "pytorch",
-    "pytorch_float",
-    "pytorch_gpu",
-    "pytorch_float_gpu",
-]
 
 
 def determine_available_capture_outputs():
@@ -72,17 +54,27 @@ def create(capture_output="pil", frame_buffer_size=60):
     )
 
 
-def _validate_capture_output(capture_output):
+def _raise_invalid_output_name(
+    capture_output_name: str,
+    available_capture_outputs: Iterable[CaptureOutputs],
+    error: KeyError | None,
+) -> NoReturn:
+    raise ValueError(
+        f"Invalid Capture Output '{capture_output_name}'. Available Options: "
+        + ", ".join([co.name.lower() for co in available_capture_outputs])
+    ) from error
+
+
+def _validate_capture_output_available(capture_output_name: str) -> CaptureOutputs:
     available_capture_outputs = determine_available_capture_outputs()
 
-    capture_output_name = capture_output
-    capture_output = capture_output_mapping.get(capture_output)
+    try:
+        capture_output = CaptureOutputs[capture_output_name.upper()]
+    except KeyError as error:
+        _raise_invalid_output_name(capture_output_name, available_capture_outputs, error)
 
     if capture_output not in available_capture_outputs:
-        available_capture_outputs = [capture_outputs[co.value] for co in available_capture_outputs]
-        raise AttributeError(
-            f"Invalid Capture Output '{capture_output_name}'. Available Options: {', '.join(available_capture_outputs)}"
-        )
+        _raise_invalid_output_name(capture_output_name, available_capture_outputs, None)
 
     return capture_output
 
