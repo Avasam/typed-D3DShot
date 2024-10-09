@@ -1,6 +1,3 @@
-.vscode
-.idea
-
 __pycache__/
 *.py[cod]
 
@@ -10,5 +7,5 @@ __pycache__/
 
 build/
 dist/
-
-poetry.lock
+*.lock
+!uv.lock
