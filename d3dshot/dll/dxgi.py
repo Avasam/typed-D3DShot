@@ -12,11 +12,11 @@ from d3dshot.dll.d3d import (
 
 
 class LUID(ctypes.Structure):
-    _fields_ = [("LowPart", wintypes.DWORD), ("HighPart", wintypes.LONG)]
+    _fields_ = (("LowPart", wintypes.DWORD), ("HighPart", wintypes.LONG))
 
 
 class DXGI_ADAPTER_DESC1(ctypes.Structure):
-    _fields_ = [
+    _fields_ = (
         ("Description", wintypes.WCHAR * 128),
         ("VendorId", wintypes.UINT),
         ("DeviceId", wintypes.UINT),
@@ -27,25 +27,25 @@ class DXGI_ADAPTER_DESC1(ctypes.Structure):
         ("SharedSystemMemory", wintypes.ULARGE_INTEGER),
         ("AdapterLuid", LUID),
         ("Flags", wintypes.UINT),
-    ]
+    )
 
 
 class DXGI_OUTPUT_DESC(ctypes.Structure):
-    _fields_ = [
+    _fields_ = (
         ("DeviceName", wintypes.WCHAR * 32),
         ("DesktopCoordinates", wintypes.RECT),
         ("AttachedToDesktop", wintypes.BOOL),
         ("Rotation", wintypes.UINT),
         ("Monitor", wintypes.HMONITOR),
-    ]
+    )
 
 
 class DXGI_OUTDUPL_POINTER_POSITION(ctypes.Structure):
-    _fields_ = [("Position", wintypes.POINT), ("Visible", wintypes.BOOL)]
+    _fields_ = (("Position", wintypes.POINT), ("Visible", wintypes.BOOL))
 
 
 class DXGI_OUTDUPL_FRAME_INFO(ctypes.Structure):
-    _fields_ = [
+    _fields_ = (
         ("LastPresentTime", wintypes.LARGE_INTEGER),
         ("LastMouseUpdateTime", wintypes.LARGE_INTEGER),
         ("AccumulatedFrames", wintypes.UINT),
@@ -54,11 +54,11 @@ class DXGI_OUTDUPL_FRAME_INFO(ctypes.Structure):
         ("PointerPosition", DXGI_OUTDUPL_POINTER_POSITION),
         ("TotalMetadataBufferSize", wintypes.UINT),
         ("PointerShapeBufferSize", wintypes.UINT),
-    ]
+    )
 
 
 class DXGI_MAPPED_RECT(ctypes.Structure):
-    _fields_ = [("Pitch", wintypes.INT), ("pBits", ctypes.POINTER(wintypes.FLOAT))]
+    _fields_ = (("Pitch", wintypes.INT), ("pBits", ctypes.POINTER(wintypes.FLOAT)))
 
 
 class IDXGIObject(comtypes.IUnknown):

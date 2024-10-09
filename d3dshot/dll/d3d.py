@@ -5,25 +5,25 @@ import comtypes
 
 
 class DXGI_SAMPLE_DESC(ctypes.Structure):
-    _fields_ = [
+    _fields_ = (
         ("Count", wintypes.UINT),
         ("Quality", wintypes.UINT),
-    ]
+    )
 
 
 class D3D11_BOX(ctypes.Structure):
-    _fields_ = [
+    _fields_ = (
         ("left", wintypes.UINT),
         ("top", wintypes.UINT),
         ("front", wintypes.UINT),
         ("right", wintypes.UINT),
         ("bottom", wintypes.UINT),
         ("back", wintypes.UINT),
-    ]
+    )
 
 
 class D3D11_TEXTURE2D_DESC(ctypes.Structure):
-    _fields_ = [
+    _fields_ = (
         ("Width", wintypes.UINT),
         ("Height", wintypes.UINT),
         ("MipLevels", wintypes.UINT),
@@ -34,7 +34,7 @@ class D3D11_TEXTURE2D_DESC(ctypes.Structure):
         ("BindFlags", wintypes.UINT),
         ("CPUAccessFlags", wintypes.UINT),
         ("MiscFlags", wintypes.UINT),
-    ]
+    )
 
 
 class ID3D11DeviceChild(comtypes.IUnknown):
