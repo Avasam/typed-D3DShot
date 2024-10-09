@@ -248,21 +248,36 @@ def discover_dxgi_outputs(dxgi_adapter):
     return dxgi_outputs
 
 
-def describe_dxgi_output(dxgi_output):
+class PositionDict(TypedDict):
+    left: int
+    top: int
+    right: int
+    bottom: int
+
+
+class DXGIOutputDict(TypedDict):
+    name: str
+    position: PositionDict
+    resolution: tuple[int, int]
+    rotation: Literal[0, 90, 180, 270]
+    is_attached_to_desktop: bool
+
+
+def describe_dxgi_output(dxgi_output: _Pointer[IDXGIOutput1]) -> DXGIOutputDict:
     dxgi_output_description = DXGI_OUTPUT_DESC()
     dxgi_output.GetDesc(ctypes.byref(dxgi_output_description))
 
-    rotation_mapping = {0: 0, 1: 0, 2: 90, 3: 180, 4: 270}
+    rotation_mapping: dict[int, Literal[0, 90, 180, 270]] = {0: 0, 1: 0, 2: 90, 3: 180, 4: 270}
 
-    return {
-        "name": dxgi_output_description.DeviceName.split("\\")[-1],
-        "position": {
-            "left": dxgi_output_description.DesktopCoordinates.left,
-            "top": dxgi_output_description.DesktopCoordinates.top,
-            "right": dxgi_output_description.DesktopCoordinates.right,
-            "bottom": dxgi_output_description.DesktopCoordinates.bottom,
-        },
-        "resolution": (
+    return DXGIOutputDict(
+        name=dxgi_output_description.DeviceName.split("\\")[-1],
+        position=PositionDict(
+            left=dxgi_output_description.DesktopCoordinates.left,
+            top=dxgi_output_description.DesktopCoordinates.top,
+            right=dxgi_output_description.DesktopCoordinates.right,
+            bottom=dxgi_output_description.DesktopCoordinates.bottom,
+        ),
+        resolution=(
             (
                 dxgi_output_description.DesktopCoordinates.right
                 - dxgi_output_description.DesktopCoordinates.left
@@ -272,9 +287,9 @@ def describe_dxgi_output(dxgi_output):
                 - dxgi_output_description.DesktopCoordinates.top
             ),
         ),
-        "rotation": rotation_mapping.get(dxgi_output_description.Rotation, 0),
-        "is_attached_to_desktop": bool(dxgi_output_description.AttachedToDesktop),
-    }
+        rotation=rotation_mapping.get(dxgi_output_description.Rotation, 0),
+        is_attached_to_desktop=bool(dxgi_output_description.AttachedToDesktop),
+    )
 
 
 def initialize_dxgi_output_duplication(dxgi_output, d3d_device):

@@ -23,7 +23,7 @@ class Display:
 
         self.resolution = resolution or (0, 0)
 
-        self.position = position or {"left": 0, "top": 0, "right": 0, "bottom": 0}
+        self.position = position or d3dshot.dll.dxgi.PositionDict(left=0, top=0, right=0, bottom=0)
         self.rotation = rotation or 0
         self.scale_factor = scale_factor or 1.0
 
