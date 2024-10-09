@@ -138,4 +138,5 @@ class CaptureOutput:
         raise ValueError("The specified backend is invalid!")
 
 
+# No default, enforce this generic parameter!
 CaptureOutputBackend = TypeVar("CaptureOutputBackend", bound=CaptureOutput)

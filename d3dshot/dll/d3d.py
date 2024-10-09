@@ -261,7 +261,7 @@ class ID3D11Device(comtypes.IUnknown):  # type:ignore[misc] # TODO (Avasam): Fig
 
 
 def initialize_d3d_device(
-    dxgi_adapter: _Pointer[IDXGIAdapter] | _Pointer[IDXGIAdapter1],
+    dxgi_adapter: _Pointer[IDXGIAdapter] | _Pointer[IDXGIAdapter1] | None,
 ) -> tuple[_Pointer[ID3D11Device], _Pointer[ID3D11DeviceContext]]:
     initialize_func = ctypes.windll.d3d11.D3D11CreateDevice
 

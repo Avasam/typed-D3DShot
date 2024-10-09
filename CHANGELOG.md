@@ -1,4 +1,9 @@
-## Unreleased
+## 1.0.1
+
+* Fixed overloads fallback to base `CaptureOutput`
+* Fixed `D3DShot.screenshot`'s return type to be potentially `None`
+
+## 1.0.0
 
 * Changed build backend to `setuptools >= 69.0.0`
 * Renamed project to `typed-D3DShot`
