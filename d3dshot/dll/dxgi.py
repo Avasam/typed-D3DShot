@@ -299,7 +299,9 @@ def get_dxgi_output_duplication_frame(
     dxgi_resource = ctypes.POINTER(IDXGIResource)()
 
     dxgi_output_duplication.AcquireNextFrame(
-        0, ctypes.byref(dxgi_output_duplication_frame_information), ctypes.byref(dxgi_resource),
+        0,
+        ctypes.byref(dxgi_output_duplication_frame_information),
+        ctypes.byref(dxgi_resource),
     )
 
     frame = None

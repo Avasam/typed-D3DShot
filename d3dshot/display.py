@@ -61,9 +61,10 @@ class Display:
         return frame
 
     def _initialize_dxgi_output_duplication(self):
-        (self.d3d_device, self.d3d_device_context,) = d3dshot.dll.d3d.initialize_d3d_device(
-            self.dxgi_adapter
-        )
+        (
+            self.d3d_device,
+            self.d3d_device_context,
+        ) = d3dshot.dll.d3d.initialize_d3d_device(self.dxgi_adapter)
 
         return d3dshot.dll.dxgi.initialize_dxgi_output_duplication(
             self.dxgi_output, self.d3d_device

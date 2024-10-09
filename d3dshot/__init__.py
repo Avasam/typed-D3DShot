@@ -7,9 +7,7 @@ from d3dshot.capture_output import CaptureOutputs
 pil_is_available = importlib.util.find_spec("PIL") is not None
 numpy_is_available = importlib.util.find_spec("numpy") is not None
 
-pytorch_is_available = (
-    importlib.util.find_spec("torch") is not None and numpy_is_available
-)
+pytorch_is_available = importlib.util.find_spec("torch") is not None and numpy_is_available
 
 pytorch_gpu_is_available = False
 
@@ -84,9 +82,7 @@ def _validate_capture_output(capture_output):
     capture_output = capture_output_mapping.get(capture_output)
 
     if capture_output not in available_capture_outputs:
-        available_capture_outputs = [
-            capture_outputs[co.value] for co in available_capture_outputs
-        ]
+        available_capture_outputs = [capture_outputs[co.value] for co in available_capture_outputs]
         raise AttributeError(
             f"Invalid Capture Output '{capture_output_name}'. Available Options: {', '.join(available_capture_outputs)}"
         )
