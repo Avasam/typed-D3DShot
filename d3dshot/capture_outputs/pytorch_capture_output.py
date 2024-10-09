@@ -2,7 +2,6 @@ import ctypes
 
 import numpy as np
 import torch
-from PIL import Image
 
 from d3dshot.capture_output import CaptureOutput
 
@@ -43,7 +42,8 @@ class PytorchCaptureOutput(CaptureOutput):
 
         return torch.from_numpy(image)
 
-    def to_pil(self, frame):
+        from PIL import Image
+
         return Image.fromarray(np.array(frame))
 
     def stack(self, frames, stack_dimension):

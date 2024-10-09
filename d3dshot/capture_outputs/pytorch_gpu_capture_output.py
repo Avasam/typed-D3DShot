@@ -1,6 +1,5 @@
 import numpy as np
 import torch
-from PIL import Image
 
 from d3dshot.capture_outputs.pytorch_capture_output import PytorchCaptureOutput
 
@@ -14,5 +13,6 @@ class PytorchGPUCaptureOutput(PytorchCaptureOutput):
         image = super().process(pointer, pitch, size, width, height, region, rotation)
         return image.to(self.device)
 
-    def to_pil(self, frame):
+        from PIL import Image
+
         return Image.fromarray(np.array(frame.cpu()))
