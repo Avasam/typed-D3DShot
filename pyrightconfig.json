@@ -1,6 +1,9 @@
 {
   "pythonVersion": "3.8",
   "typeCheckingMode": "standard",
+  "exclude": [
+    "typings/comtypes"
+  ],
   // Allow mypy comments to cover pyright too
   "reportUnnecessaryTypeIgnoreComment": "none",
   "reportImplicitOverride": "error",

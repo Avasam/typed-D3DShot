@@ -1,0 +1,6 @@
+import logging
+
+class NTDebugHandler(logging.Handler):
+    def emit(self, record, writeA=..., writeW=...) -> None: ...
+
+def setup_logging(*pathnames): ...

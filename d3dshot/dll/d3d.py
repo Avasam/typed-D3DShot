@@ -1,3 +1,6 @@
+# Too many metaclass issues
+# mypy: disable_error_code=misc
+
 from __future__ import annotations
 
 import ctypes
@@ -45,7 +48,7 @@ class D3D11_TEXTURE2D_DESC(ctypes.Structure):
     )
 
 
-class ID3D11DeviceChild(comtypes.IUnknown):  # type:ignore[misc] # TODO (Avasam): Figure out why it's Any
+class ID3D11DeviceChild(comtypes.IUnknown):
     _iid_ = comtypes.GUID("{1841e5c8-16b0-489b-bcc8-44cfb0d5deae}")
     _methods_ = [
         comtypes.STDMETHOD(None, "GetDevice"),
@@ -202,7 +205,7 @@ class ID3D11DeviceContext(ID3D11DeviceChild):
     ]
 
 
-class ID3D11Device(comtypes.IUnknown):  # type:ignore[misc] # TODO (Avasam): Figure out why it's Any
+class ID3D11Device(comtypes.IUnknown):
     _iid_ = comtypes.GUID("{db6f6ddb-ac77-4e88-8253-819df9bbf140}")
     _methods_ = [
         comtypes.STDMETHOD(comtypes.HRESULT, "CreateBuffer"),

@@ -1,0 +1,6 @@
+from _typeshed import Incomplete
+
+class _coclass_meta(type):
+    def __new__(cls, name, bases, namespace): ...
+
+class _coclass_pointer_meta(Incomplete, _coclass_meta): ...
