@@ -668,7 +668,10 @@ class D3DShot(Generic[CaptureOutputBackend], metaclass=Singleton):  # noqa: PLR0
             cycle_start = time.time()
 
             frame = self.screenshot(region=region, skip_region_validation=True)
-            self.frame_buffer.appendleft(frame)
+            if frame is not None:
+                self.frame_buffer.appendleft(frame)
+            elif len(self.frame_buffer):
+                self.frame_buffer.appendleft(self.frame_buffer[0])
 
             cycle_end = time.time()
 
