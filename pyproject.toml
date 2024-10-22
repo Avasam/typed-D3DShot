@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "typed-D3DShot"
-version = "1.0.1"
+version = "1.0.2"
 description = "Extremely Fast, Robust, and Typed, Screen Capture on Windows with the Desktop Duplication API"
 readme = "README.md"
 authors = [{ name = "Nicholas Brochu", email = "nicholas@serpent.ai" }]
@@ -21,7 +21,7 @@ keywords = [
   "Windows",
 ]
 classifiers = [
-  "Development Status :: 4 - Beta",
+  "Development Status :: 5 - Production/Stable",
   "Intended Audience :: Developers",
   "License :: OSI Approved :: MIT License",
   "Natural Language :: English",
@@ -41,22 +41,23 @@ classifiers = [
   "Topic :: Multimedia :: Graphics :: Capture :: Screen Capture",
 ]
 requires-python = ">= 3.8"
-dependencies = ["comtypes >= 1.1.7"]
+dependencies = [
+  "comtypes >= 1.1.7 ; python_version < '3.13'",
+  "comtypes >= 1.4.8 ; python_version >= '3.13'",
+]
 
 [project.optional-dependencies]
 # First version w/ Image.Transpose enums
 # 10.3.0 is the first py.typed, but we can do with simple type inference
 PIL = ["pillow >= 9.1.0"]
-# First py.typed version w/ numpy.typing.NDArray
-numpy = ["numpy >= 1.21.0"]
+
+numpy = [
+  "numpy >= 1.21.0", # First py.typed version w/ numpy.typing.NDArray
+  "numpy >= 1.25.0 ; python_version >= '3.9'",
+]
 # First py.typed version
 torch = ["torch >= 2.0.0", "typed-D3DShot[numpy]"]
-dev = [
-  # Always keep Ruff first for the CI
-  "ruff ~= 0.6.9",
-  "mypy == 1.11.*",
-  "pyright == 1.1.384",
-]
+dev = ["mypy ~= 1.12.1", "pyright == 1.1.385", "ruff ~= 0.7.0"]
 
 [project.urls]
 Homepage = "https://github.com/Avasam/D3DShot"

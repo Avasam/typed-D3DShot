@@ -37,16 +37,15 @@ class Singleton(type):
     _instances: ClassVar[dict[Singleton, Any]] = {}
 
     @override
-    def __call__(
-        cls, *args: object, **kwargs: object
-    ) -> Any:  # TODO (Avasam): Try with object once everything is typed
+    # TODO (Avasam): Try with object once everything is typed
+    def __call__(cls, *args: object, **kwargs: object) -> Any:
         if cls not in cls._instances:
             cls._instances[cls] = super().__call__(*args, **kwargs)
         else:
             import warnings
 
             warnings.warn(
-                f"Only 1 instance of {cls.__name__} is allowed per process!"
+                f"Only 1 instance of {cls.__name__} is allowed per process! "
                 + "Returning the existing instance...",
                 stacklevel=1,
             )
