@@ -105,7 +105,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
+        # PyTorch doesn't have wheels matching Python 3.13 ABI yet
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
     steps:
       - name: Checkout ${{ github.repository }}/${{ github.ref }}
         uses: actions/checkout@v4
@@ -117,8 +118,33 @@ jobs:
           cache-dependency-glob: "pyproject.toml"
       - name: Install Python ${{ matrix.python-version }}
         run: uv python install ${{ matrix.python-version }}
-      - run: uv build
+      - run: uv build --wheel
       - uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.python-version }}-wheel
+          name: ${{ matrix.python-version }}-wheel-build
           path: dist/*.whl
+  sdist-build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout ${{ github.repository }}/${{ github.ref }}
+        uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          version: "latest"
+          enable-cache: true
+          cache-dependency-glob: "pyproject.toml"
+      - run: uv build --sdist
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sdist-build
+          path: dist/*.tar.gz
+  merge-artifact:
+    runs-on: ubuntu-latest
+    needs: mypycify-build
+    steps:
+      - name: Merge Artifacts
+        uses: actions/upload-artifact/merge@v4
+        with:
+          name: dist
+          pattern: "*-build"
