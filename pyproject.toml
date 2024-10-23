@@ -1,6 +1,10 @@
 
 [build-system]
-requires = ["setuptools >= 69.0.0"] # Automatically pickup `py.typed` file
+requires = [
+  "setuptools >= 69.0.0", # Automatically pickup `py.typed` file
+  "mypy ~= 1.12.1", # Same as in [dev] extra
+  "typed-D3DShot[PIL,numpy,torch]", # Same as in [dev] extra
+]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -50,14 +54,21 @@ dependencies = [
 # First version w/ Image.Transpose enums
 # 10.3.0 is the first py.typed, but we can do with simple type inference
 PIL = ["pillow >= 9.1.0"]
-
 numpy = [
   "numpy >= 1.21.0", # First py.typed version w/ numpy.typing.NDArray
   "numpy >= 1.25.0 ; python_version >= '3.9'",
 ]
 # First py.typed version
 torch = ["torch >= 2.0.0", "typed-D3DShot[numpy]"]
-dev = ["mypy ~= 1.12.1", "pyright == 1.1.385", "ruff ~= 0.7.0"]
+
+# All dev tools
+dev = [
+  "types-setuptools",
+  "mypy ~= 1.12.1",
+  "pyright == 1.1.385",
+  "ruff ~= 0.7.0",
+  "typed-D3DShot[PIL,numpy,torch]",
+]
 
 [project.urls]
 Homepage = "https://github.com/Avasam/D3DShot"
