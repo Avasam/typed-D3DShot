@@ -55,8 +55,7 @@ dependencies = [
 # 10.3.0 is the first py.typed, but we can do with simple type inference
 PIL = ["pillow >= 9.1.0"]
 numpy = [
-  "numpy >= 1.21.0 ; python_version < '3.9'", # First py.typed version w/ numpy.typing.NDArray
-  "numpy >= 1.25.0 ; python_version >= '3.9'", # 1.25 dropped Python 3.8 support
+  "numpy >= 1.21.0", # First py.typed version w/ numpy.typing.NDArray
 ]
 # First py.typed version
 torch = ["torch >= 2.0.0", "typed-D3DShot[numpy]"]
@@ -75,3 +74,8 @@ Homepage = "https://github.com/Avasam/D3DShot"
 Repository = "https://github.com/Avasam/D3DShot.git"
 Issues = "https://github.com/Avasam/D3DShot/issues"
 Changelog = "https://github.com/Avasam/D3DShot/blob/HEAD/CHANGELOG.md"
+
+[tool.uv]
+# https://github.com/astral-sh/uv/issues/4668
+# Works around the issue that NumPy 1.25 dropped Python 3.8 support
+environments = ["python_version >= '3.9'", "python_version < '3.9'"]
