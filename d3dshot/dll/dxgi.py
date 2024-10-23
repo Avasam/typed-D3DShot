@@ -75,7 +75,7 @@ class DXGI_MAPPED_RECT(ctypes.Structure):
 
 
 class IDXGIObject(comtypes.IUnknown):
-    _iid_: ClassVar[comtypes.GUID] = comtypes.GUID("{aec22fb8-76f3-4639-9be0-28eb43a67a2e}")
+    _iid_: ClassVar[comtypes.GUID] = comtypes.GUID("{aec22fb8-76f3-4639-9be0-28eb43a67a2e}")  # pyright: ignore[reportIncompatibleVariableOverride] # False-positive
     _methods_ = [
         comtypes.STDMETHOD(comtypes.HRESULT, "SetPrivateData"),
         comtypes.STDMETHOD(comtypes.HRESULT, "SetPrivateDataInterface"),
@@ -190,7 +190,7 @@ class IDXGIAdapter1(IDXGIAdapter):
 
 
 class IDXGIFactory(IDXGIObject):
-    _iid_: ClassVar[comtypes.GUID] = comtypes.GUID("{7b7166ec-21c7-44ae-b21a-c9ae321ae369}")
+    _iid_: ClassVar[comtypes.GUID] = comtypes.GUID("{7b7166ec-21c7-44ae-b21a-c9ae321ae369}")  # pyright: ignore[reportIncompatibleVariableOverride] # False-positive
     _methods_ = [
         comtypes.STDMETHOD(comtypes.HRESULT, "EnumAdapters"),
         comtypes.STDMETHOD(comtypes.HRESULT, "MakeWindowAssociation"),
@@ -201,7 +201,7 @@ class IDXGIFactory(IDXGIObject):
 
 
 class IDXGIFactory1(IDXGIFactory):
-    _iid_: ClassVar[comtypes.GUID] = comtypes.GUID("{770aae78-f26f-4dba-a829-253c83d1b387}")
+    _iid_: ClassVar[comtypes.GUID] = comtypes.GUID("{770aae78-f26f-4dba-a829-253c83d1b387}")  # pyright: ignore[reportIncompatibleVariableOverride] # False-positive
     _methods_ = [
         comtypes.STDMETHOD(
             comtypes.HRESULT,

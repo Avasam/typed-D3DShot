@@ -55,8 +55,8 @@ dependencies = [
 # 10.3.0 is the first py.typed, but we can do with simple type inference
 PIL = ["pillow >= 9.1.0"]
 numpy = [
-  "numpy >= 1.21.0", # First py.typed version w/ numpy.typing.NDArray
-  "numpy >= 1.25.0 ; python_version >= '3.9'",
+  "numpy >= 1.21.0 ; python_version < '3.9'", # First py.typed version w/ numpy.typing.NDArray
+  "numpy >= 1.25.0 ; python_version >= '3.9'", # 1.25 dropped Python 3.8 support
 ]
 # First py.typed version
 torch = ["torch >= 2.0.0", "typed-D3DShot[numpy]"]
