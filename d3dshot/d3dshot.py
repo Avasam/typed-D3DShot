@@ -37,16 +37,15 @@ class Singleton(type):
     _instances: ClassVar[dict[Singleton, Any]] = {}
 
     @override
-    def __call__(
-        cls, *args: object, **kwargs: object
-    ) -> Any:  # TODO (Avasam): Try with object once everything is typed
+    # TODO (Avasam): Try with object once everything is typed
+    def __call__(cls, *args: object, **kwargs: object) -> Any:
         if cls not in cls._instances:
             cls._instances[cls] = super().__call__(*args, **kwargs)
         else:
             import warnings
 
             warnings.warn(
-                f"Only 1 instance of {cls.__name__} is allowed per process!"
+                f"Only 1 instance of {cls.__name__} is allowed per process! "
                 + "Returning the existing instance...",
                 stacklevel=1,
             )
@@ -668,7 +667,10 @@ class D3DShot(Generic[CaptureOutputBackend], metaclass=Singleton):  # noqa: PLR0
             cycle_start = time.time()
 
             frame = self.screenshot(region=region, skip_region_validation=True)
-            self.frame_buffer.appendleft(frame)
+            if frame is not None:
+                self.frame_buffer.appendleft(frame)
+            elif len(self.frame_buffer):
+                self.frame_buffer.appendleft(self.frame_buffer[0])
 
             cycle_end = time.time()
 
