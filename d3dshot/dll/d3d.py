@@ -1,3 +1,6 @@
+# Too many metaclass issues
+# mypy: disable_error_code="misc,import-untyped"
+
 from __future__ import annotations
 
 import ctypes
