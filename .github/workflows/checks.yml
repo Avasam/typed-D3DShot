@@ -16,22 +16,13 @@ concurrency:
 jobs:
   ruff:
     runs-on: windows-latest
-    strategy:
-      fail-fast: false
     steps:
       - name: Checkout ${{ github.repository }}/${{ github.ref }}
-        uses: actions/checkout@v4
-      - name: Get Ruff version
-        id: ruff_version
-        # We need an exact value, feature request for any valid range specifier
-        # https://github.com/astral-sh/ruff-action/issues/11
-        run: |
-          $Env:RUFF_VERSION=Select-String -path pyproject.toml -pattern 'ruff ?[=<>~]?= ?(.+?)"' | %{ $_.Matches[0].Groups[1].Value }
-          echo $Env:RUFF_VERSION
-          echo "RUFF_VERSION=$Env:RUFF_VERSION" >> $Env:GITHUB_OUTPUT
-      - uses: astral-sh/ruff-action@v1
-        with:
-          version: ${{ steps.ruff_version.outputs.RUFF_VERSION }}
+        uses: actions/checkout@v5
+      - uses: astral-sh/ruff-action@v3
+      - run: ruff format --check --diff
+        # Check formatting even if the the previous step failed
+        if: ${{ !cancelled() }}
   mypy:
     runs-on: windows-latest
     strategy:
@@ -50,17 +41,13 @@ jobs:
             numpy-version: "numpy==1.26.*" # Fixes distutils removal issue with setuptools
     steps:
       - name: Checkout ${{ github.repository }}/${{ github.ref }}
-        uses: actions/checkout@v4
-      - name: Install uv
-        uses: astral-sh/setup-uv@v3
+        uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v7
         with:
-          version: "latest"
-          enable-cache: true
-          cache-dependency-glob: "pyproject.toml"
-      - name: Install Python ${{ matrix.python-version }}
-        run: uv python install ${{ matrix.python-version }}
+          python-version: ${{ matrix.python-version }}
+          activate-environment: true
       - name: Install the project
-        run: uv pip install -r pyproject.toml ${{ matrix.numpy-version }} --all-extras --system
+        run: uv pip install -r pyproject.toml ${{ matrix.numpy-version }} --group=dev
       - run: mypy d3dshot/
   Pyright:
     runs-on: windows-latest
@@ -80,21 +67,16 @@ jobs:
             numpy-version: "numpy==1.26.*" # Fixes distutils removal issue with setuptools
     steps:
       - name: Checkout ${{ github.repository }}/${{ github.ref }}
-        uses: actions/checkout@v4
-      - name: Install uv
-        uses: astral-sh/setup-uv@v3
+        uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v7
         with:
-          version: "latest"
-          enable-cache: true
-          cache-dependency-glob: "pyproject.toml"
-      - name: Install Python ${{ matrix.python-version }}
-        run: uv python install ${{ matrix.python-version }}
+          python-version: ${{ matrix.python-version }}
+          activate-environment: true
       - name: Install the project
-        run: uv pip install -r pyproject.toml ${{ matrix.numpy-version }} --all-extras --system
+        run: uv pip install -r pyproject.toml ${{ matrix.numpy-version }} --group=dev
       - name: Analysing the code with Pyright
         uses: jakebailey/pyright-action@v2
         with:
           python-version: ${{ matrix.python-version }}
-          extra-args: --threads
           version: PATH
           working-directory: d3dshot/

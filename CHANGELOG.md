@@ -5,6 +5,7 @@
 * Set the minimum NumPy version to 1.26.0 on Python 3.12+
 * Added explicit `torch < 2.9.0 ; python_version < '3.10'` version pin to help resolvers that don't account for lack of sdist or wheel like <https://github.com/astral-sh/uv/issues/9647>
 * Added tests for Python 3.14
+* Removed the `[dev]` extra in favor of `[dependency-groups.dev]`
 
 ## 1.0.1
 

@@ -43,19 +43,17 @@ classifiers = [
 requires-python = ">= 3.9"
 dependencies = [
   "comtypes >= 1.1.7 ; python_version < '3.13'",
-  "comtypes >= 1.4.8 ; python_version >= '3.13'",
+  "comtypes >= 1.4.8 ; python_version >= '3.13'", # Added Python 3.13 support
 ]
 
 [project.optional-dependencies]
 # First version w/ Image.Transpose enums
 # 10.3.0 is the first py.typed, but we can do with simple type inference
 PIL = ["pillow >= 9.1.0"]
-
 numpy = [
-  "numpy >= 1.25.0 ; python_version >= '3.9'", # Disambiguate for uv by adding a Python 3.9 resolution
+  "numpy >= 1.25.0", # Disambiguate for uv by adding a Python 3.9 resolution
   "numpy >= 1.26.0 ; python_version >= '3.12'", # Fixes distutils removal issue with setuptools
 ]
-
 torch = [
   "typed-D3DShot[numpy]",
   "torch >= 2.0.0", # First py.typed version
@@ -64,7 +62,15 @@ torch = [
   "torch < 2.9.0 ; python_version < '3.10'",
 ]
 
-dev = ["mypy ~= 1.12.1", "pyright == 1.1.385", "ruff ~= 0.7.0"]
+[dependency-groups]
+dev = [
+  "mypy ~= 1.12.1",
+  "pyright == 1.1.385",
+  "ruff ~= 0.7.0",
+  "typed-D3DShot[PIL]",
+  "typed-D3DShot[numpy]",
+  "typed-D3DShot[torch]",
+]
 
 [project.urls]
 Homepage = "https://github.com/Avasam/D3DShot"
