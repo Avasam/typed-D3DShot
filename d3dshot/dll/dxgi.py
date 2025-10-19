@@ -71,7 +71,7 @@ class DXGI_MAPPED_RECT(ctypes.Structure):
     _fields_ = (("Pitch", wintypes.INT), ("pBits", ctypes.POINTER(wintypes.FLOAT)))
 
 
-class IDXGIObject(comtypes.IUnknown):  # type:ignore[misc] # TODO (Avasam): Figure out why it's Any
+class IDXGIObject(comtypes.IUnknown):  # type: ignore[misc,name-defined] # TODO (Avasam): Figure out why it's Any
     _iid_ = comtypes.GUID("{aec22fb8-76f3-4639-9be0-28eb43a67a2e}")
     _methods_ = [
         comtypes.STDMETHOD(comtypes.HRESULT, "SetPrivateData"),

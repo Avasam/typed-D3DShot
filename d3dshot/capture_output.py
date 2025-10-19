@@ -11,6 +11,7 @@ if TYPE_CHECKING:
     import numpy.typing as npt
     import torch
     from PIL import Image
+    from typing_extensions import TypeAlias
 
     from d3dshot.capture_outputs.numpy_capture_output import NumpyCaptureOutput
     from d3dshot.capture_outputs.numpy_float_capture_output import NumpyFloatCaptureOutput
@@ -21,6 +22,12 @@ if TYPE_CHECKING:
         PytorchFloatGPUCaptureOutput,
     )
     from d3dshot.capture_outputs.pytorch_gpu_capture_output import PytorchGPUCaptureOutput
+
+    _AllBackendsFrameTypes: TypeAlias = (
+        npt.NDArray[np.uint8] | npt.NDArray[np.floating[npt.NBitBase]] | Image.Image | torch.Tensor
+    )
+else:
+    _AllBackendsFrameTypes = type
 
 
 class CaptureOutputs(Enum):
@@ -80,10 +87,7 @@ class CaptureOutput:
         height: int,
         region: tuple[int, int, int, int],
         rotation: Literal[0, 90, 180, 270],
-    ) -> (
-        # Include the full union for all subtypes
-        npt.NDArray[np.uint8] | npt.NDArray[np.floating[npt.NBitBase]] | Image.Image | torch.Tensor
-    ):
+    ) -> _AllBackendsFrameTypes:  # Include the full union for all subtypes
         raise NotImplementedError
 
     def to_pil(self, frame: Any) -> Image.Image:  # noqa: ANN401

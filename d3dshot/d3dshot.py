@@ -5,10 +5,15 @@ import os.path
 import threading
 import time
 from collections import deque
-from typing import TYPE_CHECKING, Any, ClassVar, Generic, Literal, TypeVar, overload
+from typing import TYPE_CHECKING, Any, ClassVar, Generic, Literal, NoReturn, overload
 
 from d3dshot._compat import override
-from d3dshot.capture_output import CaptureOutput, CaptureOutputBackend, CaptureOutputs
+from d3dshot.capture_output import (
+    CaptureOutput,
+    CaptureOutputBackend,
+    CaptureOutputs,
+    _AllBackendsFrameTypes,
+)
 from d3dshot.display import Display
 
 if TYPE_CHECKING:
@@ -29,8 +34,6 @@ if TYPE_CHECKING:
         PytorchFloatGPUCaptureOutput,
     )
     from d3dshot.capture_outputs.pytorch_gpu_capture_output import PytorchGPUCaptureOutput
-
-_FloatT = TypeVar("_FloatT", bound=float)
 
 
 class Singleton(type):
@@ -154,16 +157,9 @@ class D3DShot(Generic[CaptureOutputBackend], metaclass=Singleton):  # noqa: PLR0
         self.capture_output = CaptureOutput(backend=capture_output)
 
         self.frame_buffer_size = frame_buffer_size
-        self.frame_buffer: deque[
-            npt.NDArray[np.uint8]
-            | npt.NDArray[np.floating[npt.NBitBase]]
-            | Image.Image
-            | torch.Tensor
-        ] = deque(maxlen=self.frame_buffer_size)
+        self.frame_buffer: deque[_AllBackendsFrameTypes] = deque(maxlen=self.frame_buffer_size)
 
-        self.previous_screenshot = None
-
-        self.region = None
+        self.previous_screenshot: _AllBackendsFrameTypes | None = None
 
         self._pil_is_available = pil_is_available
         self._numpy_is_available = numpy_is_available
@@ -190,22 +186,10 @@ class D3DShot(Generic[CaptureOutputBackend], metaclass=Singleton):  # noqa: PLR0
     @overload
     def get_latest_frame(
         self: D3DShot[CaptureOutput],
-    ) -> (
-        npt.NDArray[np.uint8]
-        | npt.NDArray[np.floating[npt.NBitBase]]
-        | Image.Image
-        | torch.Tensor
-        | None
-    ): ...
+    ) -> _AllBackendsFrameTypes | None: ...
     def get_latest_frame(  # pyright: ignore[reportInconsistentOverload]
         self: D3DShot[CaptureOutput],
-    ) -> (
-        npt.NDArray[np.uint8]
-        | npt.NDArray[np.floating[npt.NBitBase]]
-        | Image.Image
-        | torch.Tensor
-        | None
-    ):
+    ) -> _AllBackendsFrameTypes | None:
         return self.get_frame(0)
 
     @overload
@@ -223,22 +207,8 @@ class D3DShot(Generic[CaptureOutputBackend], metaclass=Singleton):  # noqa: PLR0
     @overload
     def get_frame(
         self: D3DShot[CaptureOutput], frame_index: int
-    ) -> (
-        npt.NDArray[np.uint8]
-        | npt.NDArray[np.floating[npt.NBitBase]]
-        | Image.Image
-        | torch.Tensor
-        | None
-    ): ...
-    def get_frame(
-        self, frame_index: int
-    ) -> (
-        npt.NDArray[np.uint8]
-        | npt.NDArray[np.floating[npt.NBitBase]]
-        | Image.Image
-        | torch.Tensor
-        | None
-    ):
+    ) -> _AllBackendsFrameTypes | None: ...
+    def get_frame(self, frame_index: int) -> _AllBackendsFrameTypes | None:
         if frame_index < 0 or (frame_index + 1) > len(self.frame_buffer):
             return None
 
@@ -378,42 +348,23 @@ class D3DShot(Generic[CaptureOutputBackend], metaclass=Singleton):  # noqa: PLR0
         region: Sequence[int] | None = None,
         *,
         skip_region_validation: bool = False,
-    ) -> (
-        npt.NDArray[np.uint8]
-        | npt.NDArray[np.floating[npt.NBitBase]]
-        | Image.Image
-        | torch.Tensor
-        | None
-    ): ...
+    ) -> _AllBackendsFrameTypes | None: ...
     def screenshot(
         self,
         region: Sequence[int] | None = None,
         *,
         skip_region_validation: bool = False,
-    ) -> (
-        npt.NDArray[np.uint8]
-        | npt.NDArray[np.floating[npt.NBitBase]]
-        | Image.Image
-        | torch.Tensor
-        | None
-    ):
+    ) -> _AllBackendsFrameTypes | None:
         if not skip_region_validation:
             region = self._validate_region(region)
 
         if self.previous_screenshot is None:
-            frame: (
-                npt.NDArray[np.uint8]
-                | npt.NDArray[np.floating[npt.NBitBase]]
-                | Image.Image
-                | torch.Tensor
-                | None
-            ) = None
+            frame: _AllBackendsFrameTypes | None = None
 
             while frame is None:
                 frame = self.display.capture(self.capture_output.process, region=region)
 
-            # This makes no sense, I can only assign None to previous_screenshot now ?
-            self.previous_screenshot = frame  # type: ignore[assignment]
+            self.previous_screenshot = frame
             return frame
 
         for _ in range(300):
@@ -456,7 +407,7 @@ class D3DShot(Generic[CaptureOutputBackend], metaclass=Singleton):  # noqa: PLR0
             frame_pil.save(f"{directory}/{i + 1}.png")
 
     def capture(self, target_fps: int = 60, region: Sequence[int] | None = None) -> bool:
-        target_fps = self._validate_target_fps(target_fps)
+        self._validate_target_fps(target_fps)
 
         if self.is_capturing:
             return False
@@ -474,7 +425,7 @@ class D3DShot(Generic[CaptureOutputBackend], metaclass=Singleton):  # noqa: PLR0
         if self.is_capturing:
             return False
 
-        interval = self._validate_interval(interval)
+        self._validate_interval(interval)
 
         self._is_capturing = True
 
@@ -491,7 +442,7 @@ class D3DShot(Generic[CaptureOutputBackend], metaclass=Singleton):  # noqa: PLR0
         if self.is_capturing:
             return False
 
-        interval = self._validate_interval(interval)
+        self._validate_interval(interval)
         directory = self._validate_directory(directory)
 
         self._is_capturing = True
@@ -550,9 +501,7 @@ class D3DShot(Generic[CaptureOutputBackend], metaclass=Singleton):  # noqa: PLR0
     @overload
     def _validate_region(self, region: Sequence[int]) -> tuple[int, int, int, int]: ...
     def _validate_region(self, region: Sequence[int] | None) -> tuple[int, int, int, int] | None:
-        region = region or self.region or None
-
-        if region is None:
+        if not region:
             return None
 
         error_message = "'region' is expected to be a 4-length iterable"
@@ -592,12 +541,16 @@ class D3DShot(Generic[CaptureOutputBackend], metaclass=Singleton):  # noqa: PLR0
 
         return region  # type: ignore[return-value] # This method typeguards
 
+    @overload
     @staticmethod
-    def _validate_target_fps(target_fps: int) -> int:
+    def _validate_target_fps(target_fps: int) -> None: ...  # type: ignore[overload-overlap]
+    @overload
+    @staticmethod
+    def _validate_target_fps(target_fps: object) -> NoReturn: ...
+    @staticmethod
+    def _validate_target_fps(target_fps: object) -> None:
         if not isinstance(target_fps, int) or target_fps < 1:
             raise AttributeError("'target_fps' should be an int greater than 0")
-
-        return target_fps
 
     @staticmethod
     def _validate_directory(directory: StrPath | None) -> str:
@@ -624,12 +577,16 @@ class D3DShot(Generic[CaptureOutputBackend], metaclass=Singleton):  # noqa: PLR0
 
         return file_name
 
+    @overload
     @staticmethod
-    def _validate_interval(interval: _FloatT) -> _FloatT:
+    def _validate_interval(interval: float) -> None: ...  # type: ignore[overload-overlap]
+    @overload
+    @staticmethod
+    def _validate_interval(interval: object) -> NoReturn: ...
+    @staticmethod
+    def _validate_interval(interval: object) -> None:
         if not isinstance(interval, (int, float)) or interval < 1.0:
             raise AttributeError("'interval' should be one of (int, float) and be >= 1.0")
-
-        return interval
 
     def _capture(self, target_fps: int, region: Sequence[int] | None) -> None:
         self._reset_frame_buffer()

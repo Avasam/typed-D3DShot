@@ -64,7 +64,7 @@ torch = [
 
 [dependency-groups]
 dev = [
-  "mypy ~= 1.12.1",
+  "mypy ~= 1.18.2",
   "pyright == 1.1.385",
   "ruff ~= 0.7.0",
   "typed-D3DShot[PIL]",
