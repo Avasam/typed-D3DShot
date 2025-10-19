@@ -26,8 +26,6 @@ if TYPE_CHECKING:
     _AllBackendsFrameTypes: TypeAlias = (
         npt.NDArray[np.uint8] | npt.NDArray[np.floating[npt.NBitBase]] | Image.Image | torch.Tensor
     )
-else:
-    _AllBackendsFrameTypes = type
 
 
 class CaptureOutputs(Enum):

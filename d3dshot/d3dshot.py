@@ -8,12 +8,7 @@ from collections import deque
 from typing import TYPE_CHECKING, Any, ClassVar, Generic, Literal, NoReturn, overload
 
 from d3dshot._compat import override
-from d3dshot.capture_output import (
-    CaptureOutput,
-    CaptureOutputBackend,
-    CaptureOutputs,
-    _AllBackendsFrameTypes,
-)
+from d3dshot.capture_output import CaptureOutput, CaptureOutputBackend, CaptureOutputs
 from d3dshot.display import Display
 
 if TYPE_CHECKING:
@@ -25,6 +20,7 @@ if TYPE_CHECKING:
     from _typeshed import StrPath
     from PIL import Image
 
+    from d3dshot.capture_output import _AllBackendsFrameTypes
     from d3dshot.capture_outputs.numpy_capture_output import NumpyCaptureOutput
     from d3dshot.capture_outputs.numpy_float_capture_output import NumpyFloatCaptureOutput
     from d3dshot.capture_outputs.pil_capture_output import PILCaptureOutput
@@ -56,7 +52,7 @@ class Singleton(type):
         return cls._instances[cls]
 
 
-class D3DShot(Generic[CaptureOutputBackend], metaclass=Singleton):  # noqa: PLR0904
+class D3DShot(Generic[CaptureOutputBackend], metaclass=Singleton):
     @overload
     def __init__(
         self: D3DShot[PILCaptureOutput],
@@ -497,10 +493,13 @@ class D3DShot(Generic[CaptureOutputBackend], metaclass=Singleton):  # noqa: PLR0
         self.frame_buffer = deque(maxlen=self.frame_buffer_size)
 
     @overload
-    def _validate_region(self, region: tuple[()] | None) -> None: ...  # type: ignore[overload-overlap]
+    @staticmethod
+    def _validate_region(region: tuple[()] | None) -> None: ...  # type: ignore[overload-overlap]
     @overload
-    def _validate_region(self, region: Sequence[int]) -> tuple[int, int, int, int]: ...
-    def _validate_region(self, region: Sequence[int] | None) -> tuple[int, int, int, int] | None:
+    @staticmethod
+    def _validate_region(region: Sequence[int]) -> tuple[int, int, int, int]: ...
+    @staticmethod
+    def _validate_region(region: Sequence[int] | None) -> tuple[int, int, int, int] | None:
         if not region:
             return None
 

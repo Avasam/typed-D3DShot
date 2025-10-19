@@ -66,7 +66,7 @@ torch = [
 dev = [
   "mypy ~= 1.18.2",
   "pyright == 1.1.385",
-  "ruff ~= 0.7.0",
+  "ruff ~= 0.14.1",
   "typed-D3DShot[PIL]",
   "typed-D3DShot[numpy]",
   "typed-D3DShot[torch]",
