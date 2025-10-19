@@ -125,5 +125,5 @@ def _validate_frame_buffer_size(frame_buffer_size: int) -> None: ...  # type: ig
 @overload
 def _validate_frame_buffer_size(frame_buffer_size: object) -> NoReturn: ...
 def _validate_frame_buffer_size(frame_buffer_size: object) -> None:
-    if not isinstance(frame_buffer_size, int) or frame_buffer_size < 1:  # type: ignore[redundant-expr] # runtime validation
+    if not isinstance(frame_buffer_size, int) or frame_buffer_size < 1:
         raise AttributeError("'frame_buffer_size' should be an int greater than 0")
