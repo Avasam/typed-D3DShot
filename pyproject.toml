@@ -43,7 +43,7 @@ classifiers = [
 requires-python = ">= 3.9"
 dependencies = [
   "comtypes >= 1.1.7 ; python_version < '3.13'",
-  "comtypes >= 1.4.8 ; python_version >= '3.13'",
+  "comtypes >= 1.4.8 ; python_version >= '3.13'", # Added Python 3.13 support
 ]
 
 [project.optional-dependencies]
@@ -51,7 +51,7 @@ dependencies = [
 # 10.3.0 is the first py.typed, but we can do with simple type inference
 PIL = ["pillow >= 9.1.0"]
 numpy = [
-  "numpy >= 1.25.0 ; python_version >= '3.9'", # Disambiguate for uv by adding a Python 3.9 resolution
+  "numpy >= 1.25.0", # Disambiguate for uv by adding a Python 3.9 resolution
   "numpy >= 1.26.0 ; python_version >= '3.12'", # Fixes distutils removal issue with setuptools
 ]
 torch = [

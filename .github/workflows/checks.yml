@@ -43,7 +43,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install the project
-        run: uv pip install -r pyproject.toml ${{ matrix.numpy-version }} --dev --system
+        run: uv pip install -r pyproject.toml ${{ matrix.numpy-version }} --group=dev --system
       - run: mypy d3dshot/
   Pyright:
     runs-on: windows-latest
@@ -68,7 +68,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install the project
-        run: uv pip install -r pyproject.toml ${{ matrix.numpy-version }} --dev --system
+        run: uv pip install -r pyproject.toml ${{ matrix.numpy-version }} --group=dev --system
       - name: Analysing the code with Pyright
         uses: jakebailey/pyright-action@v2
         with:
