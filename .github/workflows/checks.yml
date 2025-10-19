@@ -37,18 +37,17 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
         # Our minimum numpy 1 supported and latest numpy 2
-        # Can't test numpy 1.21 & 1.22, but the lost in type-safety is minimal
         numpy-version: ["numpy>=2"]
         # To save on workflow runtime, only test old numpy on extreme ends of Python version
         # This should at least ensure support for oldest combination
         # and let us know when newest numpy drops support for any Python version
         include:
-          - python-version: "3.8"
-            numpy-version: "numpy==1.23.*"
-          - python-version: "3.13"
-            numpy-version: "numpy==1.23.*"
+          - python-version: "3.9"
+            numpy-version: "numpy==1.25.*"
+          - python-version: "3.14"
+            numpy-version: "numpy==1.26.*" # Fixes distutils removal issue with setuptools
     steps:
       - name: Checkout ${{ github.repository }}/${{ github.ref }}
         uses: actions/checkout@v4
@@ -68,18 +67,17 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
         # Our minimum numpy 1 supported and latest numpy 2
-        # Can't test numpy 1.21 & 1.22, but the lost in type-safety is minimal
         numpy-version: ["numpy>=2"]
         # To save on workflow runtime, only test old numpy on extreme ends of Python version
         # This should at least ensure support for oldest combination
         # and let us know when newest numpy drops support for any Python version
         include:
-          - python-version: "3.8"
-            numpy-version: "numpy==1.23.*"
-          - python-version: "3.13"
-            numpy-version: "numpy==1.23.*"
+          - python-version: "3.9"
+            numpy-version: "numpy==1.25.*"
+          - python-version: "3.14"
+            numpy-version: "numpy==1.26.*" # Fixes distutils removal issue with setuptools
     steps:
       - name: Checkout ${{ github.repository }}/${{ github.ref }}
         uses: actions/checkout@v4

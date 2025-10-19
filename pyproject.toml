@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "typed-D3DShot"
-version = "1.0.2"
+version = "1.1.0"
 description = "Extremely Fast, Robust, and Typed, Screen Capture on Windows with the Desktop Duplication API"
 readme = "README.md"
 authors = [{ name = "Nicholas Brochu", email = "nicholas@serpent.ai" }]
@@ -30,17 +30,17 @@ classifiers = [
   "Operating System :: Microsoft :: Windows :: Windows 10",
   "Operating System :: Microsoft :: Windows :: Windows 11",
   "Programming Language :: Python",
-  "Programming Language :: Python :: 3.8",
   "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
   "Topic :: Multimedia :: Graphics",
   "Topic :: Multimedia :: Graphics :: Capture",
   "Topic :: Multimedia :: Graphics :: Capture :: Screen Capture",
 ]
-requires-python = ">= 3.8"
+requires-python = ">= 3.9"
 dependencies = [
   "comtypes >= 1.1.7 ; python_version < '3.13'",
   "comtypes >= 1.4.8 ; python_version >= '3.13'",
@@ -52,11 +52,18 @@ dependencies = [
 PIL = ["pillow >= 9.1.0"]
 
 numpy = [
-  "numpy >= 1.21.0", # First py.typed version w/ numpy.typing.NDArray
-  "numpy >= 1.25.0 ; python_version >= '3.9'",
+  "numpy >= 1.25.0 ; python_version >= '3.9'", # Disambiguate for uv by adding a Python 3.9 resolution
+  "numpy >= 1.26.0 ; python_version >= '3.12'", # Fixes distutils removal issue with setuptools
 ]
-# First py.typed version
-torch = ["torch >= 2.0.0", "typed-D3DShot[numpy]"]
+
+torch = [
+  "typed-D3DShot[numpy]",
+  "torch >= 2.0.0", # First py.typed version
+  # UV's resolver doesn't account for lack of sdist or wheel https://github.com/astral-sh/uv/issues/9647
+  # PyTorch 2.9.0 doesn't have Python 3.9 wheels
+  "torch < 2.9.0 ; python_version < '3.10'",
+]
+
 dev = ["mypy ~= 1.12.1", "pyright == 1.1.385", "ruff ~= 0.7.0"]
 
 [project.urls]
