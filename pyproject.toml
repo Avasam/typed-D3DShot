@@ -63,7 +63,14 @@ torch = [
 ]
 
 [dependency-groups]
-dev = ["mypy ~= 1.12.1", "pyright == 1.1.385", "ruff ~= 0.7.0"]
+dev = [
+  "mypy ~= 1.12.1",
+  "pyright == 1.1.385",
+  "ruff ~= 0.7.0",
+  "typed-D3DShot[PIL]",
+  "typed-D3DShot[numpy]",
+  "typed-D3DShot[torch]",
+]
 
 [project.urls]
 Homepage = "https://github.com/Avasam/D3DShot"

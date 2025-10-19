@@ -1158,6 +1158,7 @@ dev = [
     { name = "mypy" },
     { name = "pyright" },
     { name = "ruff" },
+    { name = "typed-d3dshot", extra = ["numpy", "pil", "torch"] },
 ]
 
 [package.metadata]
@@ -1178,6 +1179,9 @@ dev = [
     { name = "mypy", specifier = "~=1.12.1" },
     { name = "pyright", specifier = "==1.1.385" },
     { name = "ruff", specifier = "~=0.7.0" },
+    { name = "typed-d3dshot", extras = ["numpy"] },
+    { name = "typed-d3dshot", extras = ["pil"] },
+    { name = "typed-d3dshot", extras = ["torch"] },
 ]
 
 [[package]]
