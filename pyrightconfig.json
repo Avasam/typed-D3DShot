@@ -1,5 +1,4 @@
 {
-  "pythonVersion": "3.8",
   "typeCheckingMode": "standard",
   "exclude": [
     "typings/comtypes"

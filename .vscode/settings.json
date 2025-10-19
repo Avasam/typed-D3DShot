@@ -85,6 +85,7 @@
       100 // Our hard rule
     ]
   },
+  "python.defaultInterpreterPath": ".venv/Scripts/python.exe",
   "mypy-type-checker.importStrategy": "fromEnvironment",
   "python.terminal.activateEnvironment": true,
   // python.analysis is Pylance (pyright) configurations

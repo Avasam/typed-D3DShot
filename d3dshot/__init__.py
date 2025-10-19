@@ -83,7 +83,7 @@ def create(
 def create(capture_output: str, frame_buffer_size: int = 60) -> D3DShot[CaptureOutput]: ...
 def create(capture_output: str = "pil", frame_buffer_size: int = 60) -> D3DShot[CaptureOutput]:  # type: ignore[misc]
     capture_output_enum = _validate_capture_output_available(capture_output)
-    frame_buffer_size = _validate_frame_buffer_size(frame_buffer_size)
+    _validate_frame_buffer_size(frame_buffer_size)
 
     return D3DShot(
         capture_output=capture_output_enum,
@@ -120,8 +120,10 @@ def _validate_capture_output_available(capture_output_name: str) -> CaptureOutpu
     return capture_output
 
 
-def _validate_frame_buffer_size(frame_buffer_size: int) -> int:
+@overload
+def _validate_frame_buffer_size(frame_buffer_size: int) -> None: ...  # type: ignore[overload-overlap]
+@overload
+def _validate_frame_buffer_size(frame_buffer_size: object) -> NoReturn: ...
+def _validate_frame_buffer_size(frame_buffer_size: object) -> None:
     if not isinstance(frame_buffer_size, int) or frame_buffer_size < 1:
         raise AttributeError("'frame_buffer_size' should be an int greater than 0")
-
-    return frame_buffer_size
