@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from enum import Enum, auto
-from typing import TYPE_CHECKING, Any, Final, Literal, TypeVar, overload
+from typing import TYPE_CHECKING, Any, Final, Literal, TypeVar, Union, overload
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
@@ -23,9 +23,9 @@ if TYPE_CHECKING:
     )
     from d3dshot.capture_outputs.pytorch_gpu_capture_output import PytorchGPUCaptureOutput
 
-    _AllBackendsFrameTypes: TypeAlias = (
-        npt.NDArray[np.uint8] | npt.NDArray[np.floating[npt.NBitBase]] | Image.Image | torch.Tensor
-    )
+    _AllBackendsFrameTypes: TypeAlias = Union[
+        npt.NDArray[np.uint8], npt.NDArray[np.floating[npt.NBitBase]], Image.Image, torch.Tensor
+    ]
 
 
 class CaptureOutputs(Enum):
