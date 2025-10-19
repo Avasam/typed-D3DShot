@@ -51,8 +51,10 @@ dependencies = [
 # 10.3.0 is the first py.typed, but we can do with simple type inference
 PIL = ["pillow >= 9.1.0"]
 numpy = [
-  "numpy >= 1.25.0", # Disambiguate for uv by adding a Python 3.9 resolution
-  "numpy >= 1.26.0 ; python_version >= '3.12'", # Fixes distutils removal issue with setuptools
+  # Fixes distutils removal (Python 3.12) issue with setuptools
+  # NumPy 1 is already in maintenance mode anyway
+  # Simplify testing and promote dropping usages of distutils
+  "numpy >= 1.26.0",
 ]
 torch = [
   "typed-D3DShot[numpy]",
@@ -64,9 +66,9 @@ torch = [
 
 [dependency-groups]
 dev = [
-  "mypy ~= 1.12.1",
-  "pyright == 1.1.385",
-  "ruff ~= 0.7.0",
+  "mypy ~= 1.18.2",
+  "pyright[nodejs] == 1.1.406",
+  "ruff ~= 0.14.1",
   "typed-D3DShot[PIL]",
   "typed-D3DShot[numpy]",
   "typed-D3DShot[torch]",

@@ -1,11 +1,13 @@
 ## 1.1.0
 
 * Bumped the minimum Python version to 3.9
-  * Incidentally, this bumps the minimum version of numpy to 1.25
+* Bump the minimum version of NumPy to 1.26 (this was already the case for Python 3.12+)
 * Set the minimum NumPy version to 1.26.0 on Python 3.12+
 * Added explicit `torch < 2.9.0 ; python_version < '3.10'` version pin to help resolvers that don't account for lack of sdist or wheel like <https://github.com/astral-sh/uv/issues/9647>
 * Added tests for Python 3.14
 * Removed the `[dev]` extra in favor of `[dependency-groups.dev]`
+* Removed unused `D3DShot.region` attribute
+* Micro-optimizations to validation methods that don't need a return value
 
 ## 1.0.1
 
