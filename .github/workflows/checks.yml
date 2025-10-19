@@ -18,16 +18,8 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout ${{ github.repository }}/${{ github.ref }}
-        uses: actions/checkout@v4
-      - name: Get Ruff version
-        id: ruff_version
-        run: |
-          $Env:RUFF_VERSION=Select-String -path pyproject.toml -pattern 'ruff ?([=<>~]?= ?[\d\.]+)' | %{ $_.Matches[0].Groups[1].Value }
-          echo $Env:RUFF_VERSION
-          echo "RUFF_VERSION=$Env:RUFF_VERSION" >> $Env:GITHUB_OUTPUT
-      - uses: astral-sh/ruff-action@v2
-        with:
-          version: ${{ steps.ruff_version.outputs.RUFF_VERSION }}
+        uses: actions/checkout@v5
+      - uses: astral-sh/ruff-action@v3
   mypy:
     runs-on: windows-latest
     strategy:
@@ -46,11 +38,9 @@ jobs:
             numpy-version: "numpy==1.26.*" # Fixes distutils removal issue with setuptools
     steps:
       - name: Checkout ${{ github.repository }}/${{ github.ref }}
-        uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v4
+        uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v7
         with:
-          enable-cache: true
-          cache-dependency-glob: "pyproject.toml"
           python-version: ${{ matrix.python-version }}
       - name: Install the project
         run: uv pip install -r pyproject.toml ${{ matrix.numpy-version }} --all-extras --system
@@ -73,11 +63,9 @@ jobs:
             numpy-version: "numpy==1.26.*" # Fixes distutils removal issue with setuptools
     steps:
       - name: Checkout ${{ github.repository }}/${{ github.ref }}
-        uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v4
+        uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v7
         with:
-          enable-cache: true
-          cache-dependency-glob: "pyproject.toml"
           python-version: ${{ matrix.python-version }}
       - name: Install the project
         run: uv pip install -r pyproject.toml ${{ matrix.numpy-version }} --all-extras --system
