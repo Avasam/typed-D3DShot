@@ -1,5 +1,6 @@
 import abc
-from typing import Any, Generic, Iterable, Sequence, TypeVar
+from collections.abc import Iterable, Sequence
+from typing import Any, Generic, TypeVar
 
 from _typeshed import Incomplete
 from comtypes import hints as hints

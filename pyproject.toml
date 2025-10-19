@@ -3,6 +3,9 @@
 requires = ["setuptools >= 69.0.0"] # Automatically pickup `py.typed` file
 build-backend = "setuptools.build_meta"
 
+[tool.setuptools]
+packages = ["d3dshot"]
+
 [project]
 name = "typed-D3DShot"
 version = "1.1.0"

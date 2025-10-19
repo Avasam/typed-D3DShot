@@ -1,4 +1,5 @@
-from typing import Any, Sequence
+from collections.abc import Sequence
+from typing import Any
 
 from _typeshed import Incomplete
 from comtypes import typeinfo as typeinfo

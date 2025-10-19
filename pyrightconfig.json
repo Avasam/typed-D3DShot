@@ -1,6 +1,7 @@
 {
   "typeCheckingMode": "standard",
   "exclude": [
+    ".venv",
     "typings/comtypes"
   ],
   // Allow mypy comments to cover pyright too

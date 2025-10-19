@@ -1,7 +1,8 @@
 import ctypes
+from collections.abc import Sequence
 from ctypes import _Pointer, c_int, c_void_p
 from ctypes.wintypes import DWORD, WCHAR
-from typing import Any, Sequence, TypeVar, overload
+from typing import Any, TypeVar, overload
 
 from _typeshed import Incomplete
 from comtypes import (

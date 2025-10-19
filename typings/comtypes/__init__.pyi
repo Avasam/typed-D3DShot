@@ -79,11 +79,7 @@ class _cominterface_meta(type):
 
 class _compointer_meta(Incomplete, _cominterface_meta): ...
 
-class _compointer_base(c_void_p, metaclass=_compointer_meta):
-    def __del__(self, _debug=...) -> None: ...
-    def __cmp__(self, other): ...
-    def __eq__(self, other): ...
-    def __hash__(self): ...
+class _compointer_base(c_void_p, metaclass=_compointer_meta):  # type: ignore[metaclass]
     value: Incomplete
     @classmethod
     def from_param(cls, value): ...
@@ -94,7 +90,7 @@ class BSTR(_SimpleCData):  # type: ignore[type-arg]
     @classmethod
     def from_param(cls, value): ...
 
-class helpstring(str): ...
+class helpstring(str): ...  # noqa: FURB189
 
 class defaultvalue:
     value: Incomplete
@@ -109,7 +105,7 @@ def COMMETHOD(idlflags, restype, methodname, *argspec) -> _ComMemberSpec: ...
 
 _T_IUnknown = TypeVar("_T_IUnknown", bound=IUnknown)
 
-class _IUnknown_Base(c_void_p, metaclass=_cominterface_meta): ...  # pyright: ignore[reportGeneralTypeIssues]
+class _IUnknown_Base(c_void_p, metaclass=_cominterface_meta): ...  # type: ignore[metaclass]
 
 class IUnknown(_IUnknown_Base, metaclass=_cominterface_meta):
     def QueryInterface(

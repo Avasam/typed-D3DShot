@@ -13,7 +13,5 @@ class _SafeArrayAsNdArrayContextManager:
         exc_value: BaseException | None,
         traceback: types.TracebackType | None,
     ) -> None: ...
-    def __bool__(self) -> bool: ...
-    __nonzero__ = __bool__
 
 safearray_as_ndarray: Incomplete

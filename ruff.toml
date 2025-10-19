@@ -58,6 +58,7 @@ ignore = [
   "UP047", # non-pep695-generic-function
   # Checked by type-checker (pyright/mypy)
   # "ANN", # flake-annotations # WE USE IT IN THIS LIB TO PREVENT MISSING ANNOTATIONS
+  "ANN401", # Dynamically typed expressions (typing.Any) are disallowed in `{}`
   "PGH003", # blanket-type-ignore
   # "TC", # flake8-type-checking # WE WANT IT IN THIS LIBRARY TO AVOID CIRCULAR DEPENDENCIES
   # Already shown by Pylance, checked by pyright, and can be caused by overloads.

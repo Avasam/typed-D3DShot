@@ -1,4 +1,5 @@
-from typing import Any, Callable, Iterator, NamedTuple
+from collections.abc import Iterator
+from typing import Any, Callable, NamedTuple
 
 import comtypes
 from _typeshed import Incomplete
