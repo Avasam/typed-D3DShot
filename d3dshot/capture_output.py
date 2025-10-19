@@ -88,7 +88,7 @@ class CaptureOutput:
     ) -> _AllBackendsFrameTypes:  # Include the full union for all subtypes
         raise NotImplementedError
 
-    def to_pil(self, frame: Any) -> Image.Image:  # noqa: ANN401
+    def to_pil(self, frame: Any) -> Image.Image:
         raise NotImplementedError
 
     def stack(
