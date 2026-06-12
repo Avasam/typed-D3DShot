@@ -29,7 +29,9 @@ jobs:
         # Check format even if the the previous step failed
         if: ${{ !cancelled() }}
   mypy:
-    runs-on: windows-11-arm
+    # Not windows-11-arm: PyTorch has no Windows ARM64 wheels,
+    # and we want torch installed for full typing coverage
+    runs-on: windows-latest
     strategy:
       fail-fast: false
       matrix:
@@ -55,7 +57,9 @@ jobs:
         run: uv pip install -r pyproject.toml ${{ matrix.numpy-version }} --group=dev
       - run: mypy d3dshot/
   Pyright:
-    runs-on: windows-11-arm
+    # Not windows-11-arm: PyTorch has no Windows ARM64 wheels,
+    # and we want torch installed for full typing coverage
+    runs-on: windows-latest
     strategy:
       fail-fast: false
       matrix:
@@ -111,5 +115,11 @@ jobs:
           activate-environment: true
       - name: Install the project
         run: uv pip install -r pyproject.toml ${{ matrix.numpy-version }} --all-extras
+      - name: Install the project (all extras)
+        if: matrix.os == 'windows-latest'
+        run: uv pip install -r pyproject.toml ${{ matrix.numpy-version }} --all-extras
+      - name: Install the project (without torch)
+        if: matrix.os == 'windows-11-arm'
+        run: uv pip install -r pyproject.toml ${{ matrix.numpy-version }} --extra numpy --extra PIL
       - name: Run test suite
         run: python -m unittest discover --start-directory tests --verbose
