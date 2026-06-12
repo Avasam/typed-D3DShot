@@ -14,14 +14,19 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  ruff:
-    runs-on: windows-11-arm
+  Ruff:
+    runs-on: ubuntu-24.04-arm
+    env:
+      RUFF_OUTPUT_FORMAT: github
     steps:
-      - name: Checkout ${{ github.repository }}/${{ github.ref }}
-        uses: actions/checkout@v6
-      - uses: astral-sh/ruff-action@v4
-      - run: ruff format --check --diff
-        # Check formatting even if the the previous step failed
+      - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@v7
+        with:
+          activate-environment: true
+      - run: uv sync --locked --only-group=ruff
+      - run: ruff check
+      - run: ruff format --check
+        # Check format even if the the previous step failed
         if: ${{ !cancelled() }}
   mypy:
     runs-on: windows-11-arm
