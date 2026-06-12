@@ -4,6 +4,7 @@ Smoke test: import every one of our own modules, including submodules.
 Catches import-time errors early: syntax errors, missing dependencies
 and broken platform guards in module-level code.
 """
+
 from __future__ import annotations
 
 import importlib
