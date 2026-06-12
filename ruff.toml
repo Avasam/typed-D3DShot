@@ -108,6 +108,7 @@ ignore = [
   ###
   # Specific to this project
   ###
+  "PT", # Not using Pytest (yet)
   "CPY001", # missing-copyright-notice: Assume license from root
   "PD", # Not using Pandas
   "PLC0415", # import-outside-top-level # https://github.com/astral-sh/ruff/issues/12803

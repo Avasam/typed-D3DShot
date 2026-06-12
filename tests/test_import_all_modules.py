@@ -4,6 +4,7 @@ Smoke test: import every one of our own modules, including submodules.
 Catches import-time errors early: syntax errors, missing dependencies
 and broken platform guards in module-level code.
 """
+from __future__ import annotations
 
 import importlib
 import operator
@@ -11,6 +12,10 @@ import pkgutil
 import sys
 import unittest
 from pathlib import Path
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from collections.abc import Generator
 
 SRC_DIR = Path(__file__).parent.parent / "d3dshot"
 
@@ -38,7 +43,7 @@ EXPECTED_OS_ERRORS = frozenset(
 )
 
 
-def iter_all_modules():
+def iter_all_modules() -> Generator[str]:
     """Yields every top-level module, followed by its direct submodules."""
     for top_level in sorted(pkgutil.iter_modules([SRC_DIR]), key=operator.attrgetter("name")):
         yield top_level.name
@@ -48,7 +53,7 @@ def iter_all_modules():
 
 
 class TestImportAllModules(unittest.TestCase):
-    def test_import_all_modules(self):
+    def test_import_all_modules(self) -> None:
         for module_name in iter_all_modules():
             with self.subTest(module=module_name):
                 if module_name in EXPECTED_OS_ERRORS:

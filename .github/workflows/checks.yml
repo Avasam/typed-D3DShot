@@ -19,7 +19,7 @@ jobs:
     steps:
       - name: Checkout ${{ github.repository }}/${{ github.ref }}
         uses: actions/checkout@v6
-      - uses: astral-sh/ruff-action@v3
+      - uses: astral-sh/ruff-action@v4
       - run: ruff format --check --diff
         # Check formatting even if the the previous step failed
         if: ${{ !cancelled() }}
@@ -75,7 +75,7 @@ jobs:
       - name: Install the project
         run: uv pip install -r pyproject.toml ${{ matrix.numpy-version }} --group=dev
       - name: Analysing the code with Pyright
-        uses: jakebailey/pyright-action@v2
+        uses: jakebailey/pyright-action@v3
         with:
           python-version: ${{ matrix.python-version }}
           version: PATH
