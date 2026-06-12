@@ -113,8 +113,6 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           activate-environment: true
-      - name: Install the project
-        run: uv pip install -r pyproject.toml ${{ matrix.numpy-version }} --all-extras
       - name: Install the project (all extras)
         if: matrix.os == 'windows-latest'
         run: uv pip install -r pyproject.toml ${{ matrix.numpy-version }} --all-extras
