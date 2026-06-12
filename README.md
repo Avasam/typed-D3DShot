@@ -50,7 +50,7 @@ d.screenshot_to_disk()
 ```
 
 ```python
-Out[1]: './1554298682.5632973.png'
+Out[1]: "./1554298682.5632973.png"
 ```
 
 **Screen Capture for 5 Seconds and Grab the Latest Frame**
@@ -153,7 +153,7 @@ _D3DShot_ is however quite flexible! As your environment meets certain optional 
 d = d3dshot.create(capture_output="numpy")
 
 # Captures will be np.ndarray of dtype float64 with normalized values in range (0.0, 1.0)
-d = d3dshot.create(capture_output="numpy_float")  
+d = d3dshot.create(capture_output="numpy_float")
 ```
 
 **If _NumPy_ and _PyTorch_ are available**
@@ -406,7 +406,8 @@ _Returns_: A list of frames with a format that matches the capture output you se
 **Grab specific frames from the buffer as a stack**
 
 ```python
-d.get_frame_stack([X, Y, Z, ...], stack_dimension="first|last")  # Where X, Y, Z are valid indices to desired frames
+d.get_frame_stack([X, Y, Z, ...], stack_dimension="first|last")
+# Where X, Y, Z are valid indices to desired frames
 ```
 
 Only has an effect on NumPy and PyTorch capture outputs.
