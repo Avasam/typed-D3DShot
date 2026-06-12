@@ -4,6 +4,7 @@ extend = ".venv/Beslogic-Ruff-Config/ruff.toml"
 [lint]
 ignore = [
   # Not needed or wanted
+  "PT", # Not using Pytest (yet)
   "EXE", # Windows-only lib, ignore on CI
   "CPY001", # missing-copyright-notice: Assume license from root
   "PD", # Not using Pandas

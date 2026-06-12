@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   Ruff:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm
     env:
       RUFF_OUTPUT_FORMAT: github
     steps:
@@ -29,6 +29,8 @@ jobs:
         # Check format even if the the previous step failed
         if: ${{ !cancelled() }}
   mypy:
+    # Not windows-11-arm: PyTorch has no Windows ARM64 wheels,
+    # and we want torch installed for full typing coverage
     runs-on: windows-latest
     strategy:
       fail-fast: false
@@ -55,6 +57,8 @@ jobs:
         run: uv pip install -r pyproject.toml ${{ matrix.numpy-version }} --group=dev
       - run: mypy d3dshot/
   Pyright:
+    # Not windows-11-arm: PyTorch has no Windows ARM64 wheels,
+    # and we want torch installed for full typing coverage
     runs-on: windows-latest
     strategy:
       fail-fast: false
@@ -85,3 +89,35 @@ jobs:
           python-version: ${{ matrix.python-version }}
           version: PATH
           working-directory: d3dshot/
+  unittest:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, windows-11-arm]
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
+        # Our minimum NumPy 1 supported and latest NumPy 2
+        numpy-version: ["numpy>=2"]
+        # To save on workflow runtime, only test oldest NumPy on extreme ends of Python version
+        # This should at least ensure support for oldest combination
+        # and let us know when newest NumPy drops support for any Python version
+        include:
+          - python-version: "3.9"
+            numpy-version: "numpy==1.26.*"
+          - python-version: "3.14"
+            numpy-version: "numpy==1.26.*"
+    steps:
+      - name: Checkout ${{ github.repository }}/${{ github.ref }}
+        uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@v7
+        with:
+          python-version: ${{ matrix.python-version }}
+          activate-environment: true
+      - name: Install the project (all extras)
+        if: matrix.os == 'windows-latest'
+        run: uv pip install -r pyproject.toml ${{ matrix.numpy-version }} --all-extras
+      - name: Install the project (without torch)
+        if: matrix.os == 'windows-11-arm'
+        run: uv pip install -r pyproject.toml ${{ matrix.numpy-version }} --extra numpy --extra PIL
+      - name: Run test suite
+        run: python -m unittest discover --start-directory tests --verbose
