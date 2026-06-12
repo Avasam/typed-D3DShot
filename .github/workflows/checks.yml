@@ -33,7 +33,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "3.15"]
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
         # Our minimum NumPy 1 supported and latest NumPy 2
         numpy-version: ["numpy>=2"]
         # To save on workflow runtime, only test oldest NumPy on extreme ends of Python version
@@ -42,7 +42,7 @@ jobs:
         include:
           - python-version: "3.9"
             numpy-version: "numpy==1.26.*"
-          - python-version: "3.15"
+          - python-version: "3.14"
             numpy-version: "numpy==1.26.*"
     steps:
       - name: Checkout ${{ github.repository }}/${{ github.ref }}
@@ -59,7 +59,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "3.15"]
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
         # Our minimum NumPy 1 supported and latest NumPy 2
         numpy-version: ["numpy>=2"]
         # To save on workflow runtime, only test oldest NumPy on extreme ends of Python version
@@ -68,7 +68,7 @@ jobs:
         include:
           - python-version: "3.9"
             numpy-version: "numpy==1.26.*"
-          - python-version: "3.15"
+          - python-version: "3.14"
             numpy-version: "numpy==1.26.*"
     steps:
       - name: Checkout ${{ github.repository }}/${{ github.ref }}
