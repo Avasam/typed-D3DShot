@@ -58,7 +58,7 @@ class Display:
         dxgi_adapter: _Pointer[d3dshot.dll.dxgi.IDXGIAdapter]
         | _Pointer[d3dshot.dll.dxgi.IDXGIAdapter1],
     ) -> None: ...
-    def __init__(  # noqa: PLR0913, PLR0917
+    def __init__(  # noqa: PLR0913
         self,
         name: str | None = None,
         adapter_name: str | None = None,

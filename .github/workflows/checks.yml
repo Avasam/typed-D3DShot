@@ -14,14 +14,19 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  ruff:
-    runs-on: windows-latest
+  Ruff:
+    runs-on: ubuntu-latest
+    env:
+      RUFF_OUTPUT_FORMAT: github
     steps:
-      - name: Checkout ${{ github.repository }}/${{ github.ref }}
-        uses: actions/checkout@v5
-      - uses: astral-sh/ruff-action@v3
-      - run: ruff format --check --diff
-        # Check formatting even if the the previous step failed
+      - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@v7
+        with:
+          activate-environment: true
+      - run: uv sync --locked --only-group=ruff
+      - run: ruff check
+      - run: ruff format --check
+        # Check format even if the the previous step failed
         if: ${{ !cancelled() }}
   mypy:
     runs-on: windows-latest
@@ -41,7 +46,7 @@ jobs:
             numpy-version: "numpy==1.26.*"
     steps:
       - name: Checkout ${{ github.repository }}/${{ github.ref }}
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - uses: astral-sh/setup-uv@v7
         with:
           python-version: ${{ matrix.python-version }}
@@ -67,7 +72,7 @@ jobs:
             numpy-version: "numpy==1.26.*"
     steps:
       - name: Checkout ${{ github.repository }}/${{ github.ref }}
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - uses: astral-sh/setup-uv@v7
         with:
           python-version: ${{ matrix.python-version }}
@@ -75,7 +80,7 @@ jobs:
       - name: Install the project
         run: uv pip install -r pyproject.toml ${{ matrix.numpy-version }} --group=dev
       - name: Analysing the code with Pyright
-        uses: jakebailey/pyright-action@v2
+        uses: jakebailey/pyright-action@v3
         with:
           python-version: ${{ matrix.python-version }}
           version: PATH
