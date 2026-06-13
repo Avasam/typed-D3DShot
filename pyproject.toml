@@ -1,7 +1,10 @@
-
 [build-system]
 requires = ["uv_build>=0.11.21,<0.12"]
 build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "d3dshot"
+module-root = ""
 
 [project]
 name = "typed-D3DShot"
