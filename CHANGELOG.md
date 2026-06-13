@@ -3,6 +3,8 @@
 ## 1.1.1
 
 * Fixed an access violation crash in `initialize_dxgi_factory` on ARM64: `CreateDXGIFactory1`'s `REFIID` argument was passed by value instead of by reference (the x64 ABI masked this by passing large structs by hidden reference)
+* Changed build backend from `setuptools` to `uv_build`
+* Add `numpy >= 2.3.0` for ARM64 Python 3.11+
 
 ## 1.1.0
 

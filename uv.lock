@@ -2,10 +2,14 @@ version = 1
 revision = 3
 requires-python = ">=3.9"
 resolution-markers = [
-    "python_full_version >= '3.15'",
-    "python_full_version >= '3.13' and python_full_version < '3.15'",
-    "python_full_version == '3.12.*'",
-    "python_full_version == '3.11.*'",
+    "python_full_version >= '3.15' and platform_machine == 'ARM64'",
+    "python_full_version >= '3.15' and platform_machine != 'ARM64'",
+    "python_full_version >= '3.13' and python_full_version < '3.15' and platform_machine == 'ARM64'",
+    "python_full_version >= '3.13' and python_full_version < '3.15' and platform_machine != 'ARM64'",
+    "python_full_version == '3.12.*' and platform_machine == 'ARM64'",
+    "python_full_version == '3.12.*' and platform_machine != 'ARM64'",
+    "python_full_version == '3.11.*' and platform_machine == 'ARM64'",
+    "python_full_version == '3.11.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.10.*'",
     "python_full_version < '3.10'",
 ]
@@ -158,10 +162,14 @@ name = "filelock"
 version = "3.20.0"
 source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
-    "python_full_version >= '3.15'",
-    "python_full_version >= '3.13' and python_full_version < '3.15'",
-    "python_full_version == '3.12.*'",
-    "python_full_version == '3.11.*'",
+    "python_full_version >= '3.15' and platform_machine == 'ARM64'",
+    "python_full_version >= '3.15' and platform_machine != 'ARM64'",
+    "python_full_version >= '3.13' and python_full_version < '3.15' and platform_machine == 'ARM64'",
+    "python_full_version >= '3.13' and python_full_version < '3.15' and platform_machine != 'ARM64'",
+    "python_full_version == '3.12.*' and platform_machine == 'ARM64'",
+    "python_full_version == '3.12.*' and platform_machine != 'ARM64'",
+    "python_full_version == '3.11.*' and platform_machine == 'ARM64'",
+    "python_full_version == '3.11.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.10.*'",
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/58/46/0028a82567109b5ef6e4d2a1f04a583fb513e6cf9527fcdd09afd817deeb/filelock-3.20.0.tar.gz", hash = "sha256:711e943b4ec6be42e1d4e6690b48dc175c822967466bb31c0c293f34334c13f4", size = 18922, upload-time = "2025-10-08T18:03:50.056Z" }
@@ -464,10 +472,14 @@ name = "mypy"
 version = "2.1.0"
 source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
-    "python_full_version >= '3.15'",
-    "python_full_version >= '3.13' and python_full_version < '3.15'",
-    "python_full_version == '3.12.*'",
-    "python_full_version == '3.11.*'",
+    "python_full_version >= '3.15' and platform_machine == 'ARM64'",
+    "python_full_version >= '3.15' and platform_machine != 'ARM64'",
+    "python_full_version >= '3.13' and python_full_version < '3.15' and platform_machine == 'ARM64'",
+    "python_full_version >= '3.13' and python_full_version < '3.15' and platform_machine != 'ARM64'",
+    "python_full_version == '3.12.*' and platform_machine == 'ARM64'",
+    "python_full_version == '3.12.*' and platform_machine != 'ARM64'",
+    "python_full_version == '3.11.*' and platform_machine == 'ARM64'",
+    "python_full_version == '3.11.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.10.*'",
 ]
 dependencies = [
@@ -563,10 +575,14 @@ name = "networkx"
 version = "3.5"
 source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
-    "python_full_version >= '3.15'",
-    "python_full_version >= '3.13' and python_full_version < '3.15'",
-    "python_full_version == '3.12.*'",
-    "python_full_version == '3.11.*'",
+    "python_full_version >= '3.15' and platform_machine == 'ARM64'",
+    "python_full_version >= '3.15' and platform_machine != 'ARM64'",
+    "python_full_version >= '3.13' and python_full_version < '3.15' and platform_machine == 'ARM64'",
+    "python_full_version >= '3.13' and python_full_version < '3.15' and platform_machine != 'ARM64'",
+    "python_full_version == '3.12.*' and platform_machine == 'ARM64'",
+    "python_full_version == '3.12.*' and platform_machine != 'ARM64'",
+    "python_full_version == '3.11.*' and platform_machine == 'ARM64'",
+    "python_full_version == '3.11.*' and platform_machine != 'ARM64'",
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/6c/4f/ccdb8ad3a38e583f214547fd2f7ff1fc160c43a75af88e6aec213404b96a/networkx-3.5.tar.gz", hash = "sha256:d4c6f9cf81f52d69230866796b82afbccdec3db7ae4fbd1b65ea750feed50037", size = 2471065, upload-time = "2025-05-29T11:35:07.804Z" }
 wheels = [
@@ -723,10 +739,14 @@ name = "numpy"
 version = "2.4.6"
 source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
-    "python_full_version >= '3.15'",
-    "python_full_version >= '3.13' and python_full_version < '3.15'",
-    "python_full_version == '3.12.*'",
-    "python_full_version == '3.11.*'",
+    "python_full_version >= '3.15' and platform_machine == 'ARM64'",
+    "python_full_version >= '3.15' and platform_machine != 'ARM64'",
+    "python_full_version >= '3.13' and python_full_version < '3.15' and platform_machine == 'ARM64'",
+    "python_full_version >= '3.13' and python_full_version < '3.15' and platform_machine != 'ARM64'",
+    "python_full_version == '3.12.*' and platform_machine == 'ARM64'",
+    "python_full_version == '3.12.*' and platform_machine != 'ARM64'",
+    "python_full_version == '3.11.*' and platform_machine == 'ARM64'",
+    "python_full_version == '3.11.*' and platform_machine != 'ARM64'",
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/d0/ad/fed0499ce6a338d2a03ebae59cd15093910c8875328855781952abf6c2fe/numpy-2.4.6.tar.gz", hash = "sha256:f3a3570c4a2a16746ac2c31a7c7c7b0c186b95ce902e33db6f28094ed7387dda", size = 20735807, upload-time = "2026-05-18T23:37:14.07Z" }
 wheels = [
@@ -1098,10 +1118,14 @@ name = "pathspec"
 version = "1.1.1"
 source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
-    "python_full_version >= '3.15'",
-    "python_full_version >= '3.13' and python_full_version < '3.15'",
-    "python_full_version == '3.12.*'",
-    "python_full_version == '3.11.*'",
+    "python_full_version >= '3.15' and platform_machine == 'ARM64'",
+    "python_full_version >= '3.15' and platform_machine != 'ARM64'",
+    "python_full_version >= '3.13' and python_full_version < '3.15' and platform_machine == 'ARM64'",
+    "python_full_version >= '3.13' and python_full_version < '3.15' and platform_machine != 'ARM64'",
+    "python_full_version == '3.12.*' and platform_machine == 'ARM64'",
+    "python_full_version == '3.12.*' and platform_machine != 'ARM64'",
+    "python_full_version == '3.11.*' and platform_machine == 'ARM64'",
+    "python_full_version == '3.11.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.10.*'",
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/5a/82/42f767fc1c1143d6fd36efb827202a2d997a375e160a71eb2888a925aac1/pathspec-1.1.1.tar.gz", hash = "sha256:17db5ecd524104a120e173814c90367a96a98d07c45b2e10c2f3919fff91bf5a", size = 135180, upload-time = "2026-04-27T01:46:08.907Z" }
@@ -1230,10 +1254,14 @@ name = "pillow"
 version = "12.0.0"
 source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
-    "python_full_version >= '3.15'",
-    "python_full_version >= '3.13' and python_full_version < '3.15'",
-    "python_full_version == '3.12.*'",
-    "python_full_version == '3.11.*'",
+    "python_full_version >= '3.15' and platform_machine == 'ARM64'",
+    "python_full_version >= '3.15' and platform_machine != 'ARM64'",
+    "python_full_version >= '3.13' and python_full_version < '3.15' and platform_machine == 'ARM64'",
+    "python_full_version >= '3.13' and python_full_version < '3.15' and platform_machine != 'ARM64'",
+    "python_full_version == '3.12.*' and platform_machine == 'ARM64'",
+    "python_full_version == '3.12.*' and platform_machine != 'ARM64'",
+    "python_full_version == '3.11.*' and platform_machine == 'ARM64'",
+    "python_full_version == '3.11.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.10.*'",
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/5a/b0/cace85a1b0c9775a9f8f5d5423c8261c858760e2466c79b2dd184638b056/pillow-12.0.0.tar.gz", hash = "sha256:87d4f8125c9988bfbed67af47dd7a953e2fc7b0cc1e7800ec6d2080d490bb353", size = 47008828, upload-time = "2025-10-15T18:24:14.008Z" }
@@ -1505,10 +1533,14 @@ name = "torch"
 version = "2.12.0"
 source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
-    "python_full_version >= '3.15'",
-    "python_full_version >= '3.13' and python_full_version < '3.15'",
-    "python_full_version == '3.12.*'",
-    "python_full_version == '3.11.*'",
+    "python_full_version >= '3.15' and platform_machine == 'ARM64'",
+    "python_full_version >= '3.15' and platform_machine != 'ARM64'",
+    "python_full_version >= '3.13' and python_full_version < '3.15' and platform_machine == 'ARM64'",
+    "python_full_version >= '3.13' and python_full_version < '3.15' and platform_machine != 'ARM64'",
+    "python_full_version == '3.12.*' and platform_machine == 'ARM64'",
+    "python_full_version == '3.12.*' and platform_machine != 'ARM64'",
+    "python_full_version == '3.11.*' and platform_machine == 'ARM64'",
+    "python_full_version == '3.11.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.10.*'",
 ]
 dependencies = [
@@ -1585,10 +1617,14 @@ name = "triton"
 version = "3.7.0"
 source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
-    "python_full_version >= '3.15'",
-    "python_full_version >= '3.13' and python_full_version < '3.15'",
-    "python_full_version == '3.12.*'",
-    "python_full_version == '3.11.*'",
+    "python_full_version >= '3.15' and platform_machine == 'ARM64'",
+    "python_full_version >= '3.15' and platform_machine != 'ARM64'",
+    "python_full_version >= '3.13' and python_full_version < '3.15' and platform_machine == 'ARM64'",
+    "python_full_version >= '3.13' and python_full_version < '3.15' and platform_machine != 'ARM64'",
+    "python_full_version == '3.12.*' and platform_machine == 'ARM64'",
+    "python_full_version == '3.12.*' and platform_machine != 'ARM64'",
+    "python_full_version == '3.11.*' and platform_machine == 'ARM64'",
+    "python_full_version == '3.11.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.10.*'",
 ]
 wheels = [
@@ -1652,6 +1688,7 @@ ruff = [
 requires-dist = [
     { name = "comtypes", marker = "python_full_version < '3.13'", specifier = ">=1.1.7" },
     { name = "comtypes", marker = "python_full_version >= '3.13'", specifier = ">=1.4.8" },
+    { name = "numpy", marker = "python_full_version >= '3.11' and platform_machine == 'ARM64' and extra == 'numpy'", specifier = ">=2.3.0" },
     { name = "numpy", marker = "extra == 'numpy'", specifier = ">=1.26.0" },
     { name = "pillow", marker = "extra == 'pil'", specifier = ">=9.1.0" },
     { name = "torch", marker = "python_full_version < '3.10' and extra == 'torch'", specifier = "<2.9.0" },

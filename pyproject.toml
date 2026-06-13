@@ -1,7 +1,7 @@
 
 [build-system]
-requires = ["setuptools >= 69.0.0"] # Automatically pickup `py.typed` file
-build-backend = "setuptools.build_meta"
+requires = ["uv_build>=0.11.21,<0.12"]
+build-backend = "uv_build"
 
 [project]
 name = "typed-D3DShot"
@@ -55,6 +55,8 @@ numpy = [
   # NumPy 1 is already in maintenance mode anyway
   # Simplify testing and promote dropping usages of distutils
   "numpy >= 1.26.0",
+  # First version with Windows ARM64 wheels, requires Python 3.11+
+  "numpy >= 2.3.0 ; platform_machine == 'ARM64' and python_version >= '3.11'",
 ]
 torch = [
   "typed-D3DShot[numpy]",
