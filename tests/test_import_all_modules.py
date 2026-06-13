@@ -10,6 +10,7 @@ from __future__ import annotations
 import importlib
 import operator
 import pkgutil
+import platform
 import sys
 import unittest
 from pathlib import Path
@@ -20,6 +21,8 @@ if TYPE_CHECKING:
 
 SRC_DIR = Path(__file__).parent.parent / "d3dshot"
 sys.path.insert(0, str(SRC_DIR))
+
+IS_ARM64 = platform.machine() == "ARM64"
 
 
 def iter_all_modules() -> Generator[str]:
@@ -34,6 +37,9 @@ def iter_all_modules() -> Generator[str]:
 class TestImportAllModules(unittest.TestCase):
     def test_import_all_modules(self) -> None:
         for module_name in iter_all_modules():
+            if module_name.startswith("capture_outputs.pytorch_") and IS_ARM64:
+                # PyTorch has no Windows ARM64 wheels
+                continue
             with self.subTest(module=module_name):
                 importlib.import_module(module_name)
 
