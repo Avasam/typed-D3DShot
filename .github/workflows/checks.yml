@@ -48,8 +48,10 @@ jobs:
           - python-version: "3.14"
             resolution: lowest-direct
     steps:
-      - name: Checkout ${{ github.repository }}/${{ github.ref }}
-        uses: actions/checkout@v6
+      - uses: actions/checkout@v6
+      - name: Install Pillow build dependencies
+        if: matrix.resolution == 'lowest-direct'
+        run: choco install -y --no-progress zlib
       - uses: astral-sh/setup-uv@v7
         with:
           python-version: ${{ matrix.python-version }}
@@ -75,8 +77,10 @@ jobs:
           - python-version: "3.14"
             resolution: lowest-direct
     steps:
-      - name: Checkout ${{ github.repository }}/${{ github.ref }}
-        uses: actions/checkout@v6
+      - uses: actions/checkout@v6
+      - name: Install Pillow build dependencies
+        if: matrix.resolution == 'lowest-direct'
+        run: choco install -y --no-progress zlib
       - uses: astral-sh/setup-uv@v7
         with:
           python-version: ${{ matrix.python-version }}
@@ -123,8 +127,11 @@ jobs:
             python-version: "3.14"
             resolution: lowest-direct
     steps:
-      - name: Checkout ${{ github.repository }}/${{ github.ref }}
-        uses: actions/checkout@v6
+      - uses: actions/checkout@v6
+      - name: Install Pillow build dependencies
+        if: matrix.resolution == 'lowest-direct'
+        run: choco install -y --no-progress zlib
+        #libjpeg-turbo
       - uses: astral-sh/setup-uv@v7
         with:
           # On ARM64, uv defaults to x86_64 Python, force it to aarch64.
