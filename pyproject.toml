@@ -58,7 +58,11 @@ dependencies = [
 [project.optional-dependencies]
 # First version w/ Image.Transpose enums
 # 10.3.0 is the first py.typed, but we can do with simple type inference
-PIL = ["pillow >= 9.1.0"]
+PIL = [
+  "pillow >= 9.1.0",
+  # Older Pillow source builds fail on Python 3.13+ due to setuptools KeyError: '__version__'
+  "pillow >= 10.4.0 ; python_version >= '3.13'",
+]
 numpy = [
   # Fixes distutils removal (Python 3.12) issue with setuptools
   # NumPy 1 is already in maintenance mode anyway
