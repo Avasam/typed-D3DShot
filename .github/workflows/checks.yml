@@ -51,7 +51,10 @@ jobs:
       - uses: actions/checkout@v6
       - name: Install Pillow build dependencies
         if: matrix.resolution == 'lowest-direct'
-        run: choco install -y --no-progress zlib
+        run: |
+          vcpkg install zlib:x64-windows
+          echo "INCLUDE=$env:VCPKG_INSTALLATION_ROOT\installed\x64-windows\include" >> $env:GITHUB_ENV
+          echo "LIB=$env:VCPKG_INSTALLATION_ROOT\installed\x64-windows\lib" >> $env:GITHUB_ENV
       - uses: astral-sh/setup-uv@v7
         with:
           python-version: ${{ matrix.python-version }}
@@ -80,7 +83,10 @@ jobs:
       - uses: actions/checkout@v6
       - name: Install Pillow build dependencies
         if: matrix.resolution == 'lowest-direct'
-        run: choco install -y --no-progress zlib
+        run: |
+          vcpkg install zlib:x64-windows
+          echo "INCLUDE=$env:VCPKG_INSTALLATION_ROOT\installed\x64-windows\include" >> $env:GITHUB_ENV
+          echo "LIB=$env:VCPKG_INSTALLATION_ROOT\installed\x64-windows\lib" >> $env:GITHUB_ENV
       - uses: astral-sh/setup-uv@v7
         with:
           python-version: ${{ matrix.python-version }}
@@ -130,8 +136,11 @@ jobs:
       - uses: actions/checkout@v6
       - name: Install Pillow build dependencies
         if: matrix.resolution == 'lowest-direct'
-        run: choco install -y --no-progress zlib
-        #libjpeg-turbo
+        run: |
+          $triplet = if ($env:PROCESSOR_ARCHITECTURE -eq 'ARM64') { 'arm64-windows' } else { 'x64-windows' }
+          vcpkg install "zlib:$triplet"
+          echo "INCLUDE=$env:VCPKG_INSTALLATION_ROOT\installed\$triplet\include" >> $env:GITHUB_ENV
+          echo "LIB=$env:VCPKG_INSTALLATION_ROOT\installed\$triplet\lib" >> $env:GITHUB_ENV
       - uses: astral-sh/setup-uv@v7
         with:
           # On ARM64, uv defaults to x86_64 Python, force it to aarch64.
