@@ -19,7 +19,8 @@ description = "Extremely Fast, Robust, and Typed, Screen Capture on Windows with
 readme = "README.md"
 authors = [{ name = "Nicholas Brochu", email = "nicholas@serpent.ai" }]
 maintainers = [{ name = "Avasam", email = "samuel.06@hotmail.com" }]
-license = { file = "LICENSE" }
+license = "MIT"
+license-files = ["LICENSE"]
 keywords = [
   "Computer Vision",
   "D3D",
@@ -32,7 +33,6 @@ keywords = [
 classifiers = [
   "Development Status :: 5 - Production/Stable",
   "Intended Audience :: Developers",
-  "License :: OSI Approved :: MIT License",
   "Natural Language :: English",
   "Operating System :: Microsoft :: Windows",
   "Operating System :: Microsoft :: Windows :: Windows 8.1",
