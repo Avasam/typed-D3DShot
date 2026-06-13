@@ -6,6 +6,12 @@ build-backend = "uv_build"
 module-name = "d3dshot"
 module-root = ""
 
+[project.urls]
+Homepage = "https://github.com/Avasam/D3DShot"
+Repository = "https://github.com/Avasam/D3DShot.git"
+Issues = "https://github.com/Avasam/D3DShot/issues"
+Changelog = "https://github.com/Avasam/D3DShot/blob/HEAD/CHANGELOG.md"
+
 [project]
 name = "typed-D3DShot"
 version = "1.1.1"
@@ -59,20 +65,18 @@ numpy = [
   # Simplify testing and promote dropping usages of distutils
   "numpy >= 1.26.0",
   # First versions with wheels for each Python version
-  # (the resolver still sees the sdist as available, but MinGW source builds crash)
-  # "numpy >= 2.1.0 ; python_version >= '3.13'",
-  # "numpy >= 2.3.2 ; python_version >= '3.14'",
+  "numpy >= 2.1.0 ; python_version >= '3.13'",
+  "numpy >= 2.3.2 ; python_version >= '3.14'",
   # First version with Windows ARM64 wheels, requires Python 3.11+
   "numpy >= 2.3.0 ; platform_machine == 'ARM64' and python_version >= '3.11'",
 ]
 torch = [
   "typed-D3DShot[numpy]",
   "torch >= 2.0.0", # First py.typed version
-  # UV's resolver doesn't account for lack of sdist or wheel https://github.com/astral-sh/uv/issues/9647
   # First versions with wheels for each Python version
-  # "torch >= 2.2.0 ; python_version >= '3.12'",
-  # "torch >= 2.6.0 ; python_version >= '3.13'",
-  # "torch >= 2.9.0 ; python_version >= '3.14'",
+  "torch >= 2.2.0 ; python_version >= '3.12'",
+  "torch >= 2.6.0 ; python_version >= '3.13'",
+  "torch >= 2.9.0 ; python_version >= '3.14'",
 ]
 
 [dependency-groups]
@@ -90,18 +94,10 @@ dev = [
 ]
 
 [tool.uv]
-exclude-newer = "1 week"
 # Fail fast with a resolver/install error instead of building (then crashing on)
 # a native sdist if the wheel-floor markers above ever have a gap
 no-build-package = ["numpy", "torch"]
-[tool.uv.exclude-newer-package]
-# package = "3 days" # Reason
+exclude-newer = "1 week"
 
 [tool.uv.sources]
 beslogic-ruff-config = { git = "https://github.com/Beslogic/Beslogic-Ruff-Config", rev = "312cfab" }
-
-[project.urls]
-Homepage = "https://github.com/Avasam/D3DShot"
-Repository = "https://github.com/Avasam/D3DShot.git"
-Issues = "https://github.com/Avasam/D3DShot/issues"
-Changelog = "https://github.com/Avasam/D3DShot/blob/HEAD/CHANGELOG.md"
