@@ -23,6 +23,8 @@ jobs:
       - uses: astral-sh/setup-uv@v7
         with:
           activate-environment: true
+      # NOTE: This is also our only check that validates the lockfile
+      # Which is important to ensure stricter resolvers (uv sync vs uv pip) do work
       - run: uv sync --locked --only-group=ruff
       - run: ruff check
       - run: ruff format --check
@@ -36,16 +38,15 @@ jobs:
       fail-fast: false
       matrix:
         python-version: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
-        # Our minimum NumPy 1 supported and latest NumPy 2
-        numpy-version: ["numpy>=2"]
-        # To save on workflow runtime, only test oldest NumPy on extreme ends of Python version
+        resolution: [highest]
+        # To save on workflow runtime, only test oldest resolution on extreme ends of Python version
         # This should at least ensure support for oldest combination
-        # and let us know when newest NumPy drops support for any Python version
+        # and let us know when newest dependencies drop support for any Python version
         include:
           - python-version: "3.9"
-            numpy-version: "numpy==1.26.*"
+            resolution: lowest-direct
           - python-version: "3.14"
-            numpy-version: "numpy==2.3.*"
+            resolution: lowest-direct
     steps:
       - name: Checkout ${{ github.repository }}/${{ github.ref }}
         uses: actions/checkout@v6
@@ -54,7 +55,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
           activate-environment: true
       - name: Install the project
-        run: uv pip install -r pyproject.toml ${{ matrix.numpy-version }} --group=dev
+        run: uv sync --resolution=${{ matrix.resolution }}
       - run: mypy d3dshot/
   Pyright:
     # Not windows-11-arm: PyTorch has no Windows ARM64 wheels,
@@ -64,16 +65,15 @@ jobs:
       fail-fast: false
       matrix:
         python-version: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
-        # Our minimum NumPy 1 supported and latest NumPy 2
-        numpy-version: ["numpy>=2"]
-        # To save on workflow runtime, only test oldest NumPy on extreme ends of Python version
+        resolution: [highest]
+        # To save on workflow runtime, only test oldest resolution on extreme ends of Python version
         # This should at least ensure support for oldest combination
-        # and let us know when newest NumPy drops support for any Python version
+        # and let us know when newest dependencies drop support for any Python version
         include:
           - python-version: "3.9"
-            numpy-version: "numpy==1.26.*"
+            resolution: lowest-direct
           - python-version: "3.14"
-            numpy-version: "numpy==2.3.*"
+            resolution: lowest-direct
     steps:
       - name: Checkout ${{ github.repository }}/${{ github.ref }}
         uses: actions/checkout@v6
@@ -82,7 +82,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
           activate-environment: true
       - name: Install the project
-        run: uv pip install -r pyproject.toml ${{ matrix.numpy-version }} --group=dev
+        run: uv sync --resolution=${{ matrix.resolution }}
       - name: Analysing the code with Pyright
         uses: jakebailey/pyright-action@v3
         with:
@@ -96,32 +96,32 @@ jobs:
       matrix:
         os: [windows-latest, windows-11-arm]
         python-version: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
-        # Our minimum NumPy 1 supported and latest NumPy 2
-        numpy-version: ["numpy>=2"]
+        resolution: [highest]
         # uv has no Windows ARM64 builds for Python 3.9 and 3.10
         exclude:
           - os: windows-11-arm
             python-version: "3.9"
           - os: windows-11-arm
             python-version: "3.10"
-        # To save on workflow runtime, only test oldest NumPy on extreme ends of Python version
+        # To save on workflow runtime, only test oldest resolution on extreme ends of Python version
         # This should at least ensure support for oldest combination
-        # and let us know when newest NumPy drops support for any Python version
-        # (os must be set explicitly: include entries that override numpy-version
-        # become standalone combinations and don't inherit matrix values)
+        # and let us know when newest dependencies drop support for any Python version
+        #
+        # os must be set explicitly: include entries that override resolution
+        # become standalone combinations and don't inherit matrix values
         include:
           - os: windows-latest
             python-version: "3.9"
-            numpy-version: "numpy==1.26.*"
+            resolution: lowest-direct
           - os: windows-latest
             python-version: "3.14"
-            numpy-version: "numpy==2.3.*"
+            resolution: lowest-direct
           - os: windows-11-arm
             python-version: "3.11"
-            numpy-version: "numpy==2.3.*"
+            resolution: lowest-direct
           - os: windows-11-arm
             python-version: "3.14"
-            numpy-version: "numpy==2.3.*"
+            resolution: lowest-direct
     steps:
       - name: Checkout ${{ github.repository }}/${{ github.ref }}
         uses: actions/checkout@v6
@@ -133,9 +133,9 @@ jobs:
           activate-environment: true
       - name: Install the project (all extras)
         if: matrix.os == 'windows-latest'
-        run: uv pip install -r pyproject.toml ${{ matrix.numpy-version }} --all-extras
+        run: uv sync --no-default-groups --all-extras --resolution=${{ matrix.resolution }}
       - name: Install the project (without torch)
         if: matrix.os == 'windows-11-arm'
-        run: uv pip install -r pyproject.toml ${{ matrix.numpy-version }} --extra numpy --extra PIL
+        run: uv sync --no-default-groups --extra numpy --extra PIL --resolution=${{ matrix.resolution }}
       - name: Run test suite
         run: python -m unittest discover --start-directory tests --verbose
