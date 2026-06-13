@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING, Literal, cast
 
 import numpy as np
 
@@ -28,8 +28,8 @@ class PytorchFloatCaptureOutput(PytorchCaptureOutput):
         rotation: Literal[0, 90, 180, 270],
     ) -> torch.Tensor:
         image = super().process(pointer, pitch, size, width, height, region, rotation)
-        return image / 255.0
-
+        # Incorrect type from __div__ on Python 3.9 --resolution=lowest-direct
+        return cast("torch.Tensor", image / 255.0)
     @override
     def to_pil(self, frame: _ArrayLikeFloat_co) -> Image.Image:  # type: ignore[override]
         from PIL import Image
