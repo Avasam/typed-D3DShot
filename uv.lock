@@ -1709,7 +1709,7 @@ ruff = [
 
 [package.metadata]
 requires-dist = [
-    { name = "comtypes", marker = "python_full_version < '3.13'", specifier = ">=1.1.7" },
+    { name = "comtypes", specifier = ">=1.1.11" },
     { name = "comtypes", marker = "python_full_version >= '3.13'", specifier = ">=1.4.8" },
     { name = "numpy", marker = "python_full_version >= '3.13' and extra == 'numpy'", specifier = ">=2.1.0" },
     { name = "numpy", marker = "python_full_version >= '3.14' and extra == 'numpy'", specifier = ">=2.3.2" },
