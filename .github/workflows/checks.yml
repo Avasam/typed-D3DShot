@@ -45,7 +45,7 @@ jobs:
           - python-version: "3.9"
             numpy-version: "numpy==1.26.*"
           - python-version: "3.14"
-            numpy-version: "numpy==1.26.*"
+            numpy-version: "numpy==2.3.*"
     steps:
       - name: Checkout ${{ github.repository }}/${{ github.ref }}
         uses: actions/checkout@v6
@@ -73,7 +73,7 @@ jobs:
           - python-version: "3.9"
             numpy-version: "numpy==1.26.*"
           - python-version: "3.14"
-            numpy-version: "numpy==1.26.*"
+            numpy-version: "numpy==2.3.*"
     steps:
       - name: Checkout ${{ github.repository }}/${{ github.ref }}
         uses: actions/checkout@v6
@@ -115,7 +115,7 @@ jobs:
             numpy-version: "numpy==1.26.*"
           - os: windows-latest
             python-version: "3.14"
-            numpy-version: "numpy==1.26.*"
+            numpy-version: "numpy==2.3.*"
           - os: windows-11-arm
             python-version: "3.11"
             numpy-version: "numpy==2.3.*"
