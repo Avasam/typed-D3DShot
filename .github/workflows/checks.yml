@@ -101,10 +101,20 @@ jobs:
         # To save on workflow runtime, only test oldest NumPy on extreme ends of Python version
         # This should at least ensure support for oldest combination
         # and let us know when newest NumPy drops support for any Python version
+        # (os must be set explicitly: include entries that override numpy-version
+        # become standalone combinations and don't inherit matrix values)
         include:
-          - python-version: "3.9"
+          - os: windows-latest
+            python-version: "3.9"
             numpy-version: "numpy==1.26.*"
-          - python-version: "3.14"
+          - os: windows-latest
+            python-version: "3.14"
+            numpy-version: "numpy==1.26.*"
+          - os: windows-11-arm
+            python-version: "3.9"
+            numpy-version: "numpy==1.26.*"
+          - os: windows-11-arm
+            python-version: "3.14"
             numpy-version: "numpy==1.26.*"
     steps:
       - name: Checkout ${{ github.repository }}/${{ github.ref }}
