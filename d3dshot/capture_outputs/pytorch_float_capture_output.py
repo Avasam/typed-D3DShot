@@ -28,7 +28,8 @@ class PytorchFloatCaptureOutput(PytorchCaptureOutput):
         rotation: Literal[0, 90, 180, 270],
     ) -> torch.Tensor:
         image = super().process(pointer, pitch, size, width, height, region, rotation)
-        return image / 255.0
+        # Incorrect type from __div__ on Python 3.9 --resolution=lowest-direct
+        return image / 255.0  # type: ignore[return-value]
 
     @override
     def to_pil(self, frame: _ArrayLikeFloat_co) -> Image.Image:  # type: ignore[override]

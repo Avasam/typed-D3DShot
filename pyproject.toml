@@ -1,11 +1,20 @@
-
 [build-system]
-requires = ["setuptools >= 69.0.0"] # Automatically pickup `py.typed` file
-build-backend = "setuptools.build_meta"
+requires = ["uv_build>=0.11.21,<0.12"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "d3dshot"
+module-root = ""
+
+[project.urls]
+Homepage = "https://github.com/Avasam/D3DShot"
+Repository = "https://github.com/Avasam/D3DShot.git"
+Issues = "https://github.com/Avasam/D3DShot/issues"
+Changelog = "https://github.com/Avasam/D3DShot/blob/HEAD/CHANGELOG.md"
 
 [project]
 name = "typed-D3DShot"
-version = "1.1.0"
+version = "1.1.1"
 description = "Extremely Fast, Robust, and Typed, Screen Capture on Windows with the Desktop Duplication API"
 readme = "README.md"
 authors = [{ name = "Nicholas Brochu", email = "nicholas@serpent.ai" }]
@@ -42,26 +51,36 @@ classifiers = [
 ]
 requires-python = ">= 3.9"
 dependencies = [
-  "comtypes >= 1.1.7 ; python_version < '3.13'",
+  "comtypes >= 1.1.11", # Fixed leftover Python 2 syntax
   "comtypes >= 1.4.8 ; python_version >= '3.13'", # Added Python 3.13 support
 ]
 
 [project.optional-dependencies]
 # First version w/ Image.Transpose enums
 # 10.3.0 is the first py.typed, but we can do with simple type inference
-PIL = ["pillow >= 9.1.0"]
+PIL = [
+  "pillow >= 9.1.0",
+  # Older Pillow source builds fail on Python 3.13+ due to setuptools KeyError: '__version__'
+  "pillow >= 10.4.0 ; python_version >= '3.13'",
+]
 numpy = [
   # Fixes distutils removal (Python 3.12) issue with setuptools
   # NumPy 1 is already in maintenance mode anyway
   # Simplify testing and promote dropping usages of distutils
   "numpy >= 1.26.0",
+  # First versions with wheels for each Python version
+  "numpy >= 2.1.0 ; python_version >= '3.13'",
+  "numpy >= 2.3.2 ; python_version >= '3.14'",
+  # First version with Windows ARM64 wheels, requires Python 3.11+
+  "numpy >= 2.3.0 ; platform_machine == 'ARM64' and python_version >= '3.11'",
 ]
 torch = [
   "typed-D3DShot[numpy]",
   "torch >= 2.0.0", # First py.typed version
-  # UV's resolver doesn't account for lack of sdist or wheel https://github.com/astral-sh/uv/issues/9647
-  # PyTorch 2.9.0 doesn't have Python 3.9 wheels
-  "torch < 2.9.0 ; python_version < '3.10'",
+  # First versions with wheels for each Python version
+  "torch >= 2.2.0 ; python_version >= '3.12'",
+  "torch >= 2.6.0 ; python_version >= '3.13'",
+  "torch >= 2.9.0 ; python_version >= '3.14'",
 ]
 
 [dependency-groups]
@@ -79,15 +98,10 @@ dev = [
 ]
 
 [tool.uv]
+# Fail fast with a resolver/install error instead of building (then crashing on)
+# a native sdist if the wheel-floor markers above ever have a gap
+no-build-package = ["numpy", "torch"]
 exclude-newer = "1 week"
-[tool.uv.exclude-newer-package]
-# package = "3 days" # Reason
 
 [tool.uv.sources]
 beslogic-ruff-config = { git = "https://github.com/Beslogic/Beslogic-Ruff-Config", rev = "312cfab" }
-
-[project.urls]
-Homepage = "https://github.com/Avasam/D3DShot"
-Repository = "https://github.com/Avasam/D3DShot.git"
-Issues = "https://github.com/Avasam/D3DShot/issues"
-Changelog = "https://github.com/Avasam/D3DShot/blob/HEAD/CHANGELOG.md"

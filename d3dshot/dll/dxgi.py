@@ -212,12 +212,13 @@ class IDXGIFactory1(IDXGIFactory):
 def initialize_dxgi_factory() -> _Pointer[IDXGIFactory1]:
     create_factory_func = ctypes.windll.dxgi.CreateDXGIFactory1
 
-    create_factory_func.argtypes = (comtypes.GUID, ctypes.POINTER(ctypes.c_void_p))
+    # REFIID must be a *pointer* to a GUID: by-value happens to work on x64 but crashes on ARM64
+    create_factory_func.argtypes = (ctypes.POINTER(comtypes.GUID), ctypes.POINTER(ctypes.c_void_p))
     create_factory_func.restype = ctypes.c_int32
 
     handle = ctypes.c_void_p(0)
 
-    create_factory_func(IDXGIFactory1._iid_, ctypes.byref(handle))
+    create_factory_func(ctypes.byref(IDXGIFactory1._iid_), ctypes.byref(handle))
     idxgi_factory = ctypes.POINTER(IDXGIFactory1)(handle.value)  # type: ignore[call-overload]
 
     return idxgi_factory  # noqa: RET504 # Keep for explicit name since we don't have types
