@@ -98,6 +98,12 @@ jobs:
         python-version: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
         # Our minimum NumPy 1 supported and latest NumPy 2
         numpy-version: ["numpy>=2"]
+        # uv has no Windows ARM64 builds for Python 3.9 and 3.10
+        exclude:
+          - os: windows-11-arm
+            python-version: "3.9"
+          - os: windows-11-arm
+            python-version: "3.10"
         # To save on workflow runtime, only test oldest NumPy on extreme ends of Python version
         # This should at least ensure support for oldest combination
         # and let us know when newest NumPy drops support for any Python version
@@ -111,7 +117,7 @@ jobs:
             python-version: "3.14"
             numpy-version: "numpy==1.26.*"
           - os: windows-11-arm
-            python-version: "3.9"
+            python-version: "3.11"
             numpy-version: "numpy==1.26.*"
           - os: windows-11-arm
             python-version: "3.14"

@@ -10,6 +10,7 @@ from __future__ import annotations
 import importlib
 import operator
 import pkgutil
+import sys
 import unittest
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -18,10 +19,11 @@ if TYPE_CHECKING:
     from collections.abc import Generator
 
 SRC_DIR = Path(__file__).parent.parent / "d3dshot"
+sys.path.insert(0, str(SRC_DIR))
 
 
 def iter_all_modules() -> Generator[str]:
-    """Yields every top-level module, followed by its direct submodules."""
+    """Yields every modules, followed by its direct submodules."""
     for top_level in sorted(pkgutil.iter_modules([SRC_DIR]), key=operator.attrgetter("name")):
         yield top_level.name
         if top_level.ispkg:
