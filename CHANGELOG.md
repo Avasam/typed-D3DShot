@@ -1,3 +1,9 @@
+# Changelog
+
+## 1.1.1
+
+* Fixed an access violation crash in `initialize_dxgi_factory` on ARM64: `CreateDXGIFactory1`'s `REFIID` argument was passed by value instead of by reference (the x64 ABI masked this by passing large structs by hidden reference)
+
 ## 1.1.0
 
 * Bumped the minimum Python version to 3.9
