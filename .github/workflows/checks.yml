@@ -53,8 +53,7 @@ jobs:
         if: matrix.resolution == 'lowest-direct'
         run: |
           vcpkg install zlib:x64-windows libjpeg-turbo:x64-windows
-          echo "INCLUDE=$env:VCPKG_INSTALLATION_ROOT\installed\x64-windows\include" >> $env:GITHUB_ENV
-          echo "LIB=$env:VCPKG_INSTALLATION_ROOT\installed\x64-windows\lib" >> $env:GITHUB_ENV
+
       - uses: astral-sh/setup-uv@v7
         with:
           python-version: ${{ matrix.python-version }}
@@ -84,7 +83,7 @@ jobs:
       - name: Install Pillow build dependencies
         if: matrix.resolution == 'lowest-direct'
         run: |
-          vcpkg install zlib:x64-windows libjpeg-turbo:x64-windows
+          vcpkg install zlib libjpeg-turbo
           echo "INCLUDE=$env:VCPKG_INSTALLATION_ROOT\installed\x64-windows\include" >> $env:GITHUB_ENV
           echo "LIB=$env:VCPKG_INSTALLATION_ROOT\installed\x64-windows\lib" >> $env:GITHUB_ENV
       - uses: astral-sh/setup-uv@v7
@@ -141,7 +140,6 @@ jobs:
           vcpkg install "zlib:$triplet" "libjpeg-turbo:$triplet"
           echo "INCLUDE=$env:VCPKG_INSTALLATION_ROOT\installed\$triplet\include" >> $env:GITHUB_ENV
           echo "LIB=$env:VCPKG_INSTALLATION_ROOT\installed\$triplet\lib" >> $env:GITHUB_ENV
-          echo "$env:VCPKG_INSTALLATION_ROOT\installed\$triplet\bin" >> $env:GITHUB_PATH
       - uses: astral-sh/setup-uv@v7
         with:
           # On ARM64, uv defaults to x86_64 Python, force it to aarch64.
