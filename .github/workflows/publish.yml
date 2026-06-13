@@ -2,6 +2,7 @@
 name: Publish to PyPI
 on:
   release:
+    # https://github.com/Avasam/typed-D3DShot/releases/new
     types: [published]
 
 jobs:
