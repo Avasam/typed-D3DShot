@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+__lazy_modules__ = {"d3dshot._compat"}
+
 import ctypes
 from collections.abc import Sequence
 from typing import TYPE_CHECKING, Literal, TypeVar

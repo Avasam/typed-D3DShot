@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+__lazy_modules__ = {"d3dshot.dll.d3d"}
+
 import ctypes
 from ctypes import wintypes
 from typing import TYPE_CHECKING, Literal, TypedDict, TypeVar
