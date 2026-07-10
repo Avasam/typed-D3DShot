@@ -45,6 +45,7 @@ classifiers = [
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
   "Programming Language :: Python :: 3.14",
+  "Programming Language :: Python :: 3.15",
   "Topic :: Multimedia :: Graphics",
   "Topic :: Multimedia :: Graphics :: Capture",
   "Topic :: Multimedia :: Graphics :: Capture :: Screen Capture",
@@ -104,4 +105,4 @@ no-build-package = ["numpy", "torch"]
 exclude-newer = "1 week"
 
 [tool.uv.sources]
-beslogic-ruff-config = { git = "https://github.com/Beslogic/Beslogic-Ruff-Config", rev = "312cfab" }
+beslogic-ruff-config = { git = "https://github.com/Beslogic/Beslogic-Ruff-Config", rev = "8716b51" }

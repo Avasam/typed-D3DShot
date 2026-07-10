@@ -1,5 +1,14 @@
 from __future__ import annotations
 
+__lazy_modules__ = {
+    "d3dshot._compat",
+    "d3dshot.dll",
+    "d3dshot.dll.d3d",
+    "d3dshot.dll.dxgi",
+    "d3dshot.dll.shcore",
+    "d3dshot.dll.user32",
+}
+
 from typing import TYPE_CHECKING, Literal, TypeVar, overload
 
 import d3dshot.dll.d3d
