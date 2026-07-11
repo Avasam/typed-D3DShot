@@ -6,7 +6,7 @@ if TYPE_CHECKING:
     from typing_extensions import override as override  # noqa: PLC0414
 else:
 
-    def mypyc_attr(*args: object, **kwargs: object) -> Callable[..., Any]:
+    def mypyc_attr(*args: object, **kwargs: object) -> Callable[..., Any]:  # noqa: ARG001
         """
         No-op at runtime; mypyc reads it at compile time to tune class codegen.
 

@@ -5,6 +5,9 @@ on:
     # https://github.com/Avasam/typed-D3DShot/releases/new
     types: [published]
 
+permissions:
+  contents: read
+
 jobs:
   # Pure-Python sdist + non-version-locked py3-none-any wheel (mypyc hook OFF).
   # This is the universal fallback pip uses on any platform/Python without a
