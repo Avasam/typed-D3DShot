@@ -20,9 +20,12 @@ exclude = [
   # else branch as an unreachable trap ("Reached allegedly unreachable code!").
   "d3dshot/_compat.py",
   # DXGI/COM-bound; overloaded __init__ hits a mypyc codegen bug.
+  # https://github.com/mypyc/mypyc/issues/961
   "d3dshot/display.py",
   # comtypes COM interface metaprogramming (_iid_, STDMETHOD lists,
   # IUnknown subclassing) is not mypyc-compatible.
+  # https://github.com/mypyc/mypyc/issues/1033
+  # https://github.com/mypyc/mypyc/issues/1073
   "d3dshot/dll/",
 ]
 options = { opt_level = "3", debug_level = "0" }
