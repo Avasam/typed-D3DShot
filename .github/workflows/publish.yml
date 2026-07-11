@@ -10,8 +10,8 @@ permissions:
 
 jobs:
   # Pure-Python sdist + non-version-locked py3-none-any wheel (mypyc hook OFF).
-  # This is the universal fallback pip uses on any platform/Python without a
-  # matching compiled wheel below.
+  # This is the universal fallback installers use on any platform/Python without
+  # a matching compiled wheel below.
   sdist-and-pure-wheel:
     runs-on: ubuntu-latest
     steps:
@@ -26,32 +26,36 @@ jobs:
           path: dist/*
 
   # mypyc-compiled, per-version platform wheels (hook ON via HATCH_BUILD_HOOK_ENABLE_MYPYC).
-  # pip prefers these over the pure wheel when one matches the user's Windows + Python.
+  # Installers prefers these over the pure wheel when one matches the user's Windows + Python.
   compiled-wheels:
-    name: mypyc wheels (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - os: windows-latest # AMD64
-            cibw_build: cp39-* cp310-* cp311-* cp312-* cp313-* cp314-*
-          # numpy ARM64 wheels (a build dep) and uv's ARM64 Python require 3.11+
+        os: [windows-latest, windows-11-arm]
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
+        # uv has no Windows ARM64 builds for Python 3.9 and 3.10
+        exclude:
           - os: windows-11-arm
-            cibw_build: cp311-* cp312-* cp313-* cp314-*
+            python-version: "3.9"
+          - os: windows-11-arm
+            python-version: "3.10"
     steps:
       - uses: actions/checkout@v7
-      - uses: pypa/cibuildwheel@v4.1
+      - uses: astral-sh/setup-uv@v8.3.2
+        with:
+          # On ARM64, uv defaults to x86_64 Python, force it to aarch64.
+          # https://github.com/astral-sh/uv/issues/12906#issuecomment-3587439179
+          python-version: ${{ format('{0}-{1}', matrix.python-version, matrix.os== 'windows-11-arm' && 'aarch64' || 'x86_64') }}
+          activate-environment: true
+      - run: uv build --wheel
         env:
           # Turns on the mypyc build hook (off by default; see pyproject.toml)
           HATCH_BUILD_HOOK_ENABLE_MYPYC: "1"
-          CIBW_BUILD: ${{ matrix.cibw_build }}
-          CIBW_SKIP: pp* # CPython only; mypyc doesn't target PyPy
-          CIBW_ARCHS: auto64 # native 64-bit only (AMD64 / ARM64), no win32
       - uses: actions/upload-artifact@v7
         with:
-          name: dist-${{ matrix.os }}
-          path: wheelhouse/*.whl
+          name: dist-${{ matrix.os }}-${{ matrix.python-version }}
+          path: dist/*.whl
 
   publish:
     needs: [sdist-and-pure-wheel, compiled-wheels]
