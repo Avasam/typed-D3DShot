@@ -19,8 +19,8 @@ jobs:
     env:
       RUFF_OUTPUT_FORMAT: github
     steps:
-      - uses: actions/checkout@v6
-      - uses: astral-sh/setup-uv@v7
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v8.3.2
         with:
           activate-environment: true
       # NOTE: This is also our only check that validates the lockfile
@@ -48,14 +48,14 @@ jobs:
           - python-version: "3.14"
             resolution: lowest-direct
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Install Pillow build dependencies
         if: matrix.resolution == 'lowest-direct'
         run: |
           vcpkg install zlib:x64-windows libjpeg-turbo:x64-windows
           echo "INCLUDE=$env:VCPKG_INSTALLATION_ROOT\installed\x64-windows\include" >> $env:GITHUB_ENV
           echo "LIB=$env:VCPKG_INSTALLATION_ROOT\installed\x64-windows\lib" >> $env:GITHUB_ENV
-      - uses: astral-sh/setup-uv@v7
+      - uses: astral-sh/setup-uv@v8.3.2
         with:
           python-version: ${{ matrix.python-version }}
           activate-environment: true
@@ -80,14 +80,14 @@ jobs:
           - python-version: "3.14"
             resolution: lowest-direct
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Install Pillow build dependencies
         if: matrix.resolution == 'lowest-direct'
         run: |
           vcpkg install zlib:x64-windows libjpeg-turbo:x64-windows
           echo "INCLUDE=$env:VCPKG_INSTALLATION_ROOT\installed\x64-windows\include" >> $env:GITHUB_ENV
           echo "LIB=$env:VCPKG_INSTALLATION_ROOT\installed\x64-windows\lib" >> $env:GITHUB_ENV
-      - uses: astral-sh/setup-uv@v7
+      - uses: astral-sh/setup-uv@v8.3.2
         with:
           python-version: ${{ matrix.python-version }}
           activate-environment: true
@@ -133,7 +133,7 @@ jobs:
             python-version: "3.14"
             resolution: lowest-direct
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Install Pillow build dependencies
         if: matrix.resolution == 'lowest-direct'
         run: |
@@ -141,18 +141,14 @@ jobs:
           vcpkg install "zlib:$triplet" "libjpeg-turbo:$triplet"
           echo "INCLUDE=$env:VCPKG_INSTALLATION_ROOT\installed\$triplet\include" >> $env:GITHUB_ENV
           echo "LIB=$env:VCPKG_INSTALLATION_ROOT\installed\$triplet\lib" >> $env:GITHUB_ENV
-      - uses: astral-sh/setup-uv@v7
+      - uses: astral-sh/setup-uv@v8.3.2
         with:
           # On ARM64, uv defaults to x86_64 Python, force it to aarch64.
           # https://github.com/astral-sh/uv/issues/12906#issuecomment-3587439179
           python-version: ${{ format('{0}-{1}', matrix.python-version, matrix.os== 'windows-11-arm' && 'aarch64' || 'x86_64') }}
           activate-environment: true
-      - name: Install the project (all extras)
-        if: matrix.os == 'windows-latest'
+      - name: Install the project
         run: uv sync --no-default-groups --all-extras --resolution=${{ matrix.resolution }}
-      - name: Install the project (without torch)
-        if: matrix.os == 'windows-11-arm'
-        run: uv sync --no-default-groups --extra numpy --extra PIL --resolution=${{ matrix.resolution }}
       # Python 3.8+ LOAD_LIBRARY_SEARCH_DEFAULT_DIRS excludes PATH; use os.add_dll_directory() instead.
       - name: Register vcpkg DLL path via sitecustomize.py for Pillow DLL resolution
         if: matrix.resolution == 'lowest-direct'
@@ -162,3 +158,46 @@ jobs:
           "import os; os.add_dll_directory(r'$vcpkgBin')" | Set-Content ".venv\Lib\site-packages\sitecustomize.py"
       - name: Run test suite
         run: python -m unittest discover --start-directory tests --verbose
+  unittest-compiled:
+    # Validates the mypyc-compiled wheels we actually ship (the `unittest` job
+    # above covers the pure-Python wheel / .py source). Builds the real wheel,
+    # installs it, and runs tests from a directory where the source tree can't
+    # shadow the installed package.
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, windows-11-arm]
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
+        # uv has no Windows ARM64 builds for Python 3.9 and 3.10
+        exclude:
+          - os: windows-11-arm
+            python-version: "3.9"
+          - os: windows-11-arm
+            python-version: "3.10"
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v8.3.2
+        with:
+          # On ARM64, uv defaults to x86_64 Python, force it to aarch64.
+          # https://github.com/astral-sh/uv/issues/12906#issuecomment-3587439179
+          python-version: ${{ format('{0}-{1}', matrix.python-version, matrix.os== 'windows-11-arm' && 'aarch64' || 'x86_64') }}
+          activate-environment: true
+      - name: Build the mypyc-compiled wheel
+        env:
+          HATCH_BUILD_HOOK_ENABLE_MYPYC: "1"
+        run: uv build --wheel
+      - name: Install the compiled wheel with extras
+        # uv rejects --all-extras for a wheel path ("Use package[extra] syntax").
+        # [torch] pulls numpy via its self-reference and self-skips on Windows ARM64.
+        run: |
+          $whl = (Get-ChildItem dist/*.whl)[0].FullName
+          uv pip install "$whl[PIL,torch]"
+      - name: Assert the installed package is actually compiled
+        # Run from elsewhere so the ./d3dshot source tree doesn't shadow the install
+        working-directory: ${{ runner.temp }}
+        run: |
+          python -c "import d3dshot.d3dshot as m; assert m.__file__.endswith('.pyd'), m.__file__; print('compiled:', m.__file__)"
+      - name: Run test suite against the installed wheel
+        working-directory: ${{ runner.temp }}
+        run: python -m unittest discover --start-directory $env:GITHUB_WORKSPACE\tests --top-level-directory $env:GITHUB_WORKSPACE\tests --verbose

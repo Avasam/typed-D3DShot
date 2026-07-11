@@ -6,17 +6,61 @@ on:
     types: [published]
 
 jobs:
+  # Pure-Python sdist + non-version-locked py3-none-any wheel (mypyc hook OFF).
+  # This is the universal fallback pip uses on any platform/Python without a
+  # matching compiled wheel below.
+  sdist-and-pure-wheel:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v8.3.2
+        with:
+          activate-environment: true
+      - run: uv build
+      - uses: actions/upload-artifact@v7
+        with:
+          name: dist-pure
+          path: dist/*
+
+  # mypyc-compiled, per-version platform wheels (hook ON via HATCH_BUILD_HOOK_ENABLE_MYPYC).
+  # pip prefers these over the pure wheel when one matches the user's Windows + Python.
+  compiled-wheels:
+    name: mypyc wheels (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest # AMD64
+            cibw_build: cp39-* cp310-* cp311-* cp312-* cp313-* cp314-*
+          # numpy ARM64 wheels (a build dep) and uv's ARM64 Python require 3.11+
+          - os: windows-11-arm
+            cibw_build: cp311-* cp312-* cp313-* cp314-*
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pypa/cibuildwheel@v4.1
+        env:
+          # Turns on the mypyc build hook (off by default; see pyproject.toml)
+          HATCH_BUILD_HOOK_ENABLE_MYPYC: "1"
+          CIBW_BUILD: ${{ matrix.cibw_build }}
+          CIBW_SKIP: pp* # CPython only; mypyc doesn't target PyPy
+          CIBW_ARCHS: auto64 # native 64-bit only (AMD64 / ARM64), no win32
+      - uses: actions/upload-artifact@v7
+        with:
+          name: dist-${{ matrix.os }}
+          path: wheelhouse/*.whl
+
   publish:
+    needs: [sdist-and-pure-wheel, compiled-wheels]
     runs-on: ubuntu-latest
     environment: pypi
     permissions:
       # IMPORTANT: this permission is mandatory for Trusted Publishing
       id-token: write
     steps:
-      - uses: actions/checkout@v6
-      - uses: astral-sh/setup-uv@v7
+      - uses: actions/download-artifact@v8
         with:
-          activate-environment: true
-      - run: uv build
+          path: dist
+          merge-multiple: true
       - name: Publish package distributions to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
