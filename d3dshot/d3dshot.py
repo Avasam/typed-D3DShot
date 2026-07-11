@@ -32,7 +32,7 @@ if TYPE_CHECKING:
     from d3dshot.capture_outputs.pytorch_gpu_capture_output import PytorchGPUCaptureOutput
 
 
-@mypyc_attr(native_class=False)
+@mypyc_attr(native_class=False)  # https://github.com/mypyc/mypyc/issues/1072
 class Singleton(type):
     _instances: ClassVar[dict[Singleton, Any]] = {}
 
