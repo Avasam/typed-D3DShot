@@ -15,7 +15,6 @@ else:
         """
         return lambda arg: arg
 
-
     def override(arg: Callable[..., Any], /) -> Callable[..., Any]:
         """
         Indicate that a method is intended to override a method in a base class.
