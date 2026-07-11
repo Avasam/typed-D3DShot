@@ -1,6 +1,10 @@
 __pycache__/
 *.py[cod]
 
+# mypyc / C-extension build artifacts
+*.so
+*.pyd
+
 .venv
 .python-version
 

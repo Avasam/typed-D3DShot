@@ -16,10 +16,14 @@ import unittest
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+import d3dshot
+
 if TYPE_CHECKING:
     from collections.abc import Generator
 
-SRC_DIR = Path(__file__).parent.parent / "d3dshot"
+# Walk the package as imported (not a hardcoded source path), so the suite covers
+# the installed mypyc-compiled wheel when run against it, else the .py source.
+SRC_DIR = Path(d3dshot.__path__[0])
 sys.path.insert(0, str(SRC_DIR))
 
 IS_ARM64 = platform.machine() == "ARM64"

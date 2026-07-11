@@ -1,10 +1,34 @@
 [build-system]
-requires = ["uv_build>=0.11.21,<0.12"]
-build-backend = "uv_build"
+requires = ["hatchling", "hatch-mypyc"]
+build-backend = "hatchling.build"
 
-[tool.uv.build-backend]
-module-name = "d3dshot"
-module-root = ""
+[tool.hatch.build.targets.wheel]
+packages = ["d3dshot"]
+
+# Compile the pure-Python capture path with mypyc.
+[tool.hatch.build.targets.wheel.hooks.mypyc]
+# Off by default so `uv build` / `uv sync` stay pure-Python (no compiler needed,
+# produces the non-version-locked py3-none-any wheel). Release CI turns it on with
+# HATCH_BUILD_HOOK_ENABLE_MYPYC=1 to build the compiled per-version platform wheels.
+enable-by-default = false
+# Install the extras so mypyc sees real types (better optimization of capture_outputs/).
+require-runtime-features = ["numpy", "PIL", "torch"]
+require-runtime-dependencies = true
+include = ["d3dshot/"]
+exclude = [
+  # Relies on `if TYPE_CHECKING: ... else: <runtime shim>`; mypyc compiles the
+  # else branch as an unreachable trap ("Reached allegedly unreachable code!").
+  "d3dshot/_compat.py",
+  # DXGI/COM-bound; overloaded __init__ hits a mypyc codegen bug.
+  # https://github.com/mypyc/mypyc/issues/961
+  "d3dshot/display.py",
+  # comtypes COM interface metaprogramming (_iid_, STDMETHOD lists,
+  # IUnknown subclassing) is not mypyc-compatible.
+  # https://github.com/mypyc/mypyc/issues/1033
+  # https://github.com/mypyc/mypyc/issues/1073
+  "d3dshot/dll/",
+]
+options = { opt_level = "3", debug_level = "0" }
 
 [project.urls]
 Homepage = "https://github.com/Avasam/D3DShot"
@@ -76,11 +100,13 @@ numpy = [
 ]
 torch = [
   "typed-D3DShot[numpy]",
-  "torch >= 2.0.0", # First py.typed version
+  # PyTorch has no Windows ARM64 wheels; skip it there so resolution/build doesn't
+  # fail (only 'ARM64' is Windows-ARM; Linux aarch64 / macOS arm64 report differently)
+  "torch >= 2.0.0 ; platform_machine != 'ARM64'", # First py.typed version
   # First versions with wheels for each Python version
-  "torch >= 2.2.0 ; python_version >= '3.12'",
-  "torch >= 2.6.0 ; python_version >= '3.13'",
-  "torch >= 2.9.0 ; python_version >= '3.14'",
+  "torch >= 2.2.0 ; python_version >= '3.12' and platform_machine != 'ARM64'",
+  "torch >= 2.6.0 ; python_version >= '3.13' and platform_machine != 'ARM64'",
+  "torch >= 2.9.0 ; python_version >= '3.14' and platform_machine != 'ARM64'",
 ]
 
 [dependency-groups]

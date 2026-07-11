@@ -5,18 +5,73 @@ on:
     # https://github.com/Avasam/typed-D3DShot/releases/new
     types: [published]
 
+permissions:
+  contents: read
+
 jobs:
+  # Pure-Python sdist + non-version-locked py3-none-any wheel (mypyc hook OFF).
+  # This is the universal fallback installers use on any platform/Python without
+  # a matching compiled wheel below.
+  sdist-and-pure-wheel:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v8.3.2
+        with:
+          activate-environment: true
+      - run: uv build
+      - uses: actions/upload-artifact@v7
+        with:
+          name: dist-pure
+          path: dist/*
+
+  # mypyc-compiled, per-version platform wheels (hook ON via HATCH_BUILD_HOOK_ENABLE_MYPYC).
+  # Installers prefers these over the pure wheel when one matches the user's Windows + Python.
+  compiled-wheels:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, windows-11-arm]
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
+        # uv has no Windows ARM64 builds for Python 3.9 and 3.10
+        exclude:
+          - os: windows-11-arm
+            python-version: "3.9"
+          - os: windows-11-arm
+            python-version: "3.10"
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v8.3.2
+        with:
+          # On ARM64, uv defaults to x86_64 Python, force it to aarch64.
+          # https://github.com/astral-sh/uv/issues/12906#issuecomment-3587439179
+          python-version: ${{ format('{0}-{1}', matrix.python-version, matrix.os== 'windows-11-arm' && 'aarch64' || 'x86_64') }}
+          activate-environment: true
+      - run: uv build --wheel
+        env:
+          # Turns on the mypyc build hook (off by default; see pyproject.toml)
+          HATCH_BUILD_HOOK_ENABLE_MYPYC: "1"
+      - uses: actions/upload-artifact@v7
+        with:
+          name: dist-${{ matrix.os }}-${{ matrix.python-version }}
+          path: dist/*.whl
+
   publish:
+    needs: [sdist-and-pure-wheel, compiled-wheels]
     runs-on: ubuntu-latest
     environment: pypi
     permissions:
       # IMPORTANT: this permission is mandatory for Trusted Publishing
       id-token: write
+      # Job-level permissions replace (not merge with) the top-level block, so
+      # re-grant what download-artifact needs to read this run's artifacts.
+      contents: read
+      actions: read
     steps:
-      - uses: actions/checkout@v6
-      - uses: astral-sh/setup-uv@v7
+      - uses: actions/download-artifact@v8
         with:
-          activate-environment: true
-      - run: uv build
+          path: dist
+          merge-multiple: true
       - name: Publish package distributions to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1

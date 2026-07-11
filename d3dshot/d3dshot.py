@@ -7,7 +7,7 @@ import time
 from collections import deque
 from typing import TYPE_CHECKING, Any, ClassVar, Generic, Literal, NoReturn, overload
 
-from d3dshot._compat import override
+from d3dshot._compat import mypyc_attr, override
 from d3dshot.capture_output import CaptureOutput, CaptureOutputBackend, CaptureOutputs
 from d3dshot.display import Display
 
@@ -32,6 +32,7 @@ if TYPE_CHECKING:
     from d3dshot.capture_outputs.pytorch_gpu_capture_output import PytorchGPUCaptureOutput
 
 
+@mypyc_attr(native_class=False)  # https://github.com/mypyc/mypyc/issues/1072
 class Singleton(type):
     _instances: ClassVar[dict[Singleton, Any]] = {}
 
