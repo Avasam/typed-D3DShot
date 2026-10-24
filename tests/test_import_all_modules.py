@@ -7,6 +7,8 @@ and broken platform guards in module-level code.
 
 from __future__ import annotations
 
+__lazy_modules__ = {"importlib", "operator", "pkgutil"}
+
 import importlib
 import operator
 import pkgutil

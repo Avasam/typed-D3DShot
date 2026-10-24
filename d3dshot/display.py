@@ -1,5 +1,12 @@
 from __future__ import annotations
 
+__lazy_modules__ = {
+    "d3dshot.dll.d3d",
+    "d3dshot.dll.dxgi",
+    "d3dshot.dll.shcore",
+    "d3dshot.dll.user32",
+}
+
 from typing import TYPE_CHECKING, Literal, TypeVar, overload
 
 import d3dshot.dll.d3d
@@ -58,7 +65,7 @@ class Display:
         dxgi_adapter: _Pointer[d3dshot.dll.dxgi.IDXGIAdapter]
         | _Pointer[d3dshot.dll.dxgi.IDXGIAdapter1],
     ) -> None: ...
-    def __init__(  # noqa: PLR0913
+    def __init__(  # noqa: PLR0913 PLR0917
         self,
         name: str | None = None,
         adapter_name: str | None = None,
