@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-__lazy_modules__ = {"numpy"}
+__lazy_modules__ = {"ctypes", "numpy"}
 
 import ctypes
 from typing import TYPE_CHECKING, Literal, TypeVar

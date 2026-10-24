@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-__lazy_modules__ = {"d3dshot._compat", "d3dshot.d3dshot"}
+__lazy_modules__ = {"d3dshot._compat", "d3dshot.capture_output", "d3dshot.d3dshot"}
 
 from typing import TYPE_CHECKING, Literal, NoReturn, overload
 

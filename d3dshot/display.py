@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 __lazy_modules__ = {
-    "d3dshot.dll",
     "d3dshot.dll.d3d",
     "d3dshot.dll.dxgi",
     "d3dshot.dll.shcore",

@@ -8,7 +8,7 @@ but can't cover output duplication itself.
 
 from __future__ import annotations
 
-__lazy_modules__ = {"d3dshot", "d3dshot.dll", "d3dshot.dll.d3d", "d3dshot.dll.dxgi"}
+__lazy_modules__ = {"d3dshot.dll.d3d", "d3dshot.dll.dxgi"}
 
 import unittest
 
