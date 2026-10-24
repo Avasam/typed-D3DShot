@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 __lazy_modules__ = {
-    "d3dshot._compat",
     "d3dshot.dll",
     "d3dshot.dll.d3d",
     "d3dshot.dll.dxgi",
@@ -67,7 +66,7 @@ class Display:
         dxgi_adapter: _Pointer[d3dshot.dll.dxgi.IDXGIAdapter]
         | _Pointer[d3dshot.dll.dxgi.IDXGIAdapter1],
     ) -> None: ...
-    def __init__(  # noqa: PLR0913
+    def __init__(  # noqa: PLR0913 PLR0917
         self,
         name: str | None = None,
         adapter_name: str | None = None,

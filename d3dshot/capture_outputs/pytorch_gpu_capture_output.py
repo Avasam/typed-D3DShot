@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-__lazy_modules__ = {"d3dshot._compat", "numpy", "torch"}
+__lazy_modules__ = {"numpy", "torch"}
 
 from typing import TYPE_CHECKING, Literal
 

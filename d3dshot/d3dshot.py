@@ -2,7 +2,6 @@ from __future__ import annotations
 
 __lazy_modules__ = {
     "collections",
-    "d3dshot._compat",
     "d3dshot.display",
     "gc",
     "threading",
