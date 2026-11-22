@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+__lazy_modules__ = {"collections", "d3dshot.display", "gc", "threading"}
+
 import gc
 import os.path
 import threading
