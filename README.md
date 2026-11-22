@@ -2,6 +2,8 @@
 
 This fork of the [now archived D3DShot](https://github.com/SerpentAI/D3DShot) aims to add static type-checking support by adding type annotations and making certain classes generic. With [typed-D3DShot](https://pypi.org/project/typed-D3DShot/), you don't need to install Typeshed's defunct [types-D3DShot](https://pypi.org/project/types-D3DShot/). `typed-D3DShot`'s own code is type-checked using [mypy](/mypy.ini) and [pyright](/pyrightconfig.json).
 
+Prebuilt wheels are compiled with [mypyc](https://mypyc.readthedocs.io/) for a speed boost. A pure-Python wheel is also published as a universal fallback, so installs are never locked to a specific Python version.
+
 Note that I do not intend on maintaining this library outside bugfixes, typing support and what I need for [AutoSplit](https://github.com/Toufool/AutoSplit).
 
 ---

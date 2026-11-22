@@ -2,8 +2,18 @@ import importlib.util
 from typing import TYPE_CHECKING, Any, Callable, Final
 
 if TYPE_CHECKING:
+    from mypy_extensions import mypyc_attr as mypyc_attr  # noqa: PLC0414
     from typing_extensions import override as override  # noqa: PLC0414
 else:
+
+    def mypyc_attr(*args: object, **kwargs: object) -> Callable[..., Any]:  # noqa: ARG001
+        """
+        No-op at runtime; mypyc reads it at compile time to tune class codegen.
+
+        Avoids a hard runtime dependency on ``mypy_extensions`` for interpreted
+        (editable / non-compiled) installs.
+        """
+        return lambda arg: arg
 
     def override(arg: Callable[..., Any], /) -> Callable[..., Any]:
         """
