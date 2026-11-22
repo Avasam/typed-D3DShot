@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+__lazy_modules__ = {"_ctypes"}
+
 import ctypes
 from _ctypes import COMError  # pyright: ignore[reportPrivateImportUsage]
 from ctypes import wintypes
