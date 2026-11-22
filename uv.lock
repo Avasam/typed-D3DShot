@@ -9,8 +9,8 @@ resolution-markers = [
     "python_full_version == '3.13.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.13.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.12.*' and platform_machine == 'ARM64'",
-    "python_full_version == '3.12.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.11.*' and platform_machine == 'ARM64'",
+    "python_full_version == '3.12.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.11.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.10.*'",
     "python_full_version < '3.10'",
@@ -143,8 +143,8 @@ resolution-markers = [
     "python_full_version == '3.13.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.13.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.12.*' and platform_machine == 'ARM64'",
-    "python_full_version == '3.12.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.11.*' and platform_machine == 'ARM64'",
+    "python_full_version == '3.12.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.11.*' and platform_machine != 'ARM64'",
 ]
 dependencies = [
@@ -188,8 +188,8 @@ resolution-markers = [
     "python_full_version == '3.13.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.13.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.12.*' and platform_machine == 'ARM64'",
-    "python_full_version == '3.12.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.11.*' and platform_machine == 'ARM64'",
+    "python_full_version == '3.12.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.11.*' and platform_machine != 'ARM64'",
 ]
 wheels = [
@@ -260,8 +260,8 @@ resolution-markers = [
     "python_full_version == '3.13.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.13.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.12.*' and platform_machine == 'ARM64'",
-    "python_full_version == '3.12.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.11.*' and platform_machine == 'ARM64'",
+    "python_full_version == '3.12.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.11.*' and platform_machine != 'ARM64'",
 ]
 wheels = [
@@ -342,8 +342,8 @@ resolution-markers = [
     "python_full_version == '3.13.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.13.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.12.*' and platform_machine == 'ARM64'",
-    "python_full_version == '3.12.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.11.*' and platform_machine == 'ARM64'",
+    "python_full_version == '3.12.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.11.*' and platform_machine != 'ARM64'",
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/a1/cf/05bcdacabdc0aec7dc8e19d76281bd82325df62dae3b6430e9ba57397689/filelock-4.2.10.tar.gz", hash = "sha256:fcc3c0cb8bfe7f4b3bb0e231c04b15dbad068cb3c2515f343d8fde4dce93bd5d", size = 670595, upload-time = "2026-11-09T18:58:00.54Z" }
@@ -375,8 +375,8 @@ resolution-markers = [
     "python_full_version == '3.13.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.13.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.12.*' and platform_machine == 'ARM64'",
-    "python_full_version == '3.12.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.11.*' and platform_machine == 'ARM64'",
+    "python_full_version == '3.12.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.11.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.10.*'",
 ]
@@ -787,8 +787,8 @@ resolution-markers = [
     "python_full_version == '3.13.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.13.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.12.*' and platform_machine == 'ARM64'",
-    "python_full_version == '3.12.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.11.*' and platform_machine == 'ARM64'",
+    "python_full_version == '3.12.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.11.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.10.*'",
 ]
@@ -879,8 +879,8 @@ resolution-markers = [
     "python_full_version == '3.13.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.13.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.12.*' and platform_machine == 'ARM64'",
-    "python_full_version == '3.12.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.11.*' and platform_machine == 'ARM64'",
+    "python_full_version == '3.12.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.11.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.10.*'",
 ]
@@ -969,8 +969,8 @@ resolution-markers = [
     "python_full_version == '3.13.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.13.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.12.*' and platform_machine == 'ARM64'",
-    "python_full_version == '3.12.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.11.*' and platform_machine == 'ARM64'",
+    "python_full_version == '3.12.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.11.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.10.*'",
 ]
@@ -1511,8 +1511,8 @@ resolution-markers = [
     "python_full_version == '3.13.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.13.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.12.*' and platform_machine == 'ARM64'",
-    "python_full_version == '3.12.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.11.*' and platform_machine == 'ARM64'",
+    "python_full_version == '3.12.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.11.*' and platform_machine != 'ARM64'",
 ]
 dependencies = [
@@ -1793,8 +1793,8 @@ resolution-markers = [
     "python_full_version == '3.13.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.13.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.12.*' and platform_machine == 'ARM64'",
-    "python_full_version == '3.12.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.11.*' and platform_machine == 'ARM64'",
+    "python_full_version == '3.12.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.11.*' and platform_machine != 'ARM64'",
 ]
 dependencies = [
@@ -2075,8 +2075,8 @@ resolution-markers = [
     "python_full_version == '3.13.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.13.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.12.*' and platform_machine == 'ARM64'",
-    "python_full_version == '3.12.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.11.*' and platform_machine == 'ARM64'",
+    "python_full_version == '3.12.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.11.*' and platform_machine != 'ARM64'",
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/ce/a4/9cc30690a394a8305e8be4c9036aa16d0dfddadd09079860b582f562496d/pillow-13.0.0.tar.gz", hash = "sha256:cdcd1ba258178f7356d74170c9a81ba4eab6a5d55748bc402a5a2a6fe6be3510", size = 47058631, upload-time = "2026-10-16T22:18:09.718Z" }
@@ -2233,8 +2233,8 @@ resolution-markers = [
     "python_full_version == '3.13.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.13.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.12.*' and platform_machine == 'ARM64'",
-    "python_full_version == '3.12.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.11.*' and platform_machine == 'ARM64'",
+    "python_full_version == '3.12.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.11.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.10.*'",
 ]
@@ -2446,8 +2446,8 @@ resolution-markers = [
     "python_full_version == '3.13.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.13.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.12.*' and platform_machine == 'ARM64'",
-    "python_full_version == '3.12.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.11.*' and platform_machine == 'ARM64'",
+    "python_full_version == '3.12.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.11.*' and platform_machine != 'ARM64'",
 ]
 dependencies = [
@@ -2552,8 +2552,8 @@ resolution-markers = [
     "python_full_version == '3.13.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.13.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.12.*' and platform_machine == 'ARM64'",
-    "python_full_version == '3.12.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.11.*' and platform_machine == 'ARM64'",
+    "python_full_version == '3.12.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.11.*' and platform_machine != 'ARM64'",
 ]
 wheels = [
