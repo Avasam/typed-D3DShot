@@ -49,12 +49,20 @@ jobs:
             resolution: lowest-direct
     steps:
       - uses: actions/checkout@v6
-      - name: Install Pillow build dependencies
+      - &install-pillow-build-dependencies
+        name: Install Pillow build dependencies
         if: matrix.resolution == 'lowest-direct'
+        env:
+          TRIPLET: ${{ runner.arch == 'ARM64' && 'arm64' || 'x64' }}-windows
         run: |
-          vcpkg install zlib:x64-windows libjpeg-turbo:x64-windows
-          echo "INCLUDE=$env:VCPKG_INSTALLATION_ROOT\installed\x64-windows\include" >> $env:GITHUB_ENV
-          echo "LIB=$env:VCPKG_INSTALLATION_ROOT\installed\x64-windows\lib" >> $env:GITHUB_ENV
+          vcpkg install "zlib:$env:TRIPLET" "libjpeg-turbo:$env:TRIPLET"
+          $root = "$env:VCPKG_INSTALLATION_ROOT\installed\$env:TRIPLET"
+          # zlib 1.4 names its MSVC import library libz.lib, but Pillow (all versions up to 13.0.0)
+          # only looks for z.lib, zlib.lib or zdll.lib. Remove once no job builds Pillow from source.
+          Copy-Item "$root\lib\libz.lib" "$root\lib\zlib.lib"
+          "INCLUDE=$root\include" >> $env:GITHUB_ENV
+          "LIB=$root\lib" >> $env:GITHUB_ENV
+          "VCPKG_BIN=$root\bin" >> $env:GITHUB_ENV
       - uses: astral-sh/setup-uv@v10.3.2
         with:
           python-version: ${{ matrix.python-version }}
@@ -81,12 +89,7 @@ jobs:
             resolution: lowest-direct
     steps:
       - uses: actions/checkout@v6
-      - name: Install Pillow build dependencies
-        if: matrix.resolution == 'lowest-direct'
-        run: |
-          vcpkg install zlib:x64-windows libjpeg-turbo:x64-windows
-          echo "INCLUDE=$env:VCPKG_INSTALLATION_ROOT\installed\x64-windows\include" >> $env:GITHUB_ENV
-          echo "LIB=$env:VCPKG_INSTALLATION_ROOT\installed\x64-windows\lib" >> $env:GITHUB_ENV
+      - *install-pillow-build-dependencies
       - uses: astral-sh/setup-uv@v10.3.2
         with:
           python-version: ${{ matrix.python-version }}
@@ -134,13 +137,7 @@ jobs:
             resolution: lowest-direct
     steps:
       - uses: actions/checkout@v6
-      - name: Install Pillow build dependencies
-        if: matrix.resolution == 'lowest-direct'
-        run: |
-          $triplet = if ($env:PROCESSOR_ARCHITECTURE -eq 'ARM64') { 'arm64-windows' } else { 'x64-windows' }
-          vcpkg install "zlib:$triplet" "libjpeg-turbo:$triplet"
-          echo "INCLUDE=$env:VCPKG_INSTALLATION_ROOT\installed\$triplet\include" >> $env:GITHUB_ENV
-          echo "LIB=$env:VCPKG_INSTALLATION_ROOT\installed\$triplet\lib" >> $env:GITHUB_ENV
+      - *install-pillow-build-dependencies
       - uses: astral-sh/setup-uv@v10.3.2
         with:
           python-version: ${{ matrix.python-version }}
@@ -155,9 +152,7 @@ jobs:
       - name: Register vcpkg DLL path via sitecustomize.py for Pillow DLL resolution
         if: matrix.resolution == 'lowest-direct'
         run: |
-          $triplet = if ($env:PROCESSOR_ARCHITECTURE -eq 'ARM64') { 'arm64-windows' } else { 'x64-windows' }
-          $vcpkgBin = "$env:VCPKG_INSTALLATION_ROOT\installed\$triplet\bin"
-          "import os; os.add_dll_directory(r'$vcpkgBin')" | Set-Content ".venv\Lib\site-packages\sitecustomize.py"
+          "import os; os.add_dll_directory(r'$env:VCPKG_BIN')" | Set-Content ".venv\Lib\site-packages\sitecustomize.py"
       - name: Run test suite
         run: python -m unittest discover --start-directory tests --verbose
   unittest-compiled:
