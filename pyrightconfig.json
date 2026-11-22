@@ -1,5 +1,7 @@
 {
   "typeCheckingMode": "standard",
+  // This is a Windows-only library, type check it as such regardless of the host OS
+  "pythonPlatform": "Windows",
   // Allow mypy comments to cover pyright too
   "reportUnnecessaryTypeIgnoreComment": "none",
   "reportImplicitOverride": "error",
