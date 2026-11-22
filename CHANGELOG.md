@@ -2,7 +2,8 @@
 
 ## Unreleased
 
-* Add Python 3.15 `__lazy_modules__`
+* Updated lowest-direct resolution pins to support Python 3.15
+* Added Python 3.15 `__lazy_modules__`
 
 ## 1.1.1
 
