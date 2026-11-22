@@ -9,19 +9,23 @@ repos:
         args: [--fix=lf]
       - id: check-case-conflict
   - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
-    rev: v2.14.0
+    rev: v2.16.0
     hooks:
       - id: pretty-format-yaml
         args: [--autofix, --indent, "2", --offset, "2", --preserve-quotes, --line-width, "100"]
       - id: pretty-format-ini
         args: [--autofix]
+  - repo: https://github.com/henryiii/flake8-lazy
+    rev: v0.11.0
+    hooks:
+      - id: flake8-lazy
+        args: [--apply=set]
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.6.9 # Must match pyproject.toml
+    rev: v0.17.6 # Must match pyproject.toml
     hooks:
       - id: ruff
         args: [--fix]
       - id: ruff-format
 
 ci:
-  autoupdate_branch: dev
   autoupdate_schedule: quarterly

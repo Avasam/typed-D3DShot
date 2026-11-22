@@ -1,3 +1,5 @@
+__lazy_modules__ = {"ctypes"}
+
 import ctypes
 from ctypes import wintypes
 

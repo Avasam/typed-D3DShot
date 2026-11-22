@@ -1,6 +1,9 @@
 from __future__ import annotations
 
+__lazy_modules__ = {"_ctypes"}
+
 import ctypes
+from _ctypes import COMError  # pyright: ignore[reportPrivateImportUsage]
 from ctypes import wintypes
 from typing import TYPE_CHECKING, Literal, TypedDict, TypeVar
 
@@ -74,38 +77,38 @@ class DXGI_MAPPED_RECT(ctypes.Structure):
 class IDXGIObject(comtypes.IUnknown):  # type: ignore[misc,name-defined] # TODO (Avasam): Figure out why it's Any
     _iid_ = comtypes.GUID("{aec22fb8-76f3-4639-9be0-28eb43a67a2e}")
     _methods_ = [
-        comtypes.STDMETHOD(comtypes.HRESULT, "SetPrivateData"),
-        comtypes.STDMETHOD(comtypes.HRESULT, "SetPrivateDataInterface"),
-        comtypes.STDMETHOD(comtypes.HRESULT, "GetPrivateData"),
-        comtypes.STDMETHOD(comtypes.HRESULT, "GetParent"),
+        comtypes.STDMETHOD(ctypes.HRESULT, "SetPrivateData"),
+        comtypes.STDMETHOD(ctypes.HRESULT, "SetPrivateDataInterface"),
+        comtypes.STDMETHOD(ctypes.HRESULT, "GetPrivateData"),
+        comtypes.STDMETHOD(ctypes.HRESULT, "GetParent"),
     ]
 
 
 class IDXGIDeviceSubObject(IDXGIObject):
     _iid_ = comtypes.GUID("{3d3e0379-f9de-4d58-bb6c-18d62992f1a6}")
     _methods_ = [
-        comtypes.STDMETHOD(comtypes.HRESULT, "GetDevice"),
+        comtypes.STDMETHOD(ctypes.HRESULT, "GetDevice"),
     ]
 
 
 class IDXGIResource(IDXGIDeviceSubObject):
     _iid_ = comtypes.GUID("{035f3ab4-482e-4e50-b41f-8a7f8bd8960b}")
     _methods_ = [
-        comtypes.STDMETHOD(comtypes.HRESULT, "GetSharedHandle"),
-        comtypes.STDMETHOD(comtypes.HRESULT, "GetUsage"),
-        comtypes.STDMETHOD(comtypes.HRESULT, "SetEvictionPriority"),
-        comtypes.STDMETHOD(comtypes.HRESULT, "GetEvictionPriority"),
+        comtypes.STDMETHOD(ctypes.HRESULT, "GetSharedHandle"),
+        comtypes.STDMETHOD(ctypes.HRESULT, "GetUsage"),
+        comtypes.STDMETHOD(ctypes.HRESULT, "SetEvictionPriority"),
+        comtypes.STDMETHOD(ctypes.HRESULT, "GetEvictionPriority"),
     ]
 
 
 class IDXGISurface(IDXGIDeviceSubObject):
     _iid_ = comtypes.GUID("{cafcb56c-6ac3-4889-bf47-9e23bbd260ec}")
     _methods_ = [
-        comtypes.STDMETHOD(comtypes.HRESULT, "GetDesc"),
+        comtypes.STDMETHOD(ctypes.HRESULT, "GetDesc"),
         comtypes.STDMETHOD(
-            comtypes.HRESULT, "Map", [ctypes.POINTER(DXGI_MAPPED_RECT), wintypes.UINT]
+            ctypes.HRESULT, "Map", [ctypes.POINTER(DXGI_MAPPED_RECT), wintypes.UINT]
         ),
-        comtypes.STDMETHOD(comtypes.HRESULT, "Unmap"),
+        comtypes.STDMETHOD(ctypes.HRESULT, "Unmap"),
     ]
 
 
@@ -114,7 +117,7 @@ class IDXGIOutputDuplication(IDXGIObject):
     _methods_ = [
         comtypes.STDMETHOD(None, "GetDesc"),
         comtypes.STDMETHOD(
-            comtypes.HRESULT,
+            ctypes.HRESULT,
             "AcquireNextFrame",
             [
                 wintypes.UINT,
@@ -122,41 +125,41 @@ class IDXGIOutputDuplication(IDXGIObject):
                 ctypes.POINTER(ctypes.POINTER(IDXGIResource)),
             ],
         ),
-        comtypes.STDMETHOD(comtypes.HRESULT, "GetFrameDirtyRects"),
-        comtypes.STDMETHOD(comtypes.HRESULT, "GetFrameMoveRects"),
-        comtypes.STDMETHOD(comtypes.HRESULT, "GetFramePointerShape"),
-        comtypes.STDMETHOD(comtypes.HRESULT, "MapDesktopSurface"),
-        comtypes.STDMETHOD(comtypes.HRESULT, "UnMapDesktopSurface"),
-        comtypes.STDMETHOD(comtypes.HRESULT, "ReleaseFrame"),
+        comtypes.STDMETHOD(ctypes.HRESULT, "GetFrameDirtyRects"),
+        comtypes.STDMETHOD(ctypes.HRESULT, "GetFrameMoveRects"),
+        comtypes.STDMETHOD(ctypes.HRESULT, "GetFramePointerShape"),
+        comtypes.STDMETHOD(ctypes.HRESULT, "MapDesktopSurface"),
+        comtypes.STDMETHOD(ctypes.HRESULT, "UnMapDesktopSurface"),
+        comtypes.STDMETHOD(ctypes.HRESULT, "ReleaseFrame"),
     ]
 
 
 class IDXGIOutput(IDXGIObject):
     _iid_ = comtypes.GUID("{ae02eedb-c735-4690-8d52-5a8dc20213aa}")
     _methods_ = [
-        comtypes.STDMETHOD(comtypes.HRESULT, "GetDesc", [ctypes.POINTER(DXGI_OUTPUT_DESC)]),
-        comtypes.STDMETHOD(comtypes.HRESULT, "GetDisplayModeList"),
-        comtypes.STDMETHOD(comtypes.HRESULT, "FindClosestMatchingMode"),
-        comtypes.STDMETHOD(comtypes.HRESULT, "WaitForVBlank"),
-        comtypes.STDMETHOD(comtypes.HRESULT, "TakeOwnership"),
+        comtypes.STDMETHOD(ctypes.HRESULT, "GetDesc", [ctypes.POINTER(DXGI_OUTPUT_DESC)]),
+        comtypes.STDMETHOD(ctypes.HRESULT, "GetDisplayModeList"),
+        comtypes.STDMETHOD(ctypes.HRESULT, "FindClosestMatchingMode"),
+        comtypes.STDMETHOD(ctypes.HRESULT, "WaitForVBlank"),
+        comtypes.STDMETHOD(ctypes.HRESULT, "TakeOwnership"),
         comtypes.STDMETHOD(None, "ReleaseOwnership"),
-        comtypes.STDMETHOD(comtypes.HRESULT, "GetGammaControlCapabilities"),
-        comtypes.STDMETHOD(comtypes.HRESULT, "SetGammaControl"),
-        comtypes.STDMETHOD(comtypes.HRESULT, "GetGammaControl"),
-        comtypes.STDMETHOD(comtypes.HRESULT, "SetDisplaySurface"),
-        comtypes.STDMETHOD(comtypes.HRESULT, "GetDisplaySurfaceData"),
-        comtypes.STDMETHOD(comtypes.HRESULT, "GetFrameStatistics"),
+        comtypes.STDMETHOD(ctypes.HRESULT, "GetGammaControlCapabilities"),
+        comtypes.STDMETHOD(ctypes.HRESULT, "SetGammaControl"),
+        comtypes.STDMETHOD(ctypes.HRESULT, "GetGammaControl"),
+        comtypes.STDMETHOD(ctypes.HRESULT, "SetDisplaySurface"),
+        comtypes.STDMETHOD(ctypes.HRESULT, "GetDisplaySurfaceData"),
+        comtypes.STDMETHOD(ctypes.HRESULT, "GetFrameStatistics"),
     ]
 
 
 class IDXGIOutput1(IDXGIOutput):
     _iid_ = comtypes.GUID("{00cddea8-939b-4b83-a340-a685226666cc}")
     _methods_ = [
-        comtypes.STDMETHOD(comtypes.HRESULT, "GetDisplayModeList1"),
-        comtypes.STDMETHOD(comtypes.HRESULT, "FindClosestMatchingMode1"),
-        comtypes.STDMETHOD(comtypes.HRESULT, "GetDisplaySurfaceData1"),
+        comtypes.STDMETHOD(ctypes.HRESULT, "GetDisplayModeList1"),
+        comtypes.STDMETHOD(ctypes.HRESULT, "FindClosestMatchingMode1"),
+        comtypes.STDMETHOD(ctypes.HRESULT, "GetDisplaySurfaceData1"),
         comtypes.STDMETHOD(
-            comtypes.HRESULT,
+            ctypes.HRESULT,
             "DuplicateOutput",
             [
                 ctypes.POINTER(ID3D11Device),
@@ -170,30 +173,30 @@ class IDXGIAdapter(IDXGIObject):
     _iid_ = comtypes.GUID("{2411e7e1-12ac-4ccf-bd14-9798e8534dc0}")
     _methods_ = [
         comtypes.STDMETHOD(
-            comtypes.HRESULT,
+            ctypes.HRESULT,
             "EnumOutputs",
             [wintypes.UINT, ctypes.POINTER(ctypes.POINTER(IDXGIOutput))],
         ),
-        comtypes.STDMETHOD(comtypes.HRESULT, "GetDesc"),
-        comtypes.STDMETHOD(comtypes.HRESULT, "CheckInterfaceSupport"),
+        comtypes.STDMETHOD(ctypes.HRESULT, "GetDesc"),
+        comtypes.STDMETHOD(ctypes.HRESULT, "CheckInterfaceSupport"),
     ]
 
 
 class IDXGIAdapter1(IDXGIAdapter):
     _iid_ = comtypes.GUID("{29038f61-3839-4626-91fd-086879011a05}")
     _methods_ = [
-        comtypes.STDMETHOD(comtypes.HRESULT, "GetDesc1", [ctypes.POINTER(DXGI_ADAPTER_DESC1)]),
+        comtypes.STDMETHOD(ctypes.HRESULT, "GetDesc1", [ctypes.POINTER(DXGI_ADAPTER_DESC1)]),
     ]
 
 
 class IDXGIFactory(IDXGIObject):
     _iid_ = comtypes.GUID("{7b7166ec-21c7-44ae-b21a-c9ae321ae369}")
     _methods_ = [
-        comtypes.STDMETHOD(comtypes.HRESULT, "EnumAdapters"),
-        comtypes.STDMETHOD(comtypes.HRESULT, "MakeWindowAssociation"),
-        comtypes.STDMETHOD(comtypes.HRESULT, "GetWindowAssociation"),
-        comtypes.STDMETHOD(comtypes.HRESULT, "CreateSwapChain"),
-        comtypes.STDMETHOD(comtypes.HRESULT, "CreateSoftwareAdapter"),
+        comtypes.STDMETHOD(ctypes.HRESULT, "EnumAdapters"),
+        comtypes.STDMETHOD(ctypes.HRESULT, "MakeWindowAssociation"),
+        comtypes.STDMETHOD(ctypes.HRESULT, "GetWindowAssociation"),
+        comtypes.STDMETHOD(ctypes.HRESULT, "CreateSwapChain"),
+        comtypes.STDMETHOD(ctypes.HRESULT, "CreateSoftwareAdapter"),
     ]
 
 
@@ -201,7 +204,7 @@ class IDXGIFactory1(IDXGIFactory):
     _iid_ = comtypes.GUID("{770aae78-f26f-4dba-a829-253c83d1b387}")
     _methods_ = [
         comtypes.STDMETHOD(
-            comtypes.HRESULT,
+            ctypes.HRESULT,
             "EnumAdapters1",
             [ctypes.c_uint, ctypes.POINTER(ctypes.POINTER(IDXGIAdapter1))],
         ),
@@ -233,7 +236,7 @@ def discover_dxgi_adapters(dxgi_factory: _Pointer[IDXGIFactory1]) -> list[_Point
             dxgi_factory.EnumAdapters1(i, ctypes.byref(dxgi_adapter))
 
             dxgi_adapters.append(dxgi_adapter)
-        except comtypes.COMError:  # noqa: PERF203 # using exception to signal end of iteration
+        except COMError:  # noqa: PERF203 # using exception to signal end of iteration
             break
 
     return dxgi_adapters
@@ -259,7 +262,7 @@ def discover_dxgi_outputs(
             dxgi_adapter.EnumOutputs(i, ctypes.byref(dxgi_output))  # type: ignore[union-attr]
 
             dxgi_outputs.append(dxgi_output)
-        except comtypes.COMError:  # noqa: PERF203 # using exception to signal end of iteration
+        except COMError:  # noqa: PERF203 # using exception to signal end of iteration
             break
 
     return dxgi_outputs

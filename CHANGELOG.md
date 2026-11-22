@@ -3,6 +3,8 @@
 ## Unreleased
 
 * Provide mypyc-compiled wheels for a speed boost
+* Updated lowest-direct resolution pins to support Python 3.15
+* Added Python 3.15 `__lazy_modules__`
 
 ## 1.1.1
 
