@@ -20,6 +20,9 @@ resolution-markers = [
 exclude-newer = "0001-01-01T00:00:00Z" # This has no effect and is included for backwards compatibility when using relative exclude-newer values.
 exclude-newer-span = "P1W"
 
+[options.exclude-newer-package]
+beslogic-ruff-config = false
+
 [[package]]
 name = "ast-serialize"
 version = "0.13.1"
@@ -2623,6 +2626,7 @@ requires-dist = [
     { name = "torch", marker = "python_full_version >= '3.12' and extra == 'torch'", specifier = ">=2.2.0" },
     { name = "torch", marker = "python_full_version >= '3.13' and extra == 'torch'", specifier = ">=2.6.0" },
     { name = "torch", marker = "python_full_version >= '3.14' and extra == 'torch'", specifier = ">=2.9.0" },
+    { name = "torch", marker = "python_full_version >= '3.15' and extra == 'torch'", specifier = ">=2.15.0" },
     { name = "torch", marker = "extra == 'torch'", specifier = ">=2.0.0" },
     { name = "typed-d3dshot", extras = ["numpy"], marker = "extra == 'torch'" },
 ]
