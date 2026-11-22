@@ -9,8 +9,8 @@ resolution-markers = [
     "python_full_version == '3.13.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.13.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.12.*' and platform_machine == 'ARM64'",
-    "python_full_version == '3.11.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.12.*' and platform_machine != 'ARM64'",
+    "python_full_version == '3.11.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.11.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.10.*'",
     "python_full_version < '3.10'",
@@ -86,8 +86,8 @@ wheels = [
 
 [[package]]
 name = "beslogic-ruff-config"
-version = "1.1.0"
-source = { git = "https://github.com/Beslogic/Beslogic-Ruff-Config?rev=8716b51#8716b51c6a4230228a856cbc715acf520fb561ce" }
+version = "2026.10.31"
+source = { git = "https://github.com/BesLogic/Beslogic-Ruff-Config#4dfdf74ee64a54230575d2fc79ca85dcb5723366" }
 dependencies = [
     { name = "ruff" },
 ]
@@ -140,8 +140,8 @@ resolution-markers = [
     "python_full_version == '3.13.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.13.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.12.*' and platform_machine == 'ARM64'",
-    "python_full_version == '3.11.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.12.*' and platform_machine != 'ARM64'",
+    "python_full_version == '3.11.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.11.*' and platform_machine != 'ARM64'",
 ]
 dependencies = [
@@ -185,8 +185,8 @@ resolution-markers = [
     "python_full_version == '3.13.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.13.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.12.*' and platform_machine == 'ARM64'",
-    "python_full_version == '3.11.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.12.*' and platform_machine != 'ARM64'",
+    "python_full_version == '3.11.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.11.*' and platform_machine != 'ARM64'",
 ]
 wheels = [
@@ -257,8 +257,8 @@ resolution-markers = [
     "python_full_version == '3.13.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.13.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.12.*' and platform_machine == 'ARM64'",
-    "python_full_version == '3.11.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.12.*' and platform_machine != 'ARM64'",
+    "python_full_version == '3.11.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.11.*' and platform_machine != 'ARM64'",
 ]
 wheels = [
@@ -339,8 +339,8 @@ resolution-markers = [
     "python_full_version == '3.13.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.13.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.12.*' and platform_machine == 'ARM64'",
-    "python_full_version == '3.11.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.12.*' and platform_machine != 'ARM64'",
+    "python_full_version == '3.11.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.11.*' and platform_machine != 'ARM64'",
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/a1/cf/05bcdacabdc0aec7dc8e19d76281bd82325df62dae3b6430e9ba57397689/filelock-4.2.10.tar.gz", hash = "sha256:fcc3c0cb8bfe7f4b3bb0e231c04b15dbad068cb3c2515f343d8fde4dce93bd5d", size = 670595, upload-time = "2026-11-09T18:58:00.54Z" }
@@ -372,8 +372,8 @@ resolution-markers = [
     "python_full_version == '3.13.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.13.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.12.*' and platform_machine == 'ARM64'",
-    "python_full_version == '3.11.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.12.*' and platform_machine != 'ARM64'",
+    "python_full_version == '3.11.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.11.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.10.*'",
 ]
@@ -784,8 +784,8 @@ resolution-markers = [
     "python_full_version == '3.13.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.13.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.12.*' and platform_machine == 'ARM64'",
-    "python_full_version == '3.11.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.12.*' and platform_machine != 'ARM64'",
+    "python_full_version == '3.11.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.11.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.10.*'",
 ]
@@ -876,8 +876,8 @@ resolution-markers = [
     "python_full_version == '3.13.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.13.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.12.*' and platform_machine == 'ARM64'",
-    "python_full_version == '3.11.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.12.*' and platform_machine != 'ARM64'",
+    "python_full_version == '3.11.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.11.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.10.*'",
 ]
@@ -966,8 +966,8 @@ resolution-markers = [
     "python_full_version == '3.13.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.13.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.12.*' and platform_machine == 'ARM64'",
-    "python_full_version == '3.11.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.12.*' and platform_machine != 'ARM64'",
+    "python_full_version == '3.11.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.11.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.10.*'",
 ]
@@ -1508,8 +1508,8 @@ resolution-markers = [
     "python_full_version == '3.13.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.13.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.12.*' and platform_machine == 'ARM64'",
-    "python_full_version == '3.11.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.12.*' and platform_machine != 'ARM64'",
+    "python_full_version == '3.11.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.11.*' and platform_machine != 'ARM64'",
 ]
 dependencies = [
@@ -1790,8 +1790,8 @@ resolution-markers = [
     "python_full_version == '3.13.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.13.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.12.*' and platform_machine == 'ARM64'",
-    "python_full_version == '3.11.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.12.*' and platform_machine != 'ARM64'",
+    "python_full_version == '3.11.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.11.*' and platform_machine != 'ARM64'",
 ]
 dependencies = [
@@ -2072,8 +2072,8 @@ resolution-markers = [
     "python_full_version == '3.13.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.13.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.12.*' and platform_machine == 'ARM64'",
-    "python_full_version == '3.11.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.12.*' and platform_machine != 'ARM64'",
+    "python_full_version == '3.11.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.11.*' and platform_machine != 'ARM64'",
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/ce/a4/9cc30690a394a8305e8be4c9036aa16d0dfddadd09079860b582f562496d/pillow-13.0.0.tar.gz", hash = "sha256:cdcd1ba258178f7356d74170c9a81ba4eab6a5d55748bc402a5a2a6fe6be3510", size = 47058631, upload-time = "2026-10-16T22:18:09.718Z" }
@@ -2230,8 +2230,8 @@ resolution-markers = [
     "python_full_version == '3.13.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.13.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.12.*' and platform_machine == 'ARM64'",
-    "python_full_version == '3.11.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.12.*' and platform_machine != 'ARM64'",
+    "python_full_version == '3.11.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.11.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.10.*'",
 ]
@@ -2443,8 +2443,8 @@ resolution-markers = [
     "python_full_version == '3.13.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.13.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.12.*' and platform_machine == 'ARM64'",
-    "python_full_version == '3.11.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.12.*' and platform_machine != 'ARM64'",
+    "python_full_version == '3.11.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.11.*' and platform_machine != 'ARM64'",
 ]
 dependencies = [
@@ -2549,8 +2549,8 @@ resolution-markers = [
     "python_full_version == '3.13.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.13.*' and platform_machine != 'ARM64'",
     "python_full_version == '3.12.*' and platform_machine == 'ARM64'",
-    "python_full_version == '3.11.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.12.*' and platform_machine != 'ARM64'",
+    "python_full_version == '3.11.*' and platform_machine == 'ARM64'",
     "python_full_version == '3.11.*' and platform_machine != 'ARM64'",
 ]
 wheels = [
@@ -2630,7 +2630,7 @@ provides-extras = ["pil", "numpy", "torch"]
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "beslogic-ruff-config", git = "https://github.com/Beslogic/Beslogic-Ruff-Config?rev=8716b51" },
+    { name = "beslogic-ruff-config", git = "https://github.com/BesLogic/Beslogic-Ruff-Config" },
     { name = "mypy", specifier = ">=1.19" },
     { name = "pyright", extras = ["nodejs"], specifier = "~=1.1.410" },
     { name = "ruff" },
@@ -2639,7 +2639,7 @@ dev = [
     { name = "typed-d3dshot", extras = ["torch"] },
 ]
 ruff = [
-    { name = "beslogic-ruff-config", git = "https://github.com/Beslogic/Beslogic-Ruff-Config?rev=8716b51" },
+    { name = "beslogic-ruff-config", git = "https://github.com/BesLogic/Beslogic-Ruff-Config" },
     { name = "ruff" },
 ]
 

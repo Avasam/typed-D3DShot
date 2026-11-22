@@ -88,7 +88,7 @@ torch = [
 
 [dependency-groups]
 ruff = [
-  "beslogic-ruff-config",
+  "beslogic-ruff-config @ git+https://github.com/BesLogic/Beslogic-Ruff-Config",
   "ruff", # Version should come from beslogic-ruff-config and the lock file
 ]
 dev = [
@@ -106,6 +106,5 @@ required-version = ">=0.13.4" # https://github.com/astral-sh/uv/security/advisor
 # a native sdist if the wheel-floor markers above ever have a gap
 no-build-package = ["numpy", "torch"]
 exclude-newer = "1 week"
-
-[tool.uv.sources]
-beslogic-ruff-config = { git = "https://github.com/Beslogic/Beslogic-Ruff-Config", rev = "8716b51" }
+[tool.uv.exclude-newer-package]
+beslogic-ruff-config = false # I own it
